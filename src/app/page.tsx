@@ -18,7 +18,7 @@ export default function Home() {
             </p>
             <p className="mt-12 text-3xl"><span className="font-bold">{app_name}</span> uses AI to build the perfect plan for you!</p>
             <div className="mt-8 text-right">
-              <Link href="/plan/goal">
+              <Link href="/planner/goal">
                 <button className="w-36 p-4 border-none rounded-3xl bg-gray-500 text-white 
                    cursor-pointer drop-shadow-lg transition hover:scale-110 duration-300">Get Started</button>
               </Link>

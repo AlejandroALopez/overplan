@@ -6,7 +6,7 @@ export default function Header() {
             <Link href="/">
                 <button className="text-white text-xl font-bold transition hover:scale-110 duration-300">Home</button>
             </Link>
-            <Link href="/plan/goal">
+            <Link href="/planner/goal">
                 <button className="text-white text-xl font-bold transition hover:scale-110 duration-300">Create a Plan</button>
             </Link>
             <Link href="/week">
