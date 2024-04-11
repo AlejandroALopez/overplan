@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GoalIdeaProps } from "@/lib/types/plannerProps";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { setGoal } from "@/lib/store/inputSlice";
 
 // Goal Suggestion Item
-const GoalIdea: React.FC<GoalIdeaProps> = ({ idea, index, setSelectedGoal }) => {
+const GoalIdea: React.FC<GoalIdeaProps> = ({ idea, setSelectedGoal }) => {
     return (
-        <button 
-            key={index} 
+        <button
             className="flex justify-center w-64 h-24 p-8 my-4 border-none rounded-2xl 
                 bg-[#666666] items-center cursor-pointer drop-shadow-md
                 transition hover:scale-110 duration-300"
@@ -19,7 +18,7 @@ const GoalIdea: React.FC<GoalIdeaProps> = ({ idea, index, setSelectedGoal }) => 
             <p className="text-white text-lg">{idea}</p>
         </button>
     );
-}  
+}
 
 export default function Goal() {
     const dispatch = useAppDispatch();
@@ -30,11 +29,15 @@ export default function Goal() {
     const ideas = ["Run 5 miles/day", "Learn Python", "Analyze a scientific paper", "Plan a date",
         "Lose 10 pounds", "Get better sleep"];
 
-    const [selectedGoal, setSelectedGoal] = useState<string>(goal || "");
+    const [selectedGoal, setSelectedGoal] = useState<string>("");
 
     const submitGoal = () => {
         dispatch(setGoal(selectedGoal));
     }
+
+    useEffect(() => {
+        if (goal !== "") setSelectedGoal(goal);
+    }, [goal]);
 
     return (
         <main className="flex min-h-screen flex-col p-8 bg-[#f5f5f5]">
