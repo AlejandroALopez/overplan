@@ -4,7 +4,7 @@ import Header from "@/components/header";
 
 export default function Home() {
 
-  const app_name = "OverGoal AI";
+  const app_name: string = "OverGoal AI";
 
   return (
     <main className="flex min-h-screen flex-col">

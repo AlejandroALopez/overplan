@@ -9,7 +9,7 @@ export default function Header() {
             <Link href="/planner/goal">
                 <button className="text-white text-xl font-bold transition hover:scale-110 duration-300">Create a Plan</button>
             </Link>
-            <Link href="/week">
+            <Link href="/dashboard/week">
                 <button className="text-white text-xl font-bold transition hover:scale-110 duration-300">My Week</button>
             </Link>
         </div>
