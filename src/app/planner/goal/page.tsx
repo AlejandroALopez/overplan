@@ -1,9 +1,10 @@
 "use client";
 
-import type { Metadata } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import { GoalIdeaProps } from "@/lib/types/plannerProps";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
+import { setGoal } from "@/lib/store/inputSlice";
 
 // Goal Suggestion Item
 const GoalIdea: React.FC<GoalIdeaProps> = ({ idea, index, setSelectedGoal }) => {
@@ -21,8 +22,9 @@ const GoalIdea: React.FC<GoalIdeaProps> = ({ idea, index, setSelectedGoal }) => 
 }  
 
 export default function Goal() {
+    const dispatch = useAppDispatch();
+    const goal = useAppSelector(state => state.input.goal);
 
-    const goal = ""
     const question = "What is your goal?";
     const placeholder_text = "Run 5 miles/day, eat healthier, etc.";
     const ideas = ["Run 5 miles/day", "Learn Python", "Analyze a scientific paper", "Plan a date",
@@ -31,7 +33,7 @@ export default function Goal() {
     const [selectedGoal, setSelectedGoal] = useState<string>(goal || "");
 
     const submitGoal = () => {
-        // dispatch(updateGoal(selectedGoal));
+        dispatch(setGoal(selectedGoal));
     }
 
     return (
