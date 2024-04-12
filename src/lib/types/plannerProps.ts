@@ -7,9 +7,8 @@ export interface GoalIdeaProps {
 }
 
 export interface WeekOptionProps {
-    option: number;
-    selectedTime: number;
-    setSelectedTime: Dispatch<SetStateAction<number>>;
+    weeks: number;
+    setWeeks: Dispatch<SetStateAction<number>>;
 }
 
 export interface WeekProps {

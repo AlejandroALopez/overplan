@@ -6,16 +6,36 @@ import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { WeekOptionProps } from "@/lib/types/plannerProps";
 import { setNumWeeks } from "@/lib/store/inputSlice";
 
-const WeekOption: React.FC<WeekOptionProps> = ({ option, selectedTime, setSelectedTime }) => {
+const WeekSelector: React.FC<WeekOptionProps> = ({ weeks, setWeeks }) => {
+    const title = "In how many weeks do you wish to complete it?";
+    const MIN_VALUE = 1;
+    const MAX_VALUE = 20;
+
     return (
-        <button
-            className={`w-3/6 p-8 border-none rounded-2xl drop-shadow-md
-                transition hover:scale-110 duration-300
-                ${selectedTime === option ? "bg-[#4d4d4d]" : "bg-[#afafaf]"}`}
-            onClick={() => setSelectedTime(option)}
-        >
-            <p className="text-xl text-white">{option}</p>
-        </button>
+        <div className="flex flex-col my-12">
+            <p className="text-2xl font-bold">{title}</p>
+            <div className="flex flex-row items-center gap-4 my-8">
+                <button 
+                    className={`px-6 py-4 rounded-2xl drop-shadow-md 
+                    transition hover:scale-110 duration-300 cursor-pointer
+                    ${weeks >= MIN_VALUE ? "bg-gray-400" : "bg-gray-300"}`}
+                    onClick={() => (weeks >= MIN_VALUE) ? setWeeks(weeks - 1) : null}
+                >
+                    <p className="text-3xl">-</p>
+                </button>
+                <div className="flex items-center justify-center w-32 h-16 rounded-2xl border-2 border-solid border-gray-400">
+                    <p className="text-3xl">{weeks}</p>
+                </div>
+                <button 
+                    className={`bg-gray-400 px-6 py-4 rounded-2xl drop-shadow-md 
+                    transition hover:scale-110 duration-300 cursor-pointer
+                    ${weeks <= MAX_VALUE - 1 ? "bg-gray-400" : "bg-gray-300"}`}
+                    onClick={() => (weeks <= MAX_VALUE - 1) ? setWeeks(weeks + 1) : null}
+                >
+                    <p className="text-3xl">+</p>
+                </button>
+            </div>
+        </div>
     )
 }
 
@@ -23,14 +43,11 @@ export default function SetWeeks() {
     const dispatch = useAppDispatch();
     const goal = useAppSelector(state => state.input.goal);
 
-    const question = "In how many weeks do you wish to complete it?";
-    const options = [2, 4, 6]; // suggested number of weeks
-
-    const [selectedTime, setSelectedTime] = useState<number>(0);
+    const [weeks, setWeeks] = useState<number>(0);
 
     const submitTime = () => {
-        console.log("# weeks: ", selectedTime);
-        dispatch(setNumWeeks(selectedTime));
+        console.log("# weeks: ", weeks);
+        dispatch(setNumWeeks(weeks));
         // TODO: API call to create plan
     }
 
@@ -39,19 +56,14 @@ export default function SetWeeks() {
             <p className="text-gray-500 text-xl">
                 Goal: <span className="text-[#a52a2a] font-bold">{goal}</span>
             </p>
-            <p className="text-2xl font-bold">{question}</p>
-            <div className="flex flex-col gap-8 my-16 mx-8 w-2/6">
-                {options.map((opt: number, index: number) => (
-                    <WeekOption key={index} option={opt} selectedTime={selectedTime} setSelectedTime={setSelectedTime} />
-                ))}
-            </div>
+            <WeekSelector weeks={weeks} setWeeks={setWeeks} />
             <div className="mx-8 text-right">
                 <Link href="/planner/result">
                     <button
                         className={`w-20 h-20 p-4 border-none rounded-2xl bg-[#4d4d4d] 
                             drop-shadow-md transition hover:scale-110 duration-300 cursor-pointer
-                            ${selectedTime === 0 && "opacity-50"}`}
-                        disabled={selectedTime === 0}
+                            ${weeks === 0 && "opacity-50"}`}
+                        disabled={weeks === 0}
                         onClick={() => submitTime()}
                     >
                         <p className="text-xl text-white">&gt;</p>
