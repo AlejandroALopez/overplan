@@ -1,5 +1,6 @@
 export interface Task {
     id: string,
+    user_id?: string,
     title: string,
     description: string,
     week: number,
@@ -11,6 +12,14 @@ export interface Week {
 }
 
 export interface Plan {
+    id: string,
+    user_id: string,
+    goal: string,
+    weeksTotal: number,
+    weeksCompleted: number,
+}
+
+export interface PlanResult {
     goal: string,
     numWeeks: number,
     tasks: Task[], // ordered by week using a function

@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-str */
-import { Plan, Week } from "@/lib/types/planTypes";
+import { Plan, PlanResult, Week } from "@/lib/types/planTypes";
 
 export const testWeeks: Week = {
   "Week 1": ["Some task A", "Some task B", "Extra C", "Extra 2"],
@@ -8,7 +8,15 @@ export const testWeeks: Week = {
   "Week 4": ["Some task G", "Some task H"],
 };
 
-export const testPlan1: Plan = {
+export const plan1: Plan = {
+  id: "028ch82hncm209382yd23",
+  user_id: "asd0i2nd0n02h72gd723d",
+  goal: "Learn Python",
+  weeksTotal: 4,
+  weeksCompleted: 0,
+};
+
+export const testPlan1: PlanResult = {
   goal: "Learn Python",
   numWeeks: 4,
   tasks: [
