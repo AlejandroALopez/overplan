@@ -24,10 +24,8 @@ export default function Goal() {
     const dispatch = useAppDispatch();
     const goal = useAppSelector(state => state.input.goal);
 
-    const question = "What is your goal?";
+    const question = "What goal do you want to achieve?";
     const placeholder_text = "Run 5 miles/day, eat healthier, etc.";
-    const ideas = ["Run 5 miles/day", "Learn Python", "Analyze a scientific paper", "Plan a date",
-        "Lose 10 pounds", "Get better sleep"];
 
     const [selectedGoal, setSelectedGoal] = useState<string>("");
 
@@ -40,33 +38,35 @@ export default function Goal() {
     }, [goal]);
 
     return (
-        <main className="flex min-h-screen flex-col p-8 bg-[#f5f5f5]">
-            <p className="text-2xl font-bold mt-20">{question}</p>
-            <div className="flex flex-row items-center gap-16 my-16">
-                <input
-                    className="w-3/6 h-20 p-4 border-none rounded-2xl bg-[#cccccc] text-xl"
-                    placeholder={placeholder_text}
-                    value={selectedGoal}
-                    onChange={e => setSelectedGoal(e.target.value)}
-                />
+        <main className="flex min-h-screen flex-col items-center p-8">
+            <p className="text-3xl mt-20">Let&apos;s build the best plan for you</p>
+            <p className="text-3xl font-semibold mt-16">{question}</p>
+            <input
+                className="w-3/6 mt-16 p-8 border-[#808080] border-[1px] rounded-xl bg-[#A6A6A6] bg-opacity-25 text-2xl"
+                placeholder={placeholder_text}
+                value={selectedGoal}
+                onChange={e => setSelectedGoal(e.target.value)}
+            />
+            <div className="flex flex-row justify-between my-16 w-1/2">
+                <Link href="/">
+                    <button
+                        className={`py-4 px-6 border-none rounded-md bg-primary 
+                        text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300`}
+                    >
+                        &lt; Back
+                    </button>
+                </Link>
                 <Link href="/planner/weeks">
                     <button
-                        className={`w-20 h-20 p-4 border-none rounded-2xl bg-[#4d4d4d] 
+                        className={`py-4 px-6 border-none rounded-md bg-primary
                         text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300
                         ${selectedGoal === "" && "opacity-50"}`}
                         disabled={selectedGoal === ""}
                         onClick={() => submitGoal()}
                     >
-                        &gt;
+                        Next &gt;
                     </button>
                 </Link>
-            </div>
-            <p className="text-xl font-medium">Goal ideas</p>
-            <div className="flex flex-row flex-wrap gap-x-16">
-                {ideas.map((idea, index) => (
-                    <GoalIdea key={index} idea={idea} index={index} setSelectedGoal={setSelectedGoal} />
-                )
-                )}
             </div>
         </main>
     )
