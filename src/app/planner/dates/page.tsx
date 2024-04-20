@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
+import PlannerProgressBar from "@/components/plannerProgressBar";
 
 export default function SetDates() {
     const dispatch = useAppDispatch();
@@ -13,12 +14,11 @@ export default function SetDates() {
 
     const submitDate = () => {
         console.log("TODO");
-        // dispatch(setNumWeeks(weeks));
-        // TODO: API call to create plan
     }
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
+            <PlannerProgressBar step={3} />
             <p className="text-2xl mt-12">
                 Goal: <span className="font-semibold">{goal}</span>
             </p>

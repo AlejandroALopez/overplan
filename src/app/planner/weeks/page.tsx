@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { WeekOptionProps } from "@/lib/types/plannerProps";
 import { setNumWeeks } from "@/lib/store/inputSlice";
+import PlannerProgressBar from "@/components/plannerProgressBar";
 
 const WeekSelector: React.FC<WeekOptionProps> = ({ weeks, setWeeks }) => {
     const MIN_VALUE = 1;
@@ -46,11 +47,11 @@ export default function SetWeeks() {
 
     const submitWeeks = () => {
         dispatch(setNumWeeks(weeks));
-        // TODO: API call to create plan
     }
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
+            <PlannerProgressBar step={2} />
             <p className="text-2xl mt-12">
                 Goal: <span className="font-semibold">{goal}</span>
             </p>

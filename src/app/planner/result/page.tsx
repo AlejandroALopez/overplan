@@ -58,7 +58,7 @@ export default function Goal() {
     }
 
     return (
-        <main className="flex min-h-screen flex-col p-8 bg-[#f5f5f5]">
+        <main className="flex min-h-screen flex-col p-8">
             <div className="flex flex-col items-center">
                 <p className="my-4 text-gray-400 text-lg font-bold">Plan</p>
                 <p className="m-0 text-2xl font-bold">{goal}</p>

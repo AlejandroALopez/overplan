@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import Compass from "../../../../public/icons/compass.svg";
 import Clock from "../../../../public/icons/clock.svg";
 import Calendar from "../../../../public/icons/calendar.svg";
+import PlannerProgressBar from "@/components/plannerProgressBar";
 
 export default function ReviewPlan() {
     const dispatch = useAppDispatch();
@@ -18,29 +18,29 @@ export default function ReviewPlan() {
 
     const submitPlanParams = () => {
         console.log("TODO");
-        // dispatch(setNumWeeks(weeks));
         // TODO: API call to create plan
     }
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
-            <p className="text-3xl font-semibold mt-8">{title}</p>
+            <PlannerProgressBar step={4} />
+            <p className="text-3xl font-semibold mt-20">{title}</p>
             <div className="flex flex-row flex-wrap w-full justify-evenly items-center mt-20">
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-4">
                     <Image src={Compass} alt="goal icon" />
                     <div className="flex flex-col justify-center gap-2">
                         <p className="font-semibold text-2xl">Goal</p>
                         <p className="text-2xl">{goal}</p>
                     </div>
                 </div>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-4">
                     <Image src={Clock} alt="weeks icon" />
                     <div className="flex flex-col justify-center gap-2">
                         <p className="font-semibold text-2xl">Length</p>
                         <p className="text-2xl">{weeks} weeks</p>
                     </div>
                 </div>
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-4">
                     <Image src={Calendar} alt="date icon" />
                     <div className="flex flex-col justify-center gap-2">
                         <p className="font-semibold text-2xl">Start</p>
