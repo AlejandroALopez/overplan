@@ -2,11 +2,32 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction } from '@/lib/types/weekProps';
+import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Task } from "@/lib/types/planTypes";
 import { testPlan1 } from "@/lib/constants/testData";
 import Navigation from "@/components/navigation";
 
+// Match column names with their respective colors
+const column_text_colors: ColumnColorsType = {
+    "Backlog": "text-taskBacklog",
+    "Active": "text-taskActive",
+    "In Progress": "text-taskInProgress",
+    "Completed": "text-taskCompleted",
+}
+
+const column_bg_colors: ColumnColorsType = {
+    "Backlog": "bg-taskBacklog",
+    "Active": "bg-taskActive",
+    "In Progress": "bg-taskInProgress",
+    "Completed": "bg-taskCompleted",
+}
+
+const column_border_colors: ColumnColorsType = {
+    "Backlog": "border-taskBacklog",
+    "Active": "border-taskActive",
+    "In Progress": "border-taskInProgress",
+    "Completed": "border-taskCompleted",
+}
 
 const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
     const [active, setActive] = useState<boolean>(false);
@@ -102,13 +123,14 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
     }
 
     return (
-        <div key={column} className="flex flex-col shrink-0 bg-[#f08080] w-64 h-full text-center">
-            <div className="flex flex-row items-center justify-between p-4">
-                <p>{column}</p>
-                <span>{filteredCards.length} items</span>
+        <div key={column} className="flex flex-col shrink-0 w-64 h-full text-center">
+            <div className="flex flex-row items-center justify-between py-2">
+                <p className={`text-xl ${column_text_colors[column]}`}>{column}</p>
+                <p className={`text-xl ${column_text_colors[column]}`}>{filteredCards.length}</p>
             </div>
             <div
-                className={`w-full h-full ${active ? "bg-[#282828] col-active opacity-50" : "bg-black"}`}
+                className={`w-full h-full ${column_bg_colors[column]} bg-opacity-5 border-[1px] rounded-md p-2
+                    ${column_border_colors[column]} ${active && "col-active opacity-50"} `}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDragEnd}
@@ -135,11 +157,13 @@ const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
             <motion.div
                 layout
                 layoutId={task.id}
-                className="bg-blue-700 p-2 cursor-grab active:cursor-grabbing"
+                className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
+                    rounded-md rounded-br-xl cursor-grab active:cursor-grabbing"
                 draggable="true"
                 onDragStart={onDragStartHandler}
             >
-                <p className="text-white">{task.title}</p>
+                <p className="w-full p-2">{task.title}</p>
+                <div className={`h-4 w-6 rounded-tl-md rounded-br-xl ${column_bg_colors[task.status]}`} />
             </motion.div>
         </>
     );
@@ -148,30 +172,50 @@ const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
 const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
     return (
         <div
-            className="my-0.5 h-0.5 w-full bg-[#a78bfa] opacity-0"
+            className="my-0.5 h-0.5 w-full bg-primary opacity-0"
             data-before={beforeId || "-1"}
             data-column={column}
         />
     )
 }
 
+// Week Progress based on tasks completed
+const ProgressBar: React.FC = () => {
+    return (
+        <div className="flex flex-row gap-4 items-center">
+            <div className="h-5 w-5/12 bg-primary bg-opacity-25 rounded-3xl">
+                <div className={`h-full w-1/4 bg-primary rounded-3xl`} />
+            </div>
+            <p className="text-2xl">50%</p>
+        </div>
+    )
+}
+
 export default function Week() {
-    const goal: string = "My Goal";
-    const weekNumber: number = 1;
+    const goal: string = testPlan1.goal;
+    const current_week: number = 1; // TODO
+    const total_weeks: number = testPlan1.numWeeks;
+    const total_tasks: number = 5; // TODO
+
+    const [completedTasks, setCompletedTasks] = useState<number>(1);
 
     const [cards, setCards] = useState<Task[]>(testPlan1.tasks);
-
-    // className="flex min-h-screen flex-col items-center justify-between p-24"
 
     return (
         <main className="flex flex-row min-h-screen">
             <Navigation />
-            <div className="w-full p-8">
-                <div className="flex flex-col">
-                    <p className="text-black">{goal}</p>
-                    <p className="text-black">Week {weekNumber}</p>
+            <div className="flex flex-col w-full pl-2">
+                <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
+                    <div className="flex flex-col justify-center w-4/6 gap-8">
+                        <p className="text-3xl font-medium">{goal} - Week {current_week} / {total_weeks}</p>
+                        <ProgressBar />
+                    </div>
+                    <div className="flex flex-col justify-center items-center w-2/6 gap-4">
+                        <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
+                        <p className="text-xl">Monday 7th (5 days)</p>
+                    </div>
                 </div>
-                <div className="flex flex-row justify-between my-8 h-5/6">
+                <div className="flex flex-row justify-between bg-white my-2 p-6 h-5/6 rounded-sm">
                     <Column column={"Backlog"} cards={cards} setCards={setCards} />
                     <Column column={"Active"} cards={cards} setCards={setCards} />
                     <Column column={"In Progress"} cards={cards} setCards={setCards} />

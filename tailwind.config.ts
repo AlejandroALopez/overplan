@@ -11,6 +11,10 @@ const config: Config = {
       colors: {
         primary: "#1A79E5",
         secondary: "#4E1FAD",
+        taskBacklog: "#B81414",
+        taskActive: "#3014B8",
+        taskInProgress: "#7A14B8",
+        taskCompleted: "#14B814",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

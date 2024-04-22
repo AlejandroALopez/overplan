@@ -19,3 +19,7 @@ export interface CardProps {
     task: Task,
     handleDragStart: HandleDragStartFunction,
 }
+
+export interface ColumnColorsType {
+    [key: string]: string;
+}
