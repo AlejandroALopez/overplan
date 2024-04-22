@@ -11,7 +11,3 @@ export default function PlannerProgressBar(props: ProgressBarProps) {
         </div>
     );
 }
-
-// Planning
-// - 100% length = some number x
-// - % needed --> 25, 50, 75, 100 ---> 1/4, 2/4

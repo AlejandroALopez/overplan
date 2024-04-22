@@ -7,7 +7,6 @@ import { useAppSelector, useAppDispatch } from "@/lib/store";
 import Compass from "../../../../public/icons/compass.svg";
 import Clock from "../../../../public/icons/clock.svg";
 import Calendar from "../../../../public/icons/calendar.svg";
-import PlannerProgressBar from "@/components/plannerProgressBar";
 
 export default function ReviewPlan() {
     const dispatch = useAppDispatch();
@@ -24,7 +23,9 @@ export default function ReviewPlan() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
-            <PlannerProgressBar step={4} />
+            <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
+                <div className={`h-4 w-4/4 bg-primary rounded-3xl`} />
+            </div>
             <p className="text-3xl font-semibold mt-20">{title}</p>
             <div className="flex flex-row flex-wrap w-full justify-evenly items-center mt-20">
                 <div className="flex flex-row gap-4">

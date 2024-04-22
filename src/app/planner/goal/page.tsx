@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import PlannerProgressBar from "@/components/plannerProgressBar";
 import { useEffect, useState } from "react";
 import { GoalIdeaProps } from "@/lib/types/plannerProps";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
@@ -40,7 +39,9 @@ export default function Goal() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
-            <PlannerProgressBar step={1} />
+            <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
+                <div className={`h-4 w-1/4 bg-primary rounded-3xl`} />
+            </div>
             <p className="text-3xl mt-20">Let&apos;s build the best plan for you</p>
             <p className="text-3xl font-semibold mt-16">{question}</p>
             <input

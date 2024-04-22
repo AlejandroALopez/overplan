@@ -8,7 +8,6 @@ import { setStartDate } from "@/lib/store/inputSlice";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import PlannerProgressBar from "@/components/plannerProgressBar";
 
 export default function SetDates() {
     const dispatch = useAppDispatch();
@@ -40,7 +39,9 @@ export default function SetDates() {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <main className="flex min-h-screen flex-col items-center p-8">
-                <PlannerProgressBar step={3} />
+                <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
+                    <div className={`h-4 w-3/4 bg-primary rounded-3xl`} />
+                </div>
                 <p className="text-2xl mt-12">
                     Goal: <span className="font-semibold">{goal}</span>
                 </p>
