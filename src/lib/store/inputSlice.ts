@@ -4,11 +4,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface IInputState {
   goal: string,
   numWeeks: number,
+  startDate: string,
 }
 
 const initialState: IInputState = {
   goal: "",
   numWeeks: 0,
+  startDate: "",
 };
 
 export const inputSlice = createSlice({
@@ -21,8 +23,11 @@ export const inputSlice = createSlice({
     setNumWeeks: (state, action: PayloadAction<number>) => {
       state.numWeeks = action.payload;
     },
+    setStartDate: (state, action: PayloadAction<string>) => {
+      state.startDate = action.payload;
+    }
   },
 });
 
-export const { setGoal, setNumWeeks } = inputSlice.actions;
+export const { setGoal, setNumWeeks, setStartDate } = inputSlice.actions;
 export const inputReducer = inputSlice.reducer;

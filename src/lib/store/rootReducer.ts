@@ -14,7 +14,7 @@ const authPersistConfig = {
 const inputPersistConfig = {
   key: "input",
   storage: storage,
-  whitelist: ["goal", "numWeeks"],
+  whitelist: ["goal", "numWeeks", "startDate"],
 };
 
 const rootReducer = combineReducers({

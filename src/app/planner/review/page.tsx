@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import dayjs from "dayjs";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import Compass from "../../../../public/icons/compass.svg";
 import Clock from "../../../../public/icons/clock.svg";
@@ -12,7 +13,7 @@ export default function ReviewPlan() {
     const dispatch = useAppDispatch();
     const goal = useAppSelector(state => state.input.goal);
     const weeks = useAppSelector(state => state.input.numWeeks);
-    const startDate = "Monday, Oct 8th"; // TODO: Replace with redux state
+    const startDate = useAppSelector(state => state.input.startDate); // TODO: Replace with redux state
 
     const title = "Review & Create Plan";
 
@@ -44,7 +45,7 @@ export default function ReviewPlan() {
                     <Image src={Calendar} alt="date icon" />
                     <div className="flex flex-col justify-center gap-2">
                         <p className="font-semibold text-2xl">Start</p>
-                        <p className="text-2xl">{startDate}</p>
+                        <p className="text-2xl">{dayjs(startDate).format('dddd, MMM DD')}</p>
                     </div>
                 </div>
             </div>
