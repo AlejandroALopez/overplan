@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+import { Task } from './planTypes';
 
 export interface GoalIdeaProps {
     idea: string;
@@ -18,6 +19,5 @@ export interface WeekProps {
 }
 
 export interface TaskProps {
-    key: number,
-    title: string,
+    task: Task
 }

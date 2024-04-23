@@ -14,6 +14,7 @@ export default function PlannerProgressBar() {
         "/planner/weeks": "w-2/4",
         "/planner/dates": "w-3/4",
         "/planner/review": "w-4/4",
+        "/planner/result": "w-4/4",
     }
 
     return (

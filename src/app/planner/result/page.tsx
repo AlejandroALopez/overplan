@@ -1,47 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import Image from 'next/image';
 import { useState } from "react";
 import { WeekProps, TaskProps } from "@/lib/types/plannerProps";
-import { testWeeks, testPlan1 } from "@/lib/constants/testData";
-import expandDown from "../../../../public/arrows/expandDown.svg";
-import expandUp from "../../../../public/arrows/expandUp.svg";
-import bulletPoint from "../../../../public/shapes/bulletPoint.svg";
+import { testPlan1 } from "@/lib/constants/testData";
+import { ColumnColorsType } from "@/lib/types/weekProps";
 
+const status_bg_colors: ColumnColorsType = {
+    "Backlog": "bg-taskBacklog",
+    "Active": "bg-taskActive",
+    "In Progress": "bg-taskInProgress",
+    "Completed": "bg-taskCompleted",
+}
 
 const Week: React.FC<WeekProps> = ({ week, activeWeek, setActiveWeek }) => {
     return (
-        <div>
-            <div className="flex items-center justify-between w-11/12 h-12 py-10 px-8 rounded-2xl bg-[#bfbfbf]">
-                <p className="text-lg">Week {week}</p>
-                <button
-                    className="border-none bg-none"
-                    onClick={() => (week === activeWeek) ? setActiveWeek(0) : setActiveWeek(week)}
-                >
-                    {activeWeek === week ?
-                        <Image src={expandUp} alt="expand up" className="cursor-pointer transition hover:scale-110 duration-300" />
-                        : <Image src={expandDown} alt="expand down" className="cursor-pointer transition hover:scale-110 duration-300" />}
-                </button>
-            </div>
-            {(week === activeWeek) && (
-                <div className="flex flex-col gap-4 w-full py-4 px-8">
-                    {testWeeks[`Week ${week}`].map((task: string, index: number) => (
-                        <Task key={index * 100} title={task} />
-                    ))}
-                </div>
-            )}
-        </div>
-    )
+        <button
+            className={`px-6 py-4 rounded-lg bg-primary ${activeWeek === week ? "bg-opacity-100" : "bg-opacity-15"} 
+            drop-shadow-lg transition hover:scale-110 duration-300`}
+            onClick={() => { if (week !== activeWeek) setActiveWeek(week) }}
+        >
+            <p className={`text-xl ${activeWeek === week && "text-white"}`}>{week}</p>
+        </button>
+    );
 }
 
-const Task: React.FC<TaskProps> = ({ title }) => {
+const Task: React.FC<TaskProps> = ({task}) => {
     return (
-        <div className="flex flex-row gap-4">
-            <Image src={bulletPoint} alt="bullet point" />
-            <div className="flex items-center w-9/12 bg-[#E6E6E6] px-8 rounded-2xl">
-                <p className="text-black text-lg">{title}</p>
-            </div>
+        <div
+            className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
+                    rounded-md rounded-br-xl"
+        >
+            <p className="w-full p-2">{task.title}</p>
+            <div className={`h-4 w-6 rounded-tl-md rounded-br-xl ${status_bg_colors[task.status]}`} />
         </div>
     );
 }
@@ -51,7 +42,9 @@ export default function Goal() {
     const numWeeks: number = testPlan1.numWeeks;
     const weeksArray: null[] = new Array(numWeeks).fill(null);
 
-    const [activeWeek, setActiveWeek] = useState<number>(0);
+    const [activeWeek, setActiveWeek] = useState<number>(1);
+
+    const filteredTasks = testPlan1.tasks.filter(task => task.week === activeWeek);
 
     const startPlan = () => {
         console.log("Start plan");
@@ -59,33 +52,32 @@ export default function Goal() {
 
     return (
         <main className="flex min-h-screen flex-col p-8">
-            <div className="flex flex-col items-center">
-                <p className="my-4 text-gray-400 text-lg font-bold">Plan</p>
-                <p className="m-0 text-2xl font-bold">{goal}</p>
-                <p className="my-4 text-xl font-bold text-[#3c3c3c]">{numWeeks} weeks</p>
+            <div className="flex flex-col items-center gap-6 mt-4">
+                <p className="text-[#808080] text-lg">Congrats! Here is an overview of your plan</p>
+                <p className="text-3xl font-semibold">{goal}</p>
+                <p className="text-xl">{numWeeks} weeks</p>
             </div>
-            <div className="flex flex-row justify-between">
-                <div className="flex flex-col gap-8 w-5/12">
-                    {weeksArray.map((_: null, index: number) => (
-                        <Week key={index} week={index + 1} activeWeek={activeWeek} setActiveWeek={setActiveWeek} />
-                    ))}
-                </div>
-                <div className="flex flex-col items-end w-5/12">
-                    <div className="h-80 w-full bg-gray-500" />
-                    <div className="my-8">
-                        <Link href="/dashboard/week">
-                            <button
-                                className="flex justify-center py-8 px-12 my-4 border-none rounded-2xl 
-                            bg-[#666666] items-center cursor-pointer drop-shadow-md
-                            transition hover:scale-110 duration-300"
-                                onClick={() => startPlan()}
-                            >
-                                <p className="text-white text-xl">Start Plan</p>
-                            </button>
-                        </Link>
-                    </div>
-                </div>
+            <div className="flex flex-row flex-wrap w-full gap-8 px-4 mt-8">
+                {weeksArray.map((_: null, index: number) => (
+                    <Week key={index} week={index + 1} activeWeek={activeWeek} setActiveWeek={setActiveWeek} />
+                ))}
             </div>
-        </main>
+            <div className="flex flex-row flex-wrap gap-12 px-4 mt-8">
+                {filteredTasks.map(task => (
+                    <Task key={task.id} task={task}/>
+                ))}
+            </div>
+            <div className="mt-36 text-right">
+                <Link href="/dashboard/week">
+                    <button
+                        className="py-4 px-6 border-none rounded-md bg-primary
+                        text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
+                        onClick={() => startPlan()}
+                    >
+                        <p className="text-white text-xl">Start Plan</p>
+                    </button>
+                </Link>
+            </div>
+        </main >
     );
 }
