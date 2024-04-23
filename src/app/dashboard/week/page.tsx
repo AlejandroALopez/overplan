@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Task } from "@/lib/types/planTypes";
 import { testPlan1 } from "@/lib/constants/testData";
-import Navigation from "@/components/navigation";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -202,26 +201,23 @@ export default function Week() {
     const [cards, setCards] = useState<Task[]>(testPlan1.tasks);
 
     return (
-        <main className="flex flex-row min-h-screen">
-            <Navigation />
-            <div className="flex flex-col w-full pl-2">
-                <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
-                    <div className="flex flex-col justify-center w-4/6 gap-8">
-                        <p className="text-3xl font-medium">{goal} - Week {current_week} / {total_weeks}</p>
-                        <ProgressBar />
-                    </div>
-                    <div className="flex flex-col justify-center items-center w-2/6 gap-4">
-                        <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
-                        <p className="text-xl">Monday 7th (5 days)</p>
-                    </div>
+        <div className="flex flex-col w-full gap-1">
+            <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
+                <div className="flex flex-col justify-center w-4/6 gap-8">
+                    <p className="text-3xl font-medium">{goal} - Week {current_week} / {total_weeks}</p>
+                    <ProgressBar />
                 </div>
-                <div className="flex flex-row justify-between bg-white my-2 p-6 h-5/6 rounded-sm">
-                    <Column column={"Backlog"} cards={cards} setCards={setCards} />
-                    <Column column={"Active"} cards={cards} setCards={setCards} />
-                    <Column column={"In Progress"} cards={cards} setCards={setCards} />
-                    <Column column={"Completed"} cards={cards} setCards={setCards} />
+                <div className="flex flex-col justify-center items-center w-2/6 gap-4">
+                    <p className="text-xl text-[#3e3737]">Week ends on:</p>
+                    <p className="text-xl">Monday 7th (5 days)</p>
                 </div>
             </div>
-        </main>
+            <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
+                <Column column={"Backlog"} cards={cards} setCards={setCards} />
+                <Column column={"Active"} cards={cards} setCards={setCards} />
+                <Column column={"In Progress"} cards={cards} setCards={setCards} />
+                <Column column={"Completed"} cards={cards} setCards={setCards} />
+            </div>
+        </div>
     );
 }
