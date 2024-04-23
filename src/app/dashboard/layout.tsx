@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
 import Navigation from "@/components/navigation";
+
+const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -13,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={montserrat.className}>
         <main className="flex flex-row min-h-screen gap-1">
           <Navigation />
           {children}

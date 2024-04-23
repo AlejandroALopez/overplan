@@ -1,16 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { plansData, PlanProgressProps } from "@/lib/constants/testPlans";
 
 // Week Progress based on tasks completed
-const ProgressBar: React.FC<PlanProgressProps> = ({prog}) => {
+const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 
     const progressBarStyle: React.CSSProperties = {
         width: `${prog * 100}%`,
-      };
-    
+    };
+
     return (
         <div className="flex flex-row justify-center items-center gap-4">
             <div className="h-3 w-5/12 bg-primary bg-opacity-25 rounded-3xl">
@@ -22,7 +23,14 @@ const ProgressBar: React.FC<PlanProgressProps> = ({prog}) => {
 }
 
 export default function MyPlans() {
-    const [currentPlan, setCurrentPlan] = useState<string>("");
+    const router = useRouter();
+    const [currentPlan, setCurrentPlan] = useState<string>(""); // TODO: Replace with redux
+
+    const handleRowClick = (id: string, slug: string) => {
+        // TODO: Add Loading
+        // TODO: API --> GET plan by id, send to redux
+        router.push(`/dashboard/plans/${encodeURIComponent(slug)}`);
+    };
 
     return (
         <div className="flex flex-col w-full bg-white gap-12 p-8">
@@ -45,10 +53,14 @@ export default function MyPlans() {
                     </thead>
                     <tbody>
                         {plansData.map((plan) => (
-                            <tr key={plan.id} className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300">
+                            <tr 
+                                key={plan.id} 
+                                className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300"
+                                onClick={() => handleRowClick(plan.id, plan.slug)}
+                            >
                                 <td className="text-center border-b border-gray-200 p-4">{plan.goal}</td>
                                 <td className="text-center border-b border-gray-200 p-4">{plan.currWeek} of {plan.numWeeks}</td>
-                                <td className="text-center border-b border-gray-200 p-4"><ProgressBar prog={plan.weekProg}/></td>
+                                <td className="text-center border-b border-gray-200 p-4"><ProgressBar prog={plan.weekProg} /></td>
                                 <td className="text-center border-b border-gray-200 p-4">{plan.weekEndDate}</td>
                             </tr>
                         ))}
