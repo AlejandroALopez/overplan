@@ -23,10 +23,7 @@ export default function ReviewPlan() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
-            <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
-                <div className={`h-4 w-4/4 bg-primary rounded-3xl`} />
-            </div>
-            <p className="text-3xl font-semibold mt-20">{title}</p>
+            <p className="text-3xl font-semibold mt-12">{title}</p>
             <div className="flex flex-row flex-wrap w-full justify-evenly items-center mt-20">
                 <div className="flex flex-row gap-4">
                     <Image src={Compass} alt="goal icon" />
@@ -50,7 +47,7 @@ export default function ReviewPlan() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row justify-between my-24 w-1/2">
+            <div className="flex flex-row justify-between my-36 w-1/2">
                 <Link href="/planner/dates">
                     <button
                         className={`py-4 px-6 border-none rounded-md bg-primary 

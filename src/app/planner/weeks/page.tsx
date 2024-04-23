@@ -50,10 +50,7 @@ export default function SetWeeks() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
-            <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
-                <div className={`h-4 w-2/4 bg-primary rounded-3xl`} />
-            </div>
-            <p className="text-2xl mt-12">
+            <p className="text-2xl mt-8">
                 Goal: <span className="font-semibold">{goal}</span>
             </p>
             <p className="text-3xl font-semibold mt-16">{question}</p>

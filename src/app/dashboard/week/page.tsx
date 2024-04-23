@@ -208,7 +208,7 @@ export default function Week() {
                     <ProgressBar />
                 </div>
                 <div className="flex flex-col justify-center items-center w-2/6 gap-4">
-                    <p className="text-xl text-[#3e3737]">Week ends on:</p>
+                    <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
                     <p className="text-xl">Monday 7th (5 days)</p>
                 </div>
             </div>

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "Keep track of the tasks for the week",
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

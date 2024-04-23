@@ -39,10 +39,7 @@ export default function SetDates() {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <main className="flex min-h-screen flex-col items-center p-8">
-                <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
-                    <div className={`h-4 w-3/4 bg-primary rounded-3xl`} />
-                </div>
-                <p className="text-2xl mt-12">
+                <p className="text-2xl mt-8">
                     Goal: <span className="font-semibold">{goal}</span>
                 </p>
                 <p className="text-2xl mt-4">{weeks} weeks</p>
@@ -54,12 +51,14 @@ export default function SetDates() {
                                 hidden: true,
                             },
                             actionBar: {
-                                hidden: true,
+                                actions: []
                             }
-                        }}
-                        onChange={(value) => changeDayHandler(value)}
-                        disablePast
-                        defaultValue={dayjs(day)}
+                        }
+                    }
+
+                    onChange={(value) => changeDayHandler(value)}
+                    disablePast
+                    defaultValue={dayjs(day)}
                     />
                     <div className="flex flex-col gap-8 my-4">
                         <p className="text-xl">Start Date: {" "}
