@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useQuery } from '@tanstack/react-query';
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Task } from "@/lib/types/planTypes";
 import { testPlan1 } from "@/lib/constants/testData";
+import { fetchPlanData } from "@/lib/api/plansApi";
+import { fetchWeekTasks } from "@/lib/api/tasksApi";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -33,7 +36,7 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
     const filteredCards = cards.filter((c) => c.status === column);
 
     const handleDragStart: HandleDragStartFunction = (e, card) => {
-        e.dataTransfer.setData("cardId", card.id);
+        e.dataTransfer.setData("cardId", card._id);
     };
 
     const handleDragOver: DragFunction = (e) => {
@@ -100,18 +103,18 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
         if (before !== cardId) { // if same card, don't do anything + double check
             let copy = [...cards];
 
-            let cardToTransfer = copy.find((c) => c.id === cardId);
+            let cardToTransfer = copy.find((c) => c._id === cardId);
             if (!cardToTransfer) return;
 
             cardToTransfer = { ...cardToTransfer, status: column } // update status of card
 
-            copy = copy.filter((c) => c.id !== cardId); // filter out that card (remove copy)
+            copy = copy.filter((c) => c._id !== cardId); // filter out that card (remove copy)
 
             const moveToBack = before === "-1";
             if (moveToBack) {
                 copy.push(cardToTransfer);
             } else {
-                const insertAtIndex = copy.findIndex((el) => el.id === before);
+                const insertAtIndex = copy.findIndex((el) => el._id === before);
                 if (insertAtIndex === undefined) return;
 
                 copy.splice(insertAtIndex, 0, cardToTransfer);
@@ -134,7 +137,7 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDragEnd}
             >
-                {filteredCards.map((c) => <Card key={c.id} task={c} handleDragStart={handleDragStart} />)}
+                {filteredCards.map((c) => <Card key={c._id} task={c} handleDragStart={handleDragStart} />)}
                 <DropIndicator beforeId="-1" column={column} />
             </div>
         </div>
@@ -152,10 +155,10 @@ const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
 
     return (
         <>
-            <DropIndicator beforeId={task.id} column={task.status} />
+            <DropIndicator beforeId={task._id} column={task.status} />
             <motion.div
                 layout
-                layoutId={task.id}
+                layoutId={task._id}
                 className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
                     rounded-md rounded-br-xl cursor-grab active:cursor-grabbing"
                 draggable="true"
@@ -191,25 +194,44 @@ const ProgressBar: React.FC = () => {
 }
 
 export default function Week() {
-    const goal: string = testPlan1.goal;
-    const current_week: number = 1; // TODO
-    const total_weeks: number = testPlan1.numWeeks;
-    const total_tasks: number = 5; // TODO
+
+    const planId = "66314851acb63213e368ceec";
+
+    const { isPending, error, data: planData } = useQuery({
+        queryKey: ['plans'],
+        queryFn: () => fetchPlanData(planId),
+    })
+
+    const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useQuery({
+        queryKey: ['tasks'],
+        queryFn: () => fetchWeekTasks(planData._id, planData.currWeek),
+        enabled: !!planData // waits until plan data is available
+    })
 
     const [completedTasks, setCompletedTasks] = useState<number>(1);
 
-    const [cards, setCards] = useState<Task[]>(testPlan1.tasks);
+    const [cards, setCards] = useState<Task[]>([]);
+    // const [cards, setCards] = useState<Task[]>(testPlan1.tasks);
+
+    useEffect(() => {
+        if(tasksData) setCards(tasksData);
+    }, [tasksData]);
+
+    if (isPending || isPendingTasks) return (<div>Loading...</div>)
+
+    if (error) return (<div>An error has occurred: {error.message} </div>)
+    if (errorTasks) return (<div>An error has occurred: {errorTasks.message} </div>)
 
     return (
         <div className="flex flex-col w-full gap-1">
             <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
                 <div className="flex flex-col justify-center w-4/6 gap-8">
-                    <p className="text-3xl font-medium">{goal} - Week {current_week} / {total_weeks}</p>
+                    <p className="text-3xl font-medium">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
                     <ProgressBar />
                 </div>
                 <div className="flex flex-col justify-center items-center w-2/6 gap-4">
                     <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
-                    <p className="text-xl">Monday 7th (5 days)</p>
+                    <p className="text-xl">{planData.weekEndDate} (5 days)</p>
                 </div>
             </div>
             <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">

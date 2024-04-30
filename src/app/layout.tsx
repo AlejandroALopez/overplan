@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { StoreProvider } from "./StoreProvider";
+import { ReactQueryClientProvider } from "@/components/ReactQueryClientProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -16,10 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
-      <html lang="en">
-        <body className={montserrat.className}>{children}</body>
-      </html>
-    </StoreProvider>
+    <ReactQueryClientProvider>
+      <StoreProvider>
+        <html lang="en">
+          <body className={montserrat.className}>{children}</body>
+        </html>
+      </StoreProvider>
+    </ReactQueryClientProvider>
   );
 }
