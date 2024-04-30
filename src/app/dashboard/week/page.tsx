@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useQuery } from '@tanstack/react-query';
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Task } from "@/lib/types/planTypes";
-import { testPlan1 } from "@/lib/constants/testData";
 import { fetchPlanData } from "@/lib/api/plansApi";
 import { fetchWeekTasks } from "@/lib/api/tasksApi";
 
@@ -195,10 +194,10 @@ const ProgressBar: React.FC = () => {
 
 export default function Week() {
 
-    const planId = "66314851acb63213e368ceec";
+    const planId = "66314851acb63213e368ceec"; // TODO: Store in redux
 
     const { isPending, error, data: planData } = useQuery({
-        queryKey: ['plans'],
+        queryKey: ['plan'],
         queryFn: () => fetchPlanData(planId),
     })
 

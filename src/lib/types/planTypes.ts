@@ -11,11 +11,14 @@ export interface Week {
 }
 
 export interface Plan {
-    id: string,
-    user_id: string,
+    _id: string,
+    slug: string,
+    userId: string,
     goal: string,
-    weeksTotal: number,
-    weeksCompleted: number,
+    numWeeks: number,
+    currWeek: number,
+    weekProg: number,
+    weekEndDate: string,
 }
 
 export interface PlanResult {

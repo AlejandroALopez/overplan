@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { plansData, PlanProgressProps } from "@/lib/constants/testPlans";
+import { useState, useEffect } from "react";
+import { useQuery } from '@tanstack/react-query';
+import { PlanProgressProps } from "@/lib/constants/testPlans";
+import { fetchPlansByUserId } from "@/lib/api/plansApi";
+import { Plan } from "@/lib/types/planTypes";
 
 // Week Progress based on tasks completed
 const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
@@ -25,12 +28,28 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 export default function MyPlans() {
     const router = useRouter();
     const [currentPlan, setCurrentPlan] = useState<string>(""); // TODO: Replace with redux
+    const [plans, setPlans] = useState<Plan[]>([]);
+
+    const userId = "user1";
+
+    const { isPending, error, data: plansData } = useQuery({
+        queryKey: ['plans'],
+        queryFn: () => fetchPlansByUserId(userId),
+    })
 
     const handleRowClick = (id: string, slug: string) => {
         // TODO: Add Loading
         // TODO: API --> GET plan by id, send to redux
         router.push(`/dashboard/plans/${encodeURIComponent(slug)}`);
     };
+
+    useEffect(() => {
+        if(plansData) setPlans(plansData);
+    }, [plansData]);
+
+    if (isPending) return (<div>Loading...</div>)
+
+    if (error) return (<div>An error has occurred: {error.message} </div>)
 
     return (
         <div className="flex flex-col w-full bg-white gap-12 p-8">
@@ -52,11 +71,11 @@ export default function MyPlans() {
                         </tr>
                     </thead>
                     <tbody>
-                        {plansData.map((plan) => (
+                        {plans.map((plan: Plan) => (
                             <tr 
-                                key={plan.id} 
+                                key={plan._id} 
                                 className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300"
-                                onClick={() => handleRowClick(plan.id, plan.slug)}
+                                onClick={() => handleRowClick(plan._id, plan.slug)}
                             >
                                 <td className="text-center border-b border-gray-200 p-4">{plan.goal}</td>
                                 <td className="text-center border-b border-gray-200 p-4">{plan.currWeek} of {plan.numWeeks}</td>
