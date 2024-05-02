@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WeekProps, TaskProps } from "@/lib/types/plannerProps";
-import { testPlan1 } from "@/lib/constants/testData";
 import { ColumnColorsType } from "@/lib/types/weekProps";
+import { useAppSelector } from "@/lib/store";
+import { useQuery } from "@tanstack/react-query";
+import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
+import { Task } from "@/lib/types/planTypes";
 
 const status_bg_colors: ColumnColorsType = {
     "Backlog": "bg-taskBacklog",
@@ -25,7 +28,7 @@ const Week: React.FC<WeekProps> = ({ week, activeWeek, setActiveWeek }) => {
     );
 }
 
-const Task: React.FC<TaskProps> = ({task}) => {
+const Task: React.FC<TaskProps> = ({ task }) => {
     return (
         <div
             className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
@@ -38,24 +41,34 @@ const Task: React.FC<TaskProps> = ({task}) => {
 }
 
 export default function Goal() {
-    const goal: string = testPlan1.goal;
-    const numWeeks: number = testPlan1.numWeeks;
-    const weeksArray: null[] = new Array(numWeeks).fill(null);
+    const activePlan = useAppSelector(state => state.plan.activePlan);
+    const weeksArray: null[] = new Array(activePlan?.numWeeks).fill(null);
 
     const [activeWeek, setActiveWeek] = useState<number>(1);
 
-    const filteredTasks = testPlan1.tasks.filter(task => task.week === activeWeek);
+    const { isPending, error, data: tasksData } = useQuery({
+        queryKey: ['tasks'],
+        queryFn: () => fetchTasksByPlanId(activePlan?._id || ""),
+        enabled: !!activePlan?._id
+    })
 
-    const startPlan = () => {
-        console.log("Start plan");
-    }
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+    useEffect(() => {
+        if (tasksData) setTasks(tasksData);
+    }, [tasksData]);
+
+    const filteredTasks = tasks?.filter((task: Task) => task.week === activeWeek);
+
+    if (isPending) return (<div>Loading...</div>)
+    if (error) return (<div>An error has occurred: {error.message} </div>)
 
     return (
         <main className="flex min-h-screen flex-col p-8">
             <div className="flex flex-col items-center gap-6 mt-4">
                 <p className="text-[#808080] text-lg">Congrats! Here is an overview of your plan</p>
-                <p className="text-3xl font-semibold">{goal}</p>
-                <p className="text-xl">{numWeeks} weeks</p>
+                <p className="text-3xl font-semibold">{activePlan?.goal}</p>
+                <p className="text-xl">{activePlan?.numWeeks} weeks</p>
             </div>
             <div className="flex flex-row flex-wrap w-full gap-8 px-4 mt-8">
                 {weeksArray.map((_: null, index: number) => (
@@ -63,8 +76,8 @@ export default function Goal() {
                 ))}
             </div>
             <div className="flex flex-row flex-wrap gap-12 px-4 mt-8">
-                {filteredTasks.map(task => (
-                    <Task key={task.id} task={task}/>
+                {filteredTasks?.map((task: Task) => (
+                    <Task key={task._id} task={task} />
                 ))}
             </div>
             <div className="mt-36 text-right">
@@ -72,7 +85,6 @@ export default function Goal() {
                     <button
                         className="py-4 px-6 border-none rounded-md bg-primary
                         text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
-                        onClick={() => startPlan()}
                     >
                         <p className="text-white text-xl">Start Plan</p>
                     </button>

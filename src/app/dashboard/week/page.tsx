@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Task } from "@/lib/types/planTypes";
 import { fetchPlanData } from "@/lib/api/plansApi";
-import { fetchWeekTasks } from "@/lib/api/tasksApi";
+import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -203,14 +203,13 @@ export default function Week() {
 
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useQuery({
         queryKey: ['tasks'],
-        queryFn: () => fetchWeekTasks(planData._id, planData.currWeek),
+        queryFn: () => fetchTasksByPlanId(planData._id, planData.currWeek),
         enabled: !!planData // waits until plan data is available
     })
 
     const [completedTasks, setCompletedTasks] = useState<number>(1);
 
     const [cards, setCards] = useState<Task[]>([]);
-    // const [cards, setCards] = useState<Task[]>(testPlan1.tasks);
 
     useEffect(() => {
         if(tasksData) setCards(tasksData);

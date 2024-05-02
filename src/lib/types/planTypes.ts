@@ -10,8 +10,7 @@ export interface Week {
     [k: string]: string[],
 }
 
-export interface Plan {
-    _id: string,
+export interface IPlanInput {
     slug: string,
     userId: string,
     goal: string,
@@ -19,6 +18,10 @@ export interface Plan {
     currWeek: number,
     weekProg: number,
     weekEndDate: string,
+}
+
+export interface Plan extends IPlanInput {
+    _id: string,
 }
 
 export interface PlanResult {
