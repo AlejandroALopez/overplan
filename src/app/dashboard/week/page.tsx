@@ -194,7 +194,7 @@ const ProgressBar: React.FC = () => {
 
 export default function Week() {
 
-    const planId = "66314851acb63213e368ceec"; // TODO: Store in redux
+    const planId = "6633eb1735c48e147505a518"; // TODO: Store in redux
 
     const { isPending, error, data: planData } = useQuery({
         queryKey: ['plan'],
