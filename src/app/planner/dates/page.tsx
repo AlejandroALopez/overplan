@@ -8,13 +8,12 @@ import { setStartDate } from "@/lib/store/inputSlice";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { DATES_QUESTION } from "@/lib/constants/plannerConstants";
 
 export default function SetDates() {
     const dispatch = useAppDispatch();
     const goal = useAppSelector(state => state.input.goal);
     const weeks = useAppSelector(state => state.input.numWeeks);
-
-    const question = "When do you want to start?";
 
     // Time variables
     const [day, setDay] = useState<string>(dayjs().format('YYYY-MM-DD'));
@@ -39,12 +38,12 @@ export default function SetDates() {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <main className="flex min-h-screen flex-col items-center p-8">
-                <p className="text-2xl mt-8">
+                <p className="text-xl sm:text-2xl mt-8">
                     Goal: <span className="font-semibold">{goal}</span>
                 </p>
-                <p className="text-2xl mt-4">{weeks} weeks</p>
-                <p className="text-3xl font-semibold mt-8">{question}</p>
-                <div className="flex flex-row gap-8 w-1/2 mt-8">
+                <p className="text-xl sm:text-2xl mt-4">{weeks} weeks</p>
+                <p className="text-2xl sm:text-3xl text-center font-semibold mt-8">{DATES_QUESTION}</p>
+                <div className="flex flex-col md:flex-row md:gap-8 xl:w-1/2 mb-8 md:mb-0 mt-8">
                     <StaticDatePicker
                         slotProps={{
                             toolbar: {
@@ -54,25 +53,24 @@ export default function SetDates() {
                                 actions: []
                             }
                         }
-                    }
-
-                    onChange={(value) => changeDayHandler(value)}
-                    disablePast
-                    defaultValue={dayjs(day)}
+                        }
+                        onChange={(value) => changeDayHandler(value)}
+                        disablePast
+                        defaultValue={dayjs(day)}
                     />
-                    <div className="flex flex-col gap-8 my-4">
-                        <p className="text-xl">Start Date: {" "}
+                    <div className="flex flex-col items-center md:items-start gap-8 my-4">
+                        <p className="text-lg sm:text-xl">Start Date: {" "}
                             <span className="font-semibold">{dayjs(day).format('dddd, MMM DD')}</span>
                         </p>
-                        <p className="text-xl">Weeks for this plan start every: {" "}
+                        <p className="text-lg sm:text-xl">Weeks for this plan start every: {" "}
                             <span className="font-semibold">{dayjs(day).format('dddd')}</span>
                         </p>
-                        <p className="text-xl">Expected completion by: {" "}
+                        <p className="text-lg sm:text-xl">Expected completion by: {" "}
                             <span className="font-semibold">{endDate}</span>
                         </p>
                     </div>
                 </div>
-                <div className="flex flex-row justify-between my-8 w-1/2">
+                <div className="flex flex-row justify-between my-8 w-full lg:w-1/2">
                     <Link href="/planner/weeks">
                         <button
                             className={`py-4 px-6 border-none rounded-md bg-primary 

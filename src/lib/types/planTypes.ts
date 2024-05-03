@@ -3,7 +3,7 @@ export interface Task {
     title: string,
     description: string,
     week: number,
-    status: string, // TODO: Switch to enum later
+    status: string,
 }
 
 export interface Week {
@@ -17,6 +17,7 @@ export interface IPlanInput {
     numWeeks: number,
     currWeek: number,
     weekProg: number,
+    startDate: string,
     weekEndDate: string,
 }
 

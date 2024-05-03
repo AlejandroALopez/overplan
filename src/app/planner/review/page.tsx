@@ -14,6 +14,7 @@ import { createPlan } from "@/lib/api/plannerApi";
 import { IPlanInput, Plan } from "@/lib/types/planTypes";
 import { makeSlug } from "@/lib/utils/formatFunctions";
 import { setPlan } from "@/lib/store/planSlice";
+import { REVIEW_TITLE, USER_ID } from "@/lib/constants/plannerConstants";
 
 export default function ReviewPlan() {
     const router = useRouter();
@@ -24,10 +25,6 @@ export default function ReviewPlan() {
 
     const weekEndDate = dayjs(startDate).add(7, 'day').format('dddd, MMM DD');
     const slug = makeSlug(goal);
-
-    const userId = "userId1"; // TODO: Replace with session id (or redux stored)
-
-    const title = "Review & Create Plan";
 
     const mutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
@@ -45,39 +42,37 @@ export default function ReviewPlan() {
             {mutation.isPending && (
                 <main className="flex min-h-screen flex-col justify-center items-center p-8">
                     <div>
-                        <p className="text-3xl font-semibold">Your Plan is being created...</p>
+                        <p className="text-2xl sm:text-3xl font-semibold">Your Plan is being created...</p>
                     </div>
                 </main>
             )}
             {!mutation.isPending && !mutation.isSuccess && (
                 <main className="flex min-h-screen flex-col items-center p-8">
-                    <p className="text-3xl font-semibold mt-12">{title}</p>
-                    <div className="flex flex-row flex-wrap w-full justify-evenly items-center mt-20">
-                        <div className="flex flex-row gap-4">
-                            <Image src={Compass} alt="goal icon" />
+                    <p className="text-3xl font-semibold mt-12">{REVIEW_TITLE}</p>
+                    <div className="flex flex-col sm:flex-row flex-wrap w-full justify-evenly items-center gap-4 mt-12 sm:mt-20">
+                        <div className="flex flex-row gap-4 max-sm:w-3/4">
+                            <Image src={Compass} alt="goal icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
                             <div className="flex flex-col justify-center gap-2">
                                 <p className="font-semibold text-2xl">Goal</p>
                                 <p className="text-2xl">{goal}</p>
-                                <p>Slug: {slug}</p>
                             </div>
                         </div>
-                        <div className="flex flex-row gap-4">
-                            <Image src={Clock} alt="weeks icon" />
+                        <div className="flex flex-row gap-4 max-sm:w-3/4">
+                            <Image src={Clock} alt="weeks icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
                             <div className="flex flex-col justify-center gap-2">
                                 <p className="font-semibold text-2xl">Length</p>
                                 <p className="text-2xl">{weeks} weeks</p>
                             </div>
                         </div>
-                        <div className="flex flex-row gap-4">
-                            <Image src={Calendar} alt="date icon" />
+                        <div className="flex flex-row gap-4 max-sm:w-3/4">
+                            <Image src={Calendar} alt="date icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
                             <div className="flex flex-col justify-center gap-2">
                                 <p className="font-semibold text-2xl">Start</p>
                                 <p className="text-2xl">{dayjs(startDate).format('dddd, MMM DD')}</p>
-                                <p>Week End: {weekEndDate}</p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row justify-between my-36 w-1/2">
+                    <div className="flex flex-row justify-between my-16 lg:my-36 w-full lg:w-1/2">
                         <Link href="/planner/dates">
                             <button
                                 className={`py-4 px-6 border-none rounded-md bg-primary 
@@ -92,11 +87,12 @@ export default function ReviewPlan() {
                             onClick={() => {
                                 mutation.mutate({
                                     slug: slug,
-                                    userId: userId,
+                                    userId: USER_ID,
                                     goal: goal,
                                     numWeeks: weeks,
                                     currWeek: 1,
                                     weekProg: 0,
+                                    startDate: startDate,
                                     weekEndDate: weekEndDate,
                                 })
                             }}

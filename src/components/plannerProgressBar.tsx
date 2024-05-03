@@ -18,7 +18,7 @@ export default function PlannerProgressBar() {
     }
 
     return (
-        <div className="h-4 w-1/4 bg-primary bg-opacity-25 rounded-3xl">
+        <div className="h-4 w-64 sm:w-96 bg-primary bg-opacity-25 rounded-3xl">
             <div className={`h-4 ${pathsToPercentage[pathname]} bg-primary rounded-3xl`} />
         </div>
     );
