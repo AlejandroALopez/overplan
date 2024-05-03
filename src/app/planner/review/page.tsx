@@ -33,6 +33,7 @@ export default function ReviewPlan() {
     });
 
     if (mutation.isSuccess) {
+        dispatch(setPlan(null)); // reset plan
         router.push(`/planner/result`);
         dispatch(setPlan(mutation.data));
     }
@@ -49,22 +50,22 @@ export default function ReviewPlan() {
             {!mutation.isPending && !mutation.isSuccess && (
                 <main className="flex min-h-screen flex-col items-center p-8">
                     <p className="text-3xl font-semibold mt-12">{REVIEW_TITLE}</p>
-                    <div className="flex flex-col sm:flex-row flex-wrap w-full justify-evenly items-center gap-4 mt-12 sm:mt-20">
-                        <div className="flex flex-row gap-4 max-sm:w-3/4">
+                    <div className="flex flex-col sm:flex-row flex-wrap w-full justify-evenly gap-4 mt-12 sm:mt-20">
+                        <div className="flex flex-row items-center gap-4 w-full sm:w-4/12">
                             <Image src={Compass} alt="goal icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
-                            <div className="flex flex-col justify-center gap-2">
+                            <div className="flex flex-col justify-center gap-2 sm:w-3/4">
                                 <p className="font-semibold text-2xl">Goal</p>
-                                <p className="text-2xl">{goal}</p>
+                                <p className="text-2xl w-11/12 text-ellipsis overflow-hidden">{goal}</p>
                             </div>
                         </div>
-                        <div className="flex flex-row gap-4 max-sm:w-3/4">
+                        <div className="flex flex-row items-center gap-4 max-sm:w-3/4">
                             <Image src={Clock} alt="weeks icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
                             <div className="flex flex-col justify-center gap-2">
                                 <p className="font-semibold text-2xl">Length</p>
                                 <p className="text-2xl">{weeks} weeks</p>
                             </div>
                         </div>
-                        <div className="flex flex-row gap-4 max-sm:w-3/4">
+                        <div className="flex flex-row items-center gap-4 max-sm:w-3/4">
                             <Image src={Calendar} alt="date icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
                             <div className="flex flex-col justify-center gap-2">
                                 <p className="font-semibold text-2xl">Start</p>
