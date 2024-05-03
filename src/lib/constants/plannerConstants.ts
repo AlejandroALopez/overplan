@@ -17,3 +17,4 @@ export const REVIEW_TITLE: string = "Review & Create Plan";
 export const USER_ID = "userId1"; // TODO: Replace with session id (or redux stored)
 
 // Result Page
+export const RESULT_SUBTITLE: string = "Congrats! Here is an overview of your plan";

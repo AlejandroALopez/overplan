@@ -8,6 +8,7 @@ import { useAppSelector } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
 import { Task } from "@/lib/types/planTypes";
+import { RESULT_SUBTITLE } from "@/lib/constants/plannerConstants";
 
 const status_bg_colors: ColumnColorsType = {
     "Backlog": "bg-taskBacklog",
@@ -66,16 +67,16 @@ export default function Goal() {
     return (
         <main className="flex min-h-screen flex-col p-8">
             <div className="flex flex-col items-center gap-6 mt-4">
-                <p className="text-[#808080] text-lg">Congrats! Here is an overview of your plan</p>
-                <p className="text-3xl font-semibold">{activePlan?.goal}</p>
-                <p className="text-xl">{activePlan?.numWeeks} weeks</p>
+                <p className="text-[#808080] text-lg text-center">{RESULT_SUBTITLE}</p>
+                <p className="text-2xl sm:text-3xl text-center font-semibold">{activePlan?.goal}</p>
+                <p className="text-lg sm:text-xl">{activePlan?.numWeeks} weeks</p>
             </div>
-            <div className="flex flex-row flex-wrap w-full gap-8 px-4 mt-8">
+            <div className="flex flex-row flex-wrap w-full gap-4 px-4 mt-8">
                 {weeksArray.map((_: null, index: number) => (
                     <Week key={index} week={index + 1} activeWeek={activeWeek} setActiveWeek={setActiveWeek} />
                 ))}
             </div>
-            <div className="flex flex-row flex-wrap gap-12 px-4 mt-8">
+            <div className="flex flex-row flex-wrap gap-4 px-4 mt-8">
                 {filteredTasks?.map((task: Task) => (
                     <Task key={task._id} task={task} />
                 ))}
