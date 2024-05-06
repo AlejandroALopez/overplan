@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useQuery } from '@tanstack/react-query';
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
-import { Task } from "@/lib/types/planTypes";
+import { Plan, Task } from "@/lib/types/planTypes";
 import { fetchPlanData } from "@/lib/api/plansApi";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
+import ExpandUp from "../../../../public/arrows/expandUp.svg";
+import ExpandDown from "../../../../public/arrows/expandDown.svg";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -192,6 +195,63 @@ const ProgressBar: React.FC = () => {
     )
 }
 
+const SmallProgressBar: React.FC = () => {
+    return (
+        <div className="flex flex-row gap-2 items-center">
+            <p className="text-lg">W1</p>
+            <div className="h-4 w-36 bg-primary bg-opacity-25 rounded-3xl">
+                <div className={`h-full w-1/4 bg-primary rounded-3xl`} />
+            </div>
+            <p className="text-lg">50%</p>
+        </div>
+    )
+}
+
+const PlansModal: React.FC = () => {
+    const plansData: Plan[] = [{
+        slug: "write-an-essay-about-a-book",
+        userId: "userId1",
+        goal: "Write an essay about a book",
+        numWeeks: 3,
+        currWeek: 1,
+        weekProg: 0,
+        startDate: "2024-05-03",
+        weekEndDate: "Friday, May 10",
+        _id: "663558a7befb09cc3437dd50",
+    },
+    {
+        slug: "another-test-plan",
+        userId: "userId1",
+        goal: "Test plan",
+        numWeeks: 4,
+        currWeek: 2,
+        weekProg: 0.5,
+        startDate: "2024-05-03",
+        weekEndDate: "Friday, May 10",
+        _id: "admi23i023nn2i03dm23d",
+    }
+    ];
+
+    const selectPlan = () => {
+        console.log("Change to this plan");
+    }
+
+    return (
+        <div className="absolute z-10 w-11/12 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-5/12 bg-white border-2 border-[#E6E6E6] shadow-md px-4 py-2 mt-20 rounded-md">
+            {plansData.map((plan: Plan) => (
+                <button 
+                    key={plan._id} 
+                    onClick={() => selectPlan()}
+                    className="flex flex-row items-center justify-between w-full border-b border-gray-200 px-1 py-1.5 rounded-md
+                    cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300">
+                    <p>{plan.goal}</p>
+                    <SmallProgressBar />
+                </button>
+            ))}
+        </div>
+    );
+}
+
 export default function Week() {
 
     const planId = "663558a7befb09cc3437dd50"; // TODO: Store in redux
@@ -208,11 +268,15 @@ export default function Week() {
     })
 
     const [completedTasks, setCompletedTasks] = useState<number>(1);
-
     const [cards, setCards] = useState<Task[]>([]);
+    const [showPlansModal, setShowPlansModal] = useState<boolean>(false);
+
+    const togglePlansModal = () => {
+        setShowPlansModal(!showPlansModal);
+    };
 
     useEffect(() => {
-        if(tasksData) setCards(tasksData);
+        if (tasksData) setCards(tasksData);
     }, [tasksData]);
 
     if (isPending || isPendingTasks) return (<div>Loading...</div>)
@@ -224,7 +288,13 @@ export default function Week() {
         <div className="flex flex-col w-full gap-1">
             <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
                 <div className="flex flex-col justify-center w-4/6 gap-8">
-                    <p className="text-3xl font-medium">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
+                    <div className="flex flex-row gap-4">
+                        <p className="text-3xl font-medium">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
+                        <button onClick={togglePlansModal} className="shrink-0 transition hover:scale-110 duration-300">
+                            <Image src={showPlansModal ? ExpandUp : ExpandDown} alt="expand" />
+                        </button>
+                    </div>
+                    {showPlansModal && <PlansModal />}
                     <ProgressBar />
                 </div>
                 <div className="flex flex-col justify-center items-center w-2/6 gap-4">
