@@ -17,7 +17,7 @@ export default function DashboardLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.className}`}>
-        <main className="bg-[#E6E6E6] flex flex-row min-h-screen gap-1">
+        <main className="bg-[#E6E6E6] flex flex-col sm:flex-row min-h-screen gap-1">
           <Navigation />
           {children}
         </main>
