@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Plan, Task } from "@/lib/types/planTypes";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek } from "@/hooks/queries";
-import { PlanProgressProps } from "@/lib/types/extraProps";
+import { PlanProgressProps, SmallPlanProgressProps } from "@/lib/types/extraProps";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
 
@@ -191,21 +191,25 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
     return (
         <div className="flex flex-row gap-4 items-center">
             <div className="h-5 w-5/12 bg-primary bg-opacity-25 rounded-3xl">
-                <div className="h-full w-1/4 bg-primary rounded-3xl" style={progressBarStyle} />
+                <div className="h-full bg-primary rounded-3xl" style={progressBarStyle} />
             </div>
             <p className="text-2xl">{(prog * 100).toFixed(0)}%</p>
         </div>
     )
 }
 
-const SmallProgressBar: React.FC = () => {
+const SmallProgressBar: React.FC<SmallPlanProgressProps> = ({ prog, week }) => {
+    const progressBarStyle: React.CSSProperties = {
+        width: `${prog * 100}%`,
+    };
+
     return (
         <div className="flex flex-row gap-2 items-center">
-            <p className="text-lg">W1</p>
+            <p className="w-10 text-lg">W{week}</p>
             <div className="h-4 w-36 bg-primary bg-opacity-25 rounded-3xl">
-                <div className={`h-full w-1/4 bg-primary rounded-3xl`} />
+                <div className="h-full bg-primary rounded-3xl" style={progressBarStyle} />
             </div>
-            <p className="text-lg">50%</p>
+            <p className="w-10 text-lg">{(prog * 100).toFixed(0)}%</p>
         </div>
     )
 }
@@ -248,7 +252,7 @@ const PlansModal: React.FC = () => {
                     className="flex flex-row items-center justify-between w-full border-b border-gray-200 px-1 py-1.5 rounded-md
                     cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300">
                     <p>{plan.goal}</p>
-                    <SmallProgressBar />
+                    <SmallProgressBar prog={plan.weekProg} week={plan.currWeek} />
                 </button>
             ))}
         </div>
