@@ -3,11 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useQuery } from '@tanstack/react-query';
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { Plan, Task } from "@/lib/types/planTypes";
-import { fetchPlanData } from "@/lib/api/plansApi";
-import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
+import { usePlanByPlanId, useTasksByPlanIdAndWeek } from "@/hooks/queries";
+import { PlanProgressProps } from "@/lib/types/extraProps";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
 
@@ -184,13 +183,17 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
 }
 
 // Week Progress based on tasks completed
-const ProgressBar: React.FC = () => {
+const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
+    const progressBarStyle: React.CSSProperties = {
+        width: `${prog * 100}%`,
+    };
+
     return (
         <div className="flex flex-row gap-4 items-center">
             <div className="h-5 w-5/12 bg-primary bg-opacity-25 rounded-3xl">
-                <div className={`h-full w-1/4 bg-primary rounded-3xl`} />
+                <div className="h-full w-1/4 bg-primary rounded-3xl" style={progressBarStyle} />
             </div>
-            <p className="text-2xl">50%</p>
+            <p className="text-2xl">{(prog * 100).toFixed(0)}%</p>
         </div>
     )
 }
@@ -254,20 +257,12 @@ const PlansModal: React.FC = () => {
 
 export default function Week() {
 
-    const planId = "663558a7befb09cc3437dd50"; // TODO: Store in redux
+    const planId = "6633eb1735c48e147505a518"; // TODO: Store in redux
 
-    const { isPending, error, data: planData } = useQuery({
-        queryKey: ['plan'],
-        queryFn: () => fetchPlanData(planId),
-    })
+    const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(planId);
+    const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
-    const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useQuery({
-        queryKey: ['tasks'],
-        queryFn: () => fetchTasksByPlanId(planData._id, planData.currWeek),
-        enabled: !!planData // waits until plan data is available
-    })
-
-    const [completedTasks, setCompletedTasks] = useState<number>(1);
+    // const [completedTasks, setCompletedTasks] = useState<number>(1);
     const [cards, setCards] = useState<Task[]>([]);
     const [showPlansModal, setShowPlansModal] = useState<boolean>(false);
 
@@ -279,9 +274,9 @@ export default function Week() {
         if (tasksData) setCards(tasksData);
     }, [tasksData]);
 
-    if (isPending || isPendingTasks) return (<div>Loading...</div>)
+    if (isPendingPlan || isPendingTasks) return (<div>Loading...</div>)
 
-    if (error) return (<div>An error has occurred: {error.message} </div>)
+    if (errorPlan) return (<div>An error has occurred: {errorPlan.message} </div>)
     if (errorTasks) return (<div>An error has occurred: {errorTasks.message} </div>)
 
     return (
@@ -295,7 +290,7 @@ export default function Week() {
                         </button>
                     </div>
                     {showPlansModal && <PlansModal />}
-                    <ProgressBar />
+                    <ProgressBar prog={planData.weekProg} />
                 </div>
                 <div className="flex flex-col justify-center items-center w-2/6 gap-4">
                     <p className="text-xl text-[#B3B3B3]">Week ends on:</p>

@@ -3,10 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { useQuery } from '@tanstack/react-query';
-import { PlanProgressProps } from "@/lib/constants/testPlans";
-import { fetchPlansByUserId } from "@/lib/api/plansApi";
+import { PlanProgressProps } from "@/lib/types/extraProps";
 import { Plan } from "@/lib/types/planTypes";
+import { usePlansByUserId } from "@/hooks/queries";
 
 // Week Progress based on tasks completed
 const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
@@ -27,15 +26,11 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 
 export default function MyPlans() {
     const router = useRouter();
-    const [currentPlan, setCurrentPlan] = useState<string>(""); // TODO: Replace with redux
     const [plans, setPlans] = useState<Plan[]>([]);
 
     const userId = "user1";
 
-    const { isPending, error, data: plansData } = useQuery({
-        queryKey: ['plans'],
-        queryFn: () => fetchPlansByUserId(userId),
-    })
+    const { isPending, error, data: plansData } = usePlansByUserId(userId || "");
 
     const handleRowClick = (id: string, slug: string) => {
         // TODO: Add Loading
