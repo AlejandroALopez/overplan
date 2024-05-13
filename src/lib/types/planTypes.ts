@@ -19,6 +19,8 @@ export interface IPlanInput {
     weekProg: number,
     startDate: string,
     weekEndDate: string,
+    active?: boolean,
+    completed?: boolean,
 }
 
 export interface Plan extends IPlanInput {

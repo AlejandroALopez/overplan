@@ -3,12 +3,17 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useMutation } from "@tanstack/react-query";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
-import { Plan, Task } from "@/lib/types/planTypes";
+import { IPlanInput, Plan, Task } from "@/lib/types/planTypes";
+import { updatePlan } from "@/lib/api/plansApi";
+import { setPlan } from "@/lib/store/planSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek } from "@/hooks/queries";
 import { PlanProgressProps, SmallPlanProgressProps } from "@/lib/types/extraProps";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
+import dayjs from "dayjs";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -246,8 +251,8 @@ const PlansModal: React.FC = () => {
     return (
         <div className="absolute z-10 w-11/12 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-5/12 bg-white border-2 border-[#E6E6E6] shadow-md px-4 py-2 mt-20 rounded-md">
             {plansData.map((plan: Plan) => (
-                <button 
-                    key={plan._id} 
+                <button
+                    key={plan._id}
                     onClick={() => selectPlan()}
                     className="flex flex-row items-center justify-between w-full border-b border-gray-200 px-1 py-1.5 rounded-md
                     cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300">
@@ -260,7 +265,8 @@ const PlansModal: React.FC = () => {
 }
 
 export default function Week() {
-
+    const dispatch = useAppDispatch();
+    const today = dayjs();
     const planId = "6633eb1735c48e147505a518"; // TODO: Store in redux
 
     const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(planId);
@@ -270,9 +276,34 @@ export default function Week() {
     const [cards, setCards] = useState<Task[]>([]);
     const [showPlansModal, setShowPlansModal] = useState<boolean>(false);
 
+    const updatePlanMutation = useMutation({
+        mutationFn: (planInput: IPlanInput) => {
+            return updatePlan(planId, planInput);
+        },
+    });
+
     const togglePlansModal = () => {
         setShowPlansModal(!showPlansModal);
     };
+
+    const startPlanEarly = () => {
+        updatePlanMutation.mutate({
+            slug: planData?.slug,
+            userId: planData?.userId,
+            goal: planData?.goal,
+            numWeeks: planData?.numWeeks,
+            currWeek: planData?.currWeek,
+            weekProg: planData?.weekProg,
+            startDate: dayjs(today).format('MM/DD/YYYY'),
+            weekEndDate: dayjs(today).add(7, 'day').format('MM/DD/YYYY'),
+            active: true,
+            completed: planData?.completed,
+        });
+    }
+
+    if (updatePlanMutation.isSuccess) {
+        dispatch(setPlan(updatePlanMutation.data));
+    }
 
     useEffect(() => {
         if (tasksData) setCards(tasksData);
@@ -301,12 +332,31 @@ export default function Week() {
                     <p className="text-xl">{planData.weekEndDate} (5 days)</p>
                 </div>
             </div>
-            <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
-                <Column column={"Backlog"} cards={cards} setCards={setCards} />
-                <Column column={"Active"} cards={cards} setCards={setCards} />
-                <Column column={"In Progress"} cards={cards} setCards={setCards} />
-                <Column column={"Completed"} cards={cards} setCards={setCards} />
-            </div>
+            {planData?.active ||  dayjs(planData?.startDate).isBefore(dayjs(today).subtract(1, 'day'), 'day') // if today < start, show Activate screen
+                ?
+                (
+                    <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
+                        <Column column={"Backlog"} cards={cards} setCards={setCards} />
+                        <Column column={"Active"} cards={cards} setCards={setCards} />
+                        <Column column={"In Progress"} cards={cards} setCards={setCards} />
+                        <Column column={"Completed"} cards={cards} setCards={setCards} />
+                    </div>
+                )
+                :
+                (
+                    <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
+                        <p className="text-xl">Plan starts on:</p>
+                        <p className="text-3xl font-medium">{planData?.startDate}</p>
+                        <button
+                            className="py-4 px-6 border-none rounded-md bg-primary
+                            text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
+                            onClick={() => startPlanEarly()}
+                        >
+                            Start now
+                        </button>
+                    </div>
+                )
+            }
         </div>
     );
 }

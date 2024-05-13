@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Plan } from "../types/planTypes";
+import { IPlanInput } from "../types/planTypes";
 
 // GET plan by id
 export const fetchPlanData = async (id: string) => {
@@ -22,7 +22,7 @@ export const fetchPlansByUserId = async (userId: string) => {
 }
 
 // Update plan and return it
-export const updatePlan = async (id: string, updatedPlan: Plan) => {
+export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
     const URL = 'http://localhost:8080/plans/' + `${id}`;
     try {
         const response = await axios.put(URL, updatedPlan);

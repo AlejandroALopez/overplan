@@ -93,8 +93,8 @@ export default function ReviewPlan() {
                                     numWeeks: weeks,
                                     currWeek: 1,
                                     weekProg: 0,
-                                    startDate: startDate,
-                                    weekEndDate: weekEndDate,
+                                    startDate: dayjs(startDate).format('MM/DD/YYYY'),
+                                    weekEndDate: dayjs(weekEndDate).format('MM/DD/YYYY'),
                                 })
                             }}
                         >
