@@ -230,6 +230,8 @@ const PlansModal: React.FC = () => {
         startDate: "2024-05-03",
         weekEndDate: "Friday, May 10",
         _id: "663558a7befb09cc3437dd50",
+        active: true,
+        completed: false,
     },
     {
         slug: "another-test-plan",
@@ -241,6 +243,8 @@ const PlansModal: React.FC = () => {
         startDate: "2024-05-03",
         weekEndDate: "Friday, May 10",
         _id: "admi23i023nn2i03dm23d",
+        active: true,
+        completed: false,
     }
     ];
 
@@ -288,16 +292,9 @@ export default function Week() {
 
     const startPlanEarly = () => {
         updatePlanMutation.mutate({
-            slug: planData?.slug,
-            userId: planData?.userId,
-            goal: planData?.goal,
-            numWeeks: planData?.numWeeks,
-            currWeek: planData?.currWeek,
-            weekProg: planData?.weekProg,
             startDate: dayjs(today).format('MM/DD/YYYY'),
             weekEndDate: dayjs(today).add(7, 'day').format('MM/DD/YYYY'),
             active: true,
-            completed: planData?.completed,
         });
     }
 
@@ -332,8 +329,8 @@ export default function Week() {
                     <p className="text-xl">{planData.weekEndDate} (5 days)</p>
                 </div>
             </div>
-            {planData?.active ||  dayjs(planData?.startDate).isBefore(dayjs(today).subtract(1, 'day'), 'day') // if today < start, show Activate screen
-                ?
+            {planData?.active && dayjs(planData?.startDate).isBefore(dayjs(today).subtract(1, 'day'), 'day') // if today < start, show Activate screen
+                ?    // Plan active and started
                 (
                     <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
                         <Column column={"Backlog"} cards={cards} setCards={setCards} />
@@ -342,17 +339,17 @@ export default function Week() {
                         <Column column={"Completed"} cards={cards} setCards={setCards} />
                     </div>
                 )
-                :
+                :    // Plan paused or starts later
                 (
                     <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
-                        <p className="text-xl">Plan starts on:</p>
-                        <p className="text-3xl font-medium">{planData?.startDate}</p>
+                        <p className="text-xl">{planData?.active ? "Plan starts on:" : "Plan Paused"}</p>
+                        {planData?.active && (<p className="text-3xl font-medium">{planData?.startDate}</p>)}
                         <button
                             className="py-4 px-6 border-none rounded-md bg-primary
                             text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
                             onClick={() => startPlanEarly()}
                         >
-                            Start now
+                            {planData?.active ? "Start Now" : "Resume Plan"}
                         </button>
                     </div>
                 )
