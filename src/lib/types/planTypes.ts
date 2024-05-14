@@ -10,6 +10,11 @@ export interface Week {
     [k: string]: string[],
 }
 
+export interface IMoveTasksInput {
+    planId: string,
+    week: number,
+}
+
 // For POST and PUT requests
 export interface IPlanInput {
     slug?: string,

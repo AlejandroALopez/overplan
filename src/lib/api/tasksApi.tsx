@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Task } from "../types/planTypes";
+import { IMoveTasksInput, Task } from "../types/planTypes";
 
 // Get tasks by planId and week
 export const fetchTasksByPlanId = async (planId: string, week?: number) => {
@@ -23,3 +23,15 @@ export const updateTask = async (id: string, updatedTask: Task) => {
         return null;
     }
 }
+
+// Move tasks
+export const moveTasks = async (input: IMoveTasksInput) => {
+    const URL = 'http://localhost:8080/tasks/move';
+    try {
+        const response = await axios.post(URL, {planId: input.planId, week: input.week});
+        return response.data;
+    } catch (error) {
+        console.log("Error moving tasks: ", error);
+        return null;
+    }
+};

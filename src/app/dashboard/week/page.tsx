@@ -6,14 +6,16 @@ import { motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
-import { IPlanInput, Plan, Task } from "@/lib/types/planTypes";
+import { IMoveTasksInput, IPlanInput, Plan, Task } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { setPlan } from "@/lib/store/planSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek } from "@/hooks/queries";
 import { PlanProgressProps, SmallPlanProgressProps } from "@/lib/types/extraProps";
+import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
 import dayjs from "dayjs";
+import { moveTasks } from "@/lib/api/tasksApi";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -276,9 +278,16 @@ export default function Week() {
     const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(planId);
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
-    // const [completedTasks, setCompletedTasks] = useState<number>(1);
     const [cards, setCards] = useState<Task[]>([]);
     const [showPlansModal, setShowPlansModal] = useState<boolean>(false);
+    const [showCompletedSection, setShowCompletedSection] = useState<boolean>(false);
+    const completedTasks = cards.filter((c) => c.status === 'Completed').length;
+
+    const moveTasksMutation = useMutation({
+        mutationFn: (input: IMoveTasksInput) => {
+            return moveTasks(input);
+        },
+    });
 
     const updatePlanMutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
@@ -298,6 +307,20 @@ export default function Week() {
         });
     }
 
+    // Update week on Plan and move incomplete tasks
+    const startNextWeek = () => {
+        // Update week progress
+        updatePlanMutation.mutate({
+            currWeek: planData.currWeek + 1,
+            numWeeks: (planData.numWeeks === planData.currWeek) ? planData.numWeeks + 1 : planData.numWeeks,
+            weekProg: 0,
+            weekEndDate: dayjs(planData.weekEndDate).add(7, 'day').format('MM/DD/YYYY'),
+        });
+
+        // Move incomplete tasks to next week
+        moveTasksMutation.mutate({planId: planData._id, week: planData.currWeek });
+    }
+
     if (updatePlanMutation.isSuccess) {
         dispatch(setPlan(updatePlanMutation.data));
     }
@@ -305,6 +328,11 @@ export default function Week() {
     useEffect(() => {
         if (tasksData) setCards(tasksData);
     }, [tasksData]);
+
+    useEffect(() => {
+        if (isDateBeforeOrToday(planData?.weekEndDate)) setShowCompletedSection(true);
+        else setShowCompletedSection(false);
+    }, [planData])
 
     if (isPendingPlan || isPendingTasks) return (<div>Loading...</div>)
 
@@ -329,29 +357,47 @@ export default function Week() {
                     <p className="text-xl">{planData.weekEndDate} (5 days)</p>
                 </div>
             </div>
-            {planData?.active && dayjs(planData?.startDate).isBefore(dayjs(today).subtract(1, 'day'), 'day') // if today < start, show Activate screen
-                ?    // Plan active and started
-                (
-                    <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
-                        <Column column={"Backlog"} cards={cards} setCards={setCards} />
-                        <Column column={"Active"} cards={cards} setCards={setCards} />
-                        <Column column={"In Progress"} cards={cards} setCards={setCards} />
-                        <Column column={"Completed"} cards={cards} setCards={setCards} />
-                    </div>
-                )
-                :    // Plan paused or starts later
-                (
-                    <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
-                        <p className="text-xl">{planData?.active ? "Plan starts on:" : "Plan Paused"}</p>
-                        {planData?.active && (<p className="text-3xl font-medium">{planData?.startDate}</p>)}
-                        <button
-                            className="py-4 px-6 border-none rounded-md bg-primary
+            {showCompletedSection ? ( // If conditions met, show "Week Completed" section
+                <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
+                    <p className="text-3xl font-medium">Moving to Week {(planData?.currWeek || 0) + 1}</p>
+                    {planData?.currWeek !== planData?.numWeeks && (<p className="text-xl text-[#B3B3B3]">Extra Week to complete remaining tasks</p>)}
+                    <button
+                        className="py-4 px-6 border-none rounded-md bg-primary
                             text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
-                            onClick={() => startPlanEarly()}
-                        >
-                            {planData?.active ? "Start Now" : "Resume Plan"}
-                        </button>
-                    </div>
+                        onClick={() => startNextWeek()}
+                    >
+                        Start week {(planData?.currWeek || 0) + 1}
+                    </button>
+                </div>
+            ) :
+                (   // Else, show either Kanban or Activate sections
+                    <>
+                        {planData?.active && isDateBeforeOrToday(planData?.startDate) // if today >= start
+                            ?    // Plan active and started
+                            (
+                                <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
+                                    <Column column={"Backlog"} cards={cards} setCards={setCards} />
+                                    <Column column={"Active"} cards={cards} setCards={setCards} />
+                                    <Column column={"In Progress"} cards={cards} setCards={setCards} />
+                                    <Column column={"Completed"} cards={cards} setCards={setCards} />
+                                </div>
+                            )
+                            :    // Plan paused or starts later
+                            (
+                                <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
+                                    <p className="text-xl">{planData?.active ? "Plan starts on:" : "Plan Paused"}</p>
+                                    {planData?.active && (<p className="text-3xl font-medium">{planData?.startDate}</p>)}
+                                    <button
+                                        className="py-4 px-6 border-none rounded-md bg-primary
+                            text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
+                                        onClick={() => startPlanEarly()}
+                                    >
+                                        {planData?.active ? "Start Now" : "Resume Plan"}
+                                    </button>
+                                </div>
+                            )
+                        }
+                    </>
                 )
             }
         </div>
