@@ -23,3 +23,8 @@ export interface CardProps {
 export interface ColumnColorsType {
     [key: string]: string;
 }
+
+export interface KanbanProps {
+    cards: Task[],
+    setCards: Dispatch<SetStateAction<Task[]>>;
+}
