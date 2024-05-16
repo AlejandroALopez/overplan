@@ -105,7 +105,7 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
             let cardToTransfer = copy.find((c) => c._id === cardId);
             if (!cardToTransfer) return;
 
-            cardToTransfer = { ...cardToTransfer, status: column } // update status of card
+            cardToTransfer = { ...cardToTransfer, status: column }; // update status of card
             updateTaskMutation.mutate({  // update Task in database
                 id: cardId, 
                 taskInput: { 
