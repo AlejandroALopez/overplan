@@ -4,6 +4,7 @@ export interface Task {
     description: string,
     week: number,
     status: string,
+    completionDate: string | null,
 }
 
 export interface Week {

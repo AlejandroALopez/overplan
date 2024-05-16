@@ -7,6 +7,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { UpdateTaskMutationInput, ITaskInput, Task } from "@/lib/types/planTypes";
 import { updateTask } from "@/lib/api/tasksApi";
+import dayjs from "dayjs";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -105,12 +106,26 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
             let cardToTransfer = copy.find((c) => c._id === cardId);
             if (!cardToTransfer) return;
 
-            cardToTransfer = { ...cardToTransfer, status: column }; // update status of card
+            let newCompletionDate: string | null = null;
+            const prevStatus = cardToTransfer?.status;
+
+            if (prevStatus === column) { // same column, keep completion date
+                newCompletionDate = cardToTransfer.completionDate;
+            } else if (column === 'Completed') {
+                newCompletionDate = dayjs().format('MM/DD/YYYY');
+            } else null;
+
+            cardToTransfer = {
+                ...cardToTransfer, status: column,
+                completionDate: newCompletionDate,
+            }; // update status of card
+
             updateTaskMutation.mutate({  // update Task in database
-                id: cardId, 
-                taskInput: { 
+                id: cardId,
+                taskInput: {
                     status: column,
-                } 
+                    completionDate: newCompletionDate,
+                }
             })
 
             copy = copy.filter((c) => c._id !== cardId); // filter out that card (remove copy)
