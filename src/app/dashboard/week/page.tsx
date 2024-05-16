@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { ColumnProps, DropIndicatorProps, CardProps, HandleDragStartFunction, DragFunction, ColumnColorsType } from '@/lib/types/weekProps';
 import { IMoveTasksInput, IPlanInput, Plan, Task } from "@/lib/types/planTypes";
@@ -16,6 +16,7 @@ import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
 import dayjs from "dayjs";
 import { moveTasks } from "@/lib/api/tasksApi";
+import { setIsLoading } from "@/lib/store/modalSlice";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -221,7 +222,7 @@ const SmallProgressBar: React.FC<SmallPlanProgressProps> = ({ prog, week }) => {
     )
 }
 
-const PlansModal: React.FC = () => {
+const PlanSelector: React.FC = () => {
     const plansData: Plan[] = [{
         slug: "write-an-essay-about-a-book",
         userId: "userId1",
@@ -272,6 +273,7 @@ const PlansModal: React.FC = () => {
 
 export default function Week() {
     const dispatch = useAppDispatch();
+    const queryClient = useQueryClient();
     const today = dayjs();
     const planId = "6633eb1735c48e147505a518"; // TODO: Store in redux
 
@@ -287,11 +289,19 @@ export default function Week() {
         mutationFn: (input: IMoveTasksInput) => {
             return moveTasks(input);
         },
+        onError: () => {
+            console.log('Error moving tasks');
+            dispatch(setIsLoading(false));
+        },
     });
 
     const updatePlanMutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
             return updatePlan(planId, planInput);
+        },
+        onError: () => {
+            console.log('Error updating plan');
+            dispatch(setIsLoading(false));
         },
     });
 
@@ -308,17 +318,38 @@ export default function Week() {
     }
 
     // Update week on Plan and move incomplete tasks
-    const startNextWeek = () => {
-        // Update week progress
-        updatePlanMutation.mutate({
-            currWeek: planData.currWeek + 1,
-            numWeeks: (planData.numWeeks === planData.currWeek) ? planData.numWeeks + 1 : planData.numWeeks,
-            weekProg: 0,
-            weekEndDate: dayjs(planData.weekEndDate).add(7, 'day').format('MM/DD/YYYY'),
-        });
+    const startNextWeek = async () => {
+        dispatch(setIsLoading(true));
 
-        // Move incomplete tasks to next week
-        moveTasksMutation.mutate({planId: planData._id, week: planData.currWeek });
+        try {
+            // Update week progress
+            await updatePlanMutation.mutateAsync({
+                currWeek: planData.currWeek + 1,
+                numWeeks: (planData.numWeeks === planData.currWeek) ? planData.numWeeks + 1 : planData.numWeeks,
+                weekProg: 0,
+                weekEndDate: dayjs(planData.weekEndDate).add(7, 'day').format('MM/DD/YYYY'),
+            });
+
+            // Move incomplete tasks to next week
+            await moveTasksMutation.mutateAsync({ planId: planData._id, week: planData.currWeek });
+
+            // Invalidate and refetch the plan query first
+            await queryClient.invalidateQueries({ queryKey: ['plan', planId] });
+            await queryClient.refetchQueries({ queryKey: ['plan', planId] });
+
+            // Then invalidate the weekTasks query
+            await queryClient.invalidateQueries({ queryKey: ['weekTasks', planId] });
+
+            dispatch(setIsLoading(false));
+        } catch (error) {
+            console.log('Error handling mutations', error);
+        }
+    }
+
+    const completePlan = () => {
+        updatePlanMutation.mutate({
+            completed: true,
+        });
     }
 
     if (updatePlanMutation.isSuccess) {
@@ -349,7 +380,7 @@ export default function Week() {
                             <Image src={showPlansModal ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
                     </div>
-                    {showPlansModal && <PlansModal />}
+                    {showPlansModal && <PlanSelector />}
                     <ProgressBar prog={planData.weekProg} />
                 </div>
                 <div className="flex flex-col justify-center items-center w-2/6 gap-4">
@@ -360,13 +391,13 @@ export default function Week() {
             {showCompletedSection ? ( // If conditions met, show "Week Completed" section
                 <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
                     <p className="text-3xl font-medium">Moving to Week {(planData?.currWeek || 0) + 1}</p>
-                    {planData?.currWeek !== planData?.numWeeks && (<p className="text-xl text-[#B3B3B3]">Extra Week to complete remaining tasks</p>)}
+                    {planData?.currWeek === planData?.numWeeks && (<p className="text-xl text-[#B3B3B3]">Extra Week to complete remaining tasks</p>)}
                     <button
                         className="py-4 px-6 border-none rounded-md bg-primary
                             text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
                         onClick={() => startNextWeek()}
                     >
-                        Start week {(planData?.currWeek || 0) + 1}
+                        Continue
                     </button>
                 </div>
             ) :
