@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IMoveTasksInput, Task } from "../types/planTypes";
+import { IMoveTasksInput, ITaskInput, Task } from "../types/planTypes";
 
 // Get tasks by planId and week
 export const fetchTasksByPlanId = async (planId: string, week?: number) => {
@@ -13,7 +13,7 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
 };
 
 // Update task and return it
-export const updateTask = async (id: string, updatedTask: Task) => {
+export const updateTask = async (id: string, updatedTask: ITaskInput) => {
     const URL = 'http://localhost:8080/tasks/' + `${id}`;
     try {
         const response = await axios.put(URL, updatedTask);

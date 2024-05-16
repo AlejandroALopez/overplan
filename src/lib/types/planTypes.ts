@@ -16,6 +16,21 @@ export interface IMoveTasksInput {
 }
 
 // For POST and PUT requests
+export interface ITaskInput {
+    title?: string,
+    description?: string,
+    planId?: string,
+    week?: number,
+    status?: string,
+    completionDate?: string | null,
+}
+
+export interface UpdateTaskMutationInput {
+    id: string,
+    taskInput: ITaskInput,
+}
+
+// For POST and PUT requests
 export interface IPlanInput {
     slug?: string,
     userId?: string,

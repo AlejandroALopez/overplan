@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ColumnProps, DropIndicatorProps, CardProps, KanbanProps,
-    HandleDragStartFunction, DragFunction, ColumnColorsType 
+import {
+    ColumnProps, DropIndicatorProps, CardProps, KanbanProps,
+    HandleDragStartFunction, DragFunction, ColumnColorsType
 } from '@/lib/types/weekProps';
+import { useMutation } from "@tanstack/react-query";
+import { UpdateTaskMutationInput, ITaskInput, Task } from "@/lib/types/planTypes";
+import { updateTask } from "@/lib/api/tasksApi";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -102,6 +106,12 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
             if (!cardToTransfer) return;
 
             cardToTransfer = { ...cardToTransfer, status: column } // update status of card
+            updateTaskMutation.mutate({  // update Task in database
+                id: cardId, 
+                taskInput: { 
+                    status: column,
+                } 
+            })
 
             copy = copy.filter((c) => c._id !== cardId); // filter out that card (remove copy)
 
@@ -118,6 +128,16 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
             setCards(copy);
         }
     }
+
+    const updateTaskMutation = useMutation({
+        mutationFn: (input: UpdateTaskMutationInput) => {
+            return updateTask(input.id, input.taskInput);
+        },
+        onError: () => {
+            console.log('Error updating task');
+        },
+    });
+
 
     return (
         <div key={column} className="flex flex-col shrink-0 w-64 h-full text-center">
