@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import { moveTasks } from "@/lib/api/tasksApi";
 import { setIsLoading } from "@/lib/store/modalSlice";
 import { Kanban } from "./kanban";
-import { ProgressBar, PlanSelector} from './components';
+import { ProgressBar, PlanSelector } from './components';
 
 
 export default function Week() {
@@ -28,9 +28,12 @@ export default function Week() {
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
     const [cards, setCards] = useState<Task[]>([]);
-    const [showPlansModal, setShowPlansModal] = useState<boolean>(false);
+    const [showPlansSelector, setShowPlansSelector] = useState<boolean>(false);
     const [showCompletedSection, setShowCompletedSection] = useState<boolean>(false);
     const completedTasks = cards.filter((c) => c.status === 'Completed').length;
+
+    const weekProg: number = parseFloat((completedTasks / (cards.length || 1)).toFixed(2));
+    const daysUntilWeekEnd: number = Math.ceil(dayjs(planData?.weekEndDate).diff(today, 'day', true));
 
     const moveTasksMutation = useMutation({
         mutationFn: (input: IMoveTasksInput) => {
@@ -52,8 +55,8 @@ export default function Week() {
         },
     });
 
-    const togglePlansModal = () => {
-        setShowPlansModal(!showPlansModal);
+    const togglePlansSelector = () => {
+        setShowPlansSelector(!showPlansSelector);
     };
 
     const startPlanEarly = () => {
@@ -62,6 +65,12 @@ export default function Week() {
             weekEndDate: dayjs(today).add(7, 'day').format('MM/DD/YYYY'),
             active: true,
         });
+    }
+
+    // Checks if the last week of the active plan is completed
+    // NOTE: To be used for conditional rendering when date is past weekEndDate
+    const isPlanCompleted = () => {
+        return (planData?.numWeeks === planData?.currWeek) && (cards.length === completedTasks);
     }
 
     // Update week on Plan and move incomplete tasks
@@ -93,6 +102,10 @@ export default function Week() {
         }
     }
 
+    const advanceWeekEarly = () => {
+        console.log("TODO");
+    }
+
     const completePlan = () => {
         updatePlanMutation.mutate({
             completed: true,
@@ -108,6 +121,7 @@ export default function Week() {
     }, [tasksData]);
 
     useEffect(() => {
+        // Controls the section that appears when week end date is reached
         if (isDateBeforeOrToday(planData?.weekEndDate)) setShowCompletedSection(true);
         else setShowCompletedSection(false);
     }, [planData])
@@ -123,37 +137,59 @@ export default function Week() {
                 <div className="flex flex-col justify-center w-4/6 gap-8">
                     <div className="flex flex-row gap-4">
                         <p className="text-3xl font-medium">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
-                        <button onClick={togglePlansModal} className="shrink-0 transition hover:scale-110 duration-300">
-                            <Image src={showPlansModal ? ExpandUp : ExpandDown} alt="expand" />
+                        <button onClick={togglePlansSelector} className="shrink-0 transition hover:scale-110 duration-300">
+                            <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
                     </div>
-                    {showPlansModal && <PlanSelector />}
-                    <ProgressBar prog={planData.weekProg} />
+                    {showPlansSelector && <PlanSelector />}
+                    <ProgressBar prog={weekProg} />
                 </div>
-                <div className="flex flex-col justify-center items-center w-2/6 gap-4">
-                    <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
-                    <p className="text-xl">{planData.weekEndDate} (5 days)</p>
-                </div>
+                {daysUntilWeekEnd > 0 && (
+                    <div className="flex flex-col justify-center items-center w-2/6 gap-4">
+                        <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
+                        <p className="text-xl">{planData.weekEndDate} ({daysUntilWeekEnd} {daysUntilWeekEnd > 1 ? 'days' : 'day'})</p>
+                        <button
+                            className={`py-4 px-6 border-none rounded-md bg-primary text-white text-lg drop-shadow-lg 
+                        transition hover:scale-110 duration-300 ${(completedTasks !== cards.length) && "opacity-50"}`}
+                            disabled={(completedTasks !== cards.length)}
+                            onClick={() => advanceWeekEarly()}
+                        >
+                            Advance to next week
+                        </button>
+                    </div>
+                )}
             </div>
-            {showCompletedSection ? ( // If conditions met, show "Week Completed" section
-                <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
-                    <p className="text-3xl font-medium">Moving to Week {(planData?.currWeek || 0) + 1}</p>
-                    {planData?.currWeek === planData?.numWeeks && (<p className="text-xl text-[#B3B3B3]">Extra Week to complete remaining tasks</p>)}
-                    <button
-                        className="py-4 px-6 border-none rounded-md bg-primary
+            {showCompletedSection ? ( // If conditions met, show either "Week Completed" or "Plan Completed" section
+                <>
+                    {isPlanCompleted() ? ( // Plan Completed section
+                        <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
+                            <p className="text-3xl font-medium">Congratulations!</p>
+                            <p className="text-xl">You have completed all the tasks for this plan</p>
+                        </div>
+                    ) : // Week Completed section
+                        (
+                            <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
+                                <p className="text-3xl font-medium">Moving to Week {(planData?.currWeek || 0) + 1}</p>
+                                {planData?.currWeek === planData?.numWeeks && (<p className="text-xl text-[#B3B3B3]">Extra Week to complete remaining tasks</p>)}
+                                <button
+                                    className="py-4 px-6 border-none rounded-md bg-primary
                             text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
-                        onClick={() => startNextWeek()}
-                    >
-                        Continue
-                    </button>
-                </div>
+                                    onClick={() => startNextWeek()}
+                                >
+                                    Continue
+                                </button>
+                            </div>
+                        )
+                    }
+
+                </>
             ) :
                 (   // Else, show either Kanban or Activate sections
                     <>
                         {planData?.active && isDateBeforeOrToday(planData?.startDate) // if today >= start
                             ?    // Plan active and started
                             (
-                                <Kanban cards={cards} setCards={setCards}/>
+                                <Kanban cards={cards} setCards={setCards} />
                             )
                             :    // Plan paused or starts later
                             (
@@ -173,6 +209,6 @@ export default function Week() {
                     </>
                 )
             }
-        </div>
+        </div >
     );
 }
