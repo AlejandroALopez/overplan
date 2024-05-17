@@ -13,7 +13,7 @@ import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
 import dayjs from "dayjs";
 import { moveTasks } from "@/lib/api/tasksApi";
-import { setIsLoading } from "@/lib/store/modalSlice";
+import { setIsConfirmOpen, setIsLoading, setMessage, setOnConfirm } from "@/lib/store/modalSlice";
 import { Kanban } from "./kanban";
 import { ProgressBar, PlanSelector } from './components';
 
@@ -78,12 +78,15 @@ export default function Week() {
         dispatch(setIsLoading(true));
 
         try {
+            // If past end date, new end date will be end + 7. Else, today + 7
+            const autoMode = isDateBeforeOrToday(planData?.weekEndDate);
+
             // Update week progress
             await updatePlanMutation.mutateAsync({
                 currWeek: planData.currWeek + 1,
                 numWeeks: (planData.numWeeks === planData.currWeek) ? planData.numWeeks + 1 : planData.numWeeks,
                 weekProg: 0,
-                weekEndDate: dayjs(planData.weekEndDate).add(7, 'day').format('MM/DD/YYYY'),
+                weekEndDate: autoMode ? dayjs(planData.weekEndDate).add(7, 'day').format('MM/DD/YYYY') : today.add(7, 'day').format('MM/DD/YYYY'),
             });
 
             // Move incomplete tasks to next week
@@ -102,10 +105,6 @@ export default function Week() {
         }
     }
 
-    const advanceWeekEarly = () => {
-        console.log("TODO");
-    }
-
     const completePlan = () => {
         updatePlanMutation.mutate({
             completed: true,
@@ -114,6 +113,23 @@ export default function Week() {
 
     if (updatePlanMutation.isSuccess) {
         dispatch(setPlan(updatePlanMutation.data));
+    }
+
+    const openConfirmModal = (message: string, onConfirm: () => void) => {
+        dispatch(setMessage(message));
+        dispatch(setOnConfirm(onConfirm));
+        dispatch(setIsConfirmOpen(true));
+    };
+
+    // Pass props to confirmation modal (next week vs complete plan)
+    const handleNextWeekButton = () => {
+        if (planData?.numWeeks !== planData?.currWeek) { // Option 1: Next week
+            const message = `Move to week ${(planData?.currWeek || 0) + 1}?`;
+            openConfirmModal(message, startNextWeek);
+        } else { // Option 2: Complete Plan
+            const message = 'Complete this plan early?';
+            openConfirmModal(message, completePlan);
+        }
     }
 
     useEffect(() => {
@@ -152,9 +168,9 @@ export default function Week() {
                             className={`py-4 px-6 border-none rounded-md bg-primary text-white text-lg drop-shadow-lg 
                         transition hover:scale-110 duration-300 ${(completedTasks !== cards.length) && "opacity-50"}`}
                             disabled={(completedTasks !== cards.length)}
-                            onClick={() => advanceWeekEarly()}
+                            onClick={() => handleNextWeekButton()}
                         >
-                            Advance to next week
+                            {(planData?.currWeek === planData?.numWeeks) ? "Complete Plan" : "Advance to next week"}
                         </button>
                     </div>
                 )}
