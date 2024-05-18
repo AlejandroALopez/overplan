@@ -1,28 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../types/sessionTypes";
 
 export interface ISessionState {
-  loggedUserId: string;
-  activePlanId: string;
+  user: User;
 }
 
+// for testing
+const user1: User = {
+  _id: "user1",
+  firstName: "John",
+  lastName: "Doe",
+  email: "john.doe@gmail.com",
+  tier: "Free",
+  activePlanId: "6633eb1735c48e147505a518",
+};
+
 const initialState: ISessionState = {
-  loggedUserId: "",
-  activePlanId: "",
+  user: user1,
 };
 
 export const sessionSlice = createSlice({
-  name: "modal",
+  name: "session",
   initialState,
   reducers: {
-    setLoggedUserId: (state, action: PayloadAction<string>) => {
-      state.loggedUserId = action.payload;
-    },
-    setActivePlanId: (state, action: PayloadAction<string>) => {
-      state.activePlanId = action.payload;
+    setUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
     },
   },
 });
 
-export const { setLoggedUserId, setActivePlanId } = sessionSlice.actions;
+export const { setUser } = sessionSlice.actions;
 export const sessionReducer = sessionSlice.reducer;

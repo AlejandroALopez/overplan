@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { PlanProgressProps } from "@/lib/types/extraProps";
 import { Plan } from "@/lib/types/planTypes";
 import { usePlansByUserId } from "@/hooks/queries";
+import { useAppSelector } from "@/lib/store";
 
 // Week Progress based on tasks completed
 const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
@@ -27,10 +28,9 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 export default function MyPlans() {
     const router = useRouter();
     const [plans, setPlans] = useState<Plan[]>([]);
+    const userData = useAppSelector(state => state.session.user);
 
-    const userId = "user1";
-
-    const { isPending, error, data: plansData } = usePlansByUserId(userId || "");
+    const { isPending, error, data: plansData } = usePlansByUserId(userData._id || "");
 
     const handleRowClick = (id: string, slug: string) => {
         // TODO: Add Loading

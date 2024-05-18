@@ -7,7 +7,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { IMoveTasksInput, IPlanInput, Task } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { setPlan } from "@/lib/store/planSlice";
-import { usePlanByPlanId, useTasksByPlanIdAndWeek } from "@/hooks/queries";
+import { usePlanByPlanId, useTasksByPlanIdAndWeek, usePlansByUserId } from "@/hooks/queries";
 import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
@@ -16,15 +16,18 @@ import { moveTasks } from "@/lib/api/tasksApi";
 import { setIsConfirmOpen, setIsLoading, setMessage, setOnConfirm } from "@/lib/store/modalSlice";
 import { Kanban } from "./kanban";
 import { ProgressBar, PlanSelector } from './components';
+import { setUser } from "@/lib/store/sessionSlice";
 
 
 export default function Week() {
     const dispatch = useAppDispatch();
+    const activePlanId = useAppSelector(state => state.session.user.activePlanId);
+    const userData = useAppSelector(state => state.session.user);
     const queryClient = useQueryClient();
     const today = dayjs();
-    const planId = "6633eb1735c48e147505a518"; // TODO: Store in redux
 
-    const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(planId);
+    const { isPending: isPendingPlans, error: errorPlans, data: allPlansData } = usePlansByUserId(userData._id || "");
+    const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(activePlanId);
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
     const [cards, setCards] = useState<Task[]>([]);
@@ -47,7 +50,7 @@ export default function Week() {
 
     const updatePlanMutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
-            return updatePlan(planId, planInput);
+            return updatePlan(activePlanId, planInput);
         },
         onError: () => {
             console.log('Error updating plan');
@@ -93,11 +96,11 @@ export default function Week() {
             await moveTasksMutation.mutateAsync({ planId: planData._id, week: planData.currWeek });
 
             // Invalidate and refetch the plan query first
-            await queryClient.invalidateQueries({ queryKey: ['plan', planId] });
-            await queryClient.refetchQueries({ queryKey: ['plan', planId] });
+            await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
+            await queryClient.refetchQueries({ queryKey: ['plan', activePlanId] });
 
             // Then invalidate the weekTasks query
-            await queryClient.invalidateQueries({ queryKey: ['weekTasks', planId] });
+            await queryClient.invalidateQueries({ queryKey: ['weekTasks', activePlanId] });
 
             dispatch(setIsLoading(false));
         } catch (error) {
@@ -132,6 +135,28 @@ export default function Week() {
         }
     }
 
+    // Handle active plan selection from list
+    const handlePlanSelect = async (selectedPlanId: string) => {
+        // Params: planId
+        // Dispatch redux function ---> { ...user, activePlanId: planId }
+        dispatch(setIsLoading(true));
+        setShowPlansSelector(false);
+
+        try {
+            dispatch(setUser({...userData, activePlanId: selectedPlanId}));
+
+            await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
+            await queryClient.refetchQueries({ queryKey: ['plan', activePlanId] });
+
+            // Then invalidate the weekTasks query
+            await queryClient.invalidateQueries({ queryKey: ['weekTasks', activePlanId] });
+
+            dispatch(setIsLoading(false));
+        } catch (error) {
+            console.log('Error selecting plan', error);
+        }
+    }
+
     useEffect(() => {
         if (tasksData) setCards(tasksData);
     }, [tasksData]);
@@ -142,10 +167,11 @@ export default function Week() {
         else setShowCompletedSection(false);
     }, [planData])
 
-    if (isPendingPlan || isPendingTasks) return (<div>Loading...</div>)
+    if (isPendingPlan || isPendingTasks || isPendingPlans) return (<div>Loading...</div>)
 
     if (errorPlan) return (<div>An error has occurred: {errorPlan.message} </div>)
     if (errorTasks) return (<div>An error has occurred: {errorTasks.message} </div>)
+    if (errorPlans) return (<div>An error has occurred: {errorPlans.message} </div>)
 
     return (
         <div className="flex flex-col w-full gap-1">
@@ -157,7 +183,7 @@ export default function Week() {
                             <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
                     </div>
-                    {showPlansSelector && <PlanSelector />}
+                    {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={allPlansData} activePlanId={activePlanId} />}
                     <ProgressBar prog={weekProg} />
                 </div>
                 {daysUntilWeekEnd > 0 && (
