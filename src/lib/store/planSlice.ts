@@ -4,21 +4,26 @@ import { Plan } from "../types/planTypes";
 
 export interface IPlanState {
   activePlan: Plan | null,
+  metricsPlan: Plan | null, // plan selected for Metrics page
 }
 
 const initialState: IPlanState = {
   activePlan: null,
+  metricsPlan: null,
 };
 
 export const planSlice = createSlice({
   name: "plan",
   initialState,
   reducers: {
-    setPlan: (state, action: PayloadAction<Plan | null>) => {
+    setActivePlan: (state, action: PayloadAction<Plan | null>) => {
       state.activePlan = action.payload;
+    },
+    setMetricsPlan: (state, action: PayloadAction<Plan | null>) => {
+      state.metricsPlan = action.payload;
     },
   },
 });
 
-export const { setPlan } = planSlice.actions;
+export const { setActivePlan, setMetricsPlan } = planSlice.actions;
 export const planReducer = planSlice.reducer;

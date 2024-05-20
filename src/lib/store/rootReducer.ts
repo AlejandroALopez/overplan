@@ -23,7 +23,7 @@ const inputPersistConfig = {
 const planPersistConfig = {
   key: "plan",
   storage: storage,
-  whitelist: ["activePlan"],
+  whitelist: ["activePlan", "metricsPlan"],
 }
 
 const sessionPersistConfig = {

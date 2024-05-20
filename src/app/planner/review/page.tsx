@@ -13,7 +13,7 @@ import Calendar from "../../../../public/icons/calendar.svg";
 import { createPlan } from "@/lib/api/plannerApi";
 import { IPlanInput, Plan } from "@/lib/types/planTypes";
 import { makeSlug } from "@/lib/utils/formatFunctions";
-import { setPlan } from "@/lib/store/planSlice";
+import { setActivePlan } from "@/lib/store/planSlice";
 import { REVIEW_TITLE, USER_ID } from "@/lib/constants/plannerConstants";
 
 export default function ReviewPlan() {
@@ -33,9 +33,9 @@ export default function ReviewPlan() {
     });
 
     if (mutation.isSuccess) {
-        dispatch(setPlan(null)); // reset plan
+        dispatch(setActivePlan(null)); // reset plan
         router.push(`/planner/result`);
-        dispatch(setPlan(mutation.data));
+        dispatch(setActivePlan(mutation.data));
     }
 
     return (

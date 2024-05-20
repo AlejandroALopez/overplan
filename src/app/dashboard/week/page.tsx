@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { IMoveTasksInput, IPlanInput, Task } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
-import { setPlan } from "@/lib/store/planSlice";
+import { setActivePlan } from "@/lib/store/planSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek, usePlansByUserId } from "@/hooks/queries";
 import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
@@ -115,7 +115,7 @@ export default function Week() {
     }
 
     if (updatePlanMutation.isSuccess) {
-        dispatch(setPlan(updatePlanMutation.data));
+        dispatch(setActivePlan(updatePlanMutation.data));
     }
 
     const openConfirmModal = (message: string, onConfirm: () => void) => {

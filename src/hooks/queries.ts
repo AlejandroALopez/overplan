@@ -12,11 +12,21 @@ export function usePlanByPlanId(planId: string) {
 }
 
 // Get array of Tasks by planId and week
-export function useTasksByPlanIdAndWeek(planId: string, week: number) {
+export function useTasksByPlanIdAndWeek(planId: string, week?: number) {
   return useQuery({
     queryKey: ["weekTasks", planId],
     queryFn: () => fetchTasksByPlanId(planId, week),
     enabled: !!planId && !!week, // waits until plan data is available
+  });
+}
+
+// Get array of Tasks by planId
+// NOTE: Only use this within Metrics page
+export function useAllTasks(planId: string) {
+  return useQuery({
+    queryKey: ["metricsTasks", planId],
+    queryFn: () => fetchTasksByPlanId(planId),
+    enabled: !!planId, // waits until plan data is available
   });
 }
 

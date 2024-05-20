@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { PlanProgressProps } from "@/lib/types/extraProps";
 import { Plan } from "@/lib/types/planTypes";
 import { usePlansByUserId } from "@/hooks/queries";
-import { useAppSelector } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { setMetricsPlan } from "@/lib/store/planSlice";
 
 // Week Progress based on tasks completed
 const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
@@ -27,15 +28,16 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 
 export default function MyPlans() {
     const router = useRouter();
+    const dispatch = useAppDispatch();
     const [plans, setPlans] = useState<Plan[]>([]);
     const userData = useAppSelector(state => state.session.user);
 
     const { isPending, error, data: plansData } = usePlansByUserId(userData._id || "");
 
-    const handleRowClick = (id: string, slug: string) => {
+    const handleRowClick = (plan: Plan) => {
         // TODO: Add Loading
-        // TODO: API --> GET plan by id, send to redux
-        router.push(`/dashboard/plans/${encodeURIComponent(slug)}`);
+        dispatch(setMetricsPlan(plan));
+        router.push(`/dashboard/plans/${encodeURIComponent(plan.slug)}`);
     };
 
     useEffect(() => {
@@ -70,7 +72,7 @@ export default function MyPlans() {
                             <tr 
                                 key={plan._id} 
                                 className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300"
-                                onClick={() => handleRowClick(plan._id, plan.slug)}
+                                onClick={() => handleRowClick(plan)}
                             >
                                 <td className="text-center border-b border-gray-200 p-4">{plan.goal}</td>
                                 <td className="text-center border-b border-gray-200 p-4">{plan.currWeek} of {plan.numWeeks}</td>
