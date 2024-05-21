@@ -6,6 +6,7 @@ import { TopMetrics } from "./components";
 import { useAllTasks } from "@/hooks/queries";
 import { useEffect, useState } from "react";
 import { Plan, Task } from "@/lib/types/planTypes";
+import { OverallSummaryChart, WeekSummaryChart } from "./charts";
 
 
 export default function SinglePlan() {
@@ -33,12 +34,14 @@ export default function SinglePlan() {
                 <TopMetrics plan={selectedPlan} tasks={weekTasks} />
             </div>
             <div className="flex flex-row justify-between w-full">
-                <div className="bg-white w-full h-72">
-
+                <div className="bg-white w-full p-6">
+                    <p className="text-2xl font-medium mb-4">Week Summary</p>
+                    <WeekSummaryChart />
                 </div>
                 <div className="w-2 h-full" />
-                <div className="bg-white w-full h-72">
-
+                <div className="bg-white w-full p-6">
+                    <p className="text-2xl font-medium mb-4">Week Summary</p>
+                    <OverallSummaryChart />
                 </div>
             </div>
             <div className="bg-white w-full h-48">

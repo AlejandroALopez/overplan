@@ -128,6 +128,8 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
                 }
             })
 
+            // TODO: Update Prog locally and on database
+
             copy = copy.filter((c) => c._id !== cardId); // filter out that card (remove copy)
 
             const moveToBack = before === "-1";
