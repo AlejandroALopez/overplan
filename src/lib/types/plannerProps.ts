@@ -12,6 +12,13 @@ export interface WeekProps {
     setActiveWeek: Dispatch<SetStateAction<number>>;
 }
 
+export interface WeekSelectorProps {
+    activeWeek: number;
+    setActiveWeek: Dispatch<SetStateAction<number>>;
+    weeksArray: null[];
+    filteredTasks: Task[];
+}
+
 export interface TaskProps {
     task: Task
 }

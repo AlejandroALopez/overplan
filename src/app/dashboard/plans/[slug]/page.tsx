@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useAppSelector } from "@/lib/store";
-import { TopMetrics } from "./components";
+import { TopMetrics, WeekSelector } from "./components";
 import { useAllTasks } from "@/hooks/queries";
 import { useEffect, useState } from "react";
 import { Plan, Task } from "@/lib/types/planTypes";
@@ -15,6 +15,11 @@ export default function SinglePlan() {
 
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useAllTasks(selectedPlan?._id || "");
     const weekTasks = tasks.filter((t) => t.week === selectedPlan?.currWeek);
+
+    // Week Selector params
+    const [activeWeek, setActiveWeek] = useState<number>(selectedPlan?.currWeek || 1);
+    const weeksArray: null[] = new Array(selectedPlan?.numWeeks).fill(null);
+    const filteredTasks = tasks.filter((t) => t.week === activeWeek);
 
     useEffect(() => {
         if (tasksData) setTasks(tasksData);
@@ -45,7 +50,12 @@ export default function SinglePlan() {
                 </div>
             </div>
             <div className="bg-white w-full h-48">
-
+                <WeekSelector 
+                    weeksArray={weeksArray} 
+                    activeWeek={activeWeek}
+                    setActiveWeek={setActiveWeek}
+                    filteredTasks={filteredTasks}
+                />
             </div>
         </div>
     );

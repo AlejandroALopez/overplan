@@ -41,7 +41,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     );
 }
 
-export default function Goal() {
+export default function Result() {
     const activePlan = useAppSelector(state => state.plan.activePlan);
     const weeksArray: null[] = new Array(activePlan?.numWeeks).fill(null);
 
