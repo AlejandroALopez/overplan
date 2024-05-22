@@ -4,15 +4,20 @@ import { Task } from '@/lib/types/planTypes';
 
 ChartJS.register(ArcElement, Tooltip);
 
-interface ChartProps {
+interface WeekChartProps {
     tasks: Task[];
+}
+
+interface OverallChartProps {
+    tasks: Task[];
+    currWeek: number;
 }
 
 interface StatusCountProps {
     [k: string]: number,
 }
 
-export const WeekSummaryChart: React.FC<ChartProps> = ({ tasks }) => {
+export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
 
     // Initialize counters for each status
     const statusCounts: StatusCountProps = {
@@ -103,23 +108,53 @@ export const WeekSummaryChart: React.FC<ChartProps> = ({ tasks }) => {
     )
 }
 
-export const OverallSummaryChart: React.FC<ChartProps> = ({ tasks }) => {
+export const OverallSummaryChart: React.FC<OverallChartProps> = ({ tasks, currWeek }) => {
+
+    // Initialize counters for each status
+    const statusCounts: StatusCountProps = {
+        'Done (past weeks)': 0,
+        'Done (this week)': 0,
+        'Remaining (this week)': 0,
+        'Remaining (next weeks)': 0,
+    };
+
+    // Loop through the tasks array and count the statuses
+    tasks?.forEach((task: Task) => {
+        if (task.status === "Completed" && task.week !== currWeek) {
+            statusCounts['Done (past weeks)']++;
+        } else if (task.status === "Completed" && task.week === currWeek) {
+            statusCounts['Done (this week)']++;
+        } else if (task.status !== "Completed" && task.week === currWeek) {
+            statusCounts['Remaining (this week)']++;
+        } else {
+            statusCounts['Remaining (next weeks)']++;
+        }
+    });
+
+    // Populate the datasets.data array with the counts
+    const datasetsData = [
+        statusCounts['Done (past weeks)'],
+        statusCounts['Done (this week)'],
+        statusCounts['Remaining (this week)'],
+        statusCounts['Remaining (next weeks)']
+    ];
+
     const data = {
         labels: ['Done (past weeks)', 'Done (this week)', 'Remaining (this week)', 'Remaining (next weeks)'],
         datasets: [
             {
-                label: '# of Votes',
-                data: [8, 4, 2, 12],
+                label: '# of tasks',
+                data: datasetsData,
                 backgroundColor: [
-                    'rgba(20, 184, 20, 0.2)', // Done (past weeks)
-                    'rgba(122, 20, 184, 0.2)', // Done (this week)
-                    'rgba(48, 20, 184, 0.2)', // Remaining (this week)
+                    'rgba(158, 250, 158, 0.2)', // Done (past weeks)
+                    'rgba(20, 184, 20, 0.2)', // Done (this week)
+                    'rgba(122, 20, 184, 0.2)', // Remaining (this week)
                     'rgba(184, 20, 20, 0.2)', // Remaining (next weeks)
                 ],
                 borderColor: [
+                    'rgba(158, 250, 158, 1)',
                     'rgba(20, 184, 20, 1)',
                     'rgba(122, 20, 184, 1)',
-                    'rgba(48, 20, 184, 1)',
                     'rgba(184, 20, 20, 1)',
                 ],
                 borderWidth: 1,
@@ -138,31 +173,43 @@ export const OverallSummaryChart: React.FC<ChartProps> = ({ tasks }) => {
             <div className='flex flex-col p-4 gap-4'>
                 <div className='flex flex-row items-center gap-12'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskCompleted bg-opacity-75' />
-                        <p className='w-28'>Done</p>
+                        <div className='w-8 h-8 bg-[#9EFA9E] bg-opacity-75' />
+                        <div className='flex flex-col'>
+                            <p className='w-28'>Done</p>
+                            <p className='w-28 text-sm text-[#B3B3B3]'>(past weeks)</p>
+                        </div>
                     </div>
-                    <p>8</p>
+                    <p>{statusCounts['Done (past weeks)']}</p>
+                </div>
+                <div className='flex flex-row items-center gap-12'>
+                    <div className='flex flex-row items-center gap-4'>
+                        <div className='w-8 h-8 bg-taskCompleted bg-opacity-75' />
+                        <div className='flex flex-col'>
+                            <p className='w-28'>Done</p>
+                            <p className='w-28 text-sm text-[#B3B3B3]'>(this week)</p>
+                        </div>
+                    </div>
+                    <p>{statusCounts['Done (this week)']}</p>
                 </div>
                 <div className='flex flex-row items-center gap-12'>
                     <div className='flex flex-row items-center gap-4'>
                         <div className='w-8 h-8 bg-taskInProgress bg-opacity-75' />
-                        <p className='w-28'>Done</p>
+                        <div className='flex flex-col'>
+                            <p className='w-28'>Remaining</p>
+                            <p className='w-28 text-sm text-[#B3B3B3]'>(this week)</p>
+                        </div>
                     </div>
-                    <p>4</p>
-                </div>
-                <div className='flex flex-row items-center gap-12'>
-                    <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskActive bg-opacity-75' />
-                        <p className='w-28'>Remaining</p>
-                    </div>
-                    <p>2</p>
+                    <p>{statusCounts['Remaining (this week)']}</p>
                 </div>
                 <div className='flex flex-row items-center gap-12'>
                     <div className='flex flex-row items-center gap-4'>
                         <div className='w-8 h-8 bg-taskBacklog bg-opacity-75' />
-                        <p className='w-28'>Remaining</p>
+                        <div className='flex flex-col'>
+                            <p className='w-28'>Remaining</p>
+                            <p className='w-28 text-sm text-[#B3B3B3]'>(next weeks)</p>
+                        </div>
                     </div>
-                    <p>12</p>
+                    <p>{statusCounts['Remaining (next weeks)']}</p>
                 </div>
             </div>
         </div>

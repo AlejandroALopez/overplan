@@ -46,7 +46,7 @@ export default function SinglePlan() {
                 <div className="w-2 h-full" />
                 <div className="bg-white w-full p-6">
                     <p className="text-2xl font-medium mb-4">Overall Summary</p>
-                    <OverallSummaryChart tasks={tasks} />
+                    <OverallSummaryChart tasks={tasks} currWeek={selectedPlan?.currWeek || 1} />
                 </div>
             </div>
             <div className="bg-white w-full h-48">
