@@ -41,12 +41,12 @@ export default function SinglePlan() {
             <div className="flex flex-row justify-between w-full">
                 <div className="bg-white w-full p-6">
                     <p className="text-2xl font-medium mb-4">Week Summary</p>
-                    <WeekSummaryChart />
+                    <WeekSummaryChart tasks={weekTasks} />
                 </div>
                 <div className="w-2 h-full" />
                 <div className="bg-white w-full p-6">
-                    <p className="text-2xl font-medium mb-4">Week Summary</p>
-                    <OverallSummaryChart />
+                    <p className="text-2xl font-medium mb-4">Overall Summary</p>
+                    <OverallSummaryChart tasks={tasks} />
                 </div>
             </div>
             <div className="bg-white w-full h-48">
