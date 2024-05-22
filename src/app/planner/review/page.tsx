@@ -23,7 +23,7 @@ export default function ReviewPlan() {
     const weeks = useAppSelector(state => state.input.numWeeks);
     const startDate = useAppSelector(state => state.input.startDate); // TODO: Replace with redux state
 
-    const weekEndDate = dayjs(startDate).add(7, 'day').format('dddd, MMM DD');
+    const weekEndDate = dayjs(startDate).add(7, 'day').format('MM/DD/YYYY');
     const slug = makeSlug(goal);
 
     const mutation = useMutation({
@@ -51,7 +51,7 @@ export default function ReviewPlan() {
                 <main className="flex min-h-screen flex-col items-center p-8">
                     <p className="text-3xl font-semibold mt-12">{REVIEW_TITLE}</p>
                     <div className="flex flex-col sm:flex-row flex-wrap w-full justify-evenly gap-4 mt-12 sm:mt-20">
-                        <div className="flex flex-row items-center gap-4 w-full sm:w-4/12">
+                        <div className="flex flex-row items-center gap-4 max-sm:w-3/4">
                             <Image src={Compass} alt="goal icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
                             <div className="flex flex-col justify-center gap-2 sm:w-3/4">
                                 <p className="font-semibold text-2xl">Goal</p>
@@ -93,8 +93,8 @@ export default function ReviewPlan() {
                                     numWeeks: weeks,
                                     currWeek: 1,
                                     weekProg: 0,
-                                    startDate: dayjs(startDate).format('MM/DD/YYYY'),
-                                    weekEndDate: dayjs(weekEndDate).format('MM/DD/YYYY'),
+                                    startDate: startDate,
+                                    weekEndDate: weekEndDate,
                                 })
                             }}
                         >

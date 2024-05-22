@@ -16,14 +16,14 @@ export default function SetDates() {
     const weeks = useAppSelector(state => state.input.numWeeks);
 
     // Time variables
-    const [day, setDay] = useState<string>(dayjs().format('YYYY-MM-DD'));
+    const [day, setDay] = useState<string>(dayjs().format('MM/DD/YYYY'));
     const [endDate, setEndDate] = useState<string>("");
 
     // Update start and end date
     const changeDayHandler = (date: dayjs.Dayjs | null) => {
         if (date) {
-            setDay(dayjs(date).format('YYYY-MM-DD'));
-            setEndDate(dayjs(date).add(7 * weeks, 'day').format('dddd, MMM DD'));
+            setDay(dayjs(date).format('MM/DD/YYYY'));
+            setEndDate(dayjs(date).add(7 * weeks, 'day').format('MM/DD/YYYY'));
         }
     }
 
@@ -32,7 +32,7 @@ export default function SetDates() {
     }
 
     useEffect(() => {
-        setEndDate(dayjs().add(7 * weeks, 'day').format('dddd, MMM DD'));
+        setEndDate(dayjs().add(7 * weeks, 'day').format('MM/DD/YYYY'));
     }, [weeks]);
 
     return (
@@ -66,7 +66,7 @@ export default function SetDates() {
                             <span className="font-semibold">{dayjs(day).format('dddd')}</span>
                         </p>
                         <p className="text-lg sm:text-xl">Expected completion by: {" "}
-                            <span className="font-semibold">{endDate}</span>
+                            <span className="font-semibold">{dayjs(endDate).format('dddd, MMM DD')}</span>
                         </p>
                     </div>
                 </div>
