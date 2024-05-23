@@ -2,6 +2,7 @@ export interface Task {
     _id: string,
     title: string,
     description: string,
+    planId: string,
     week: number,
     status: string,
     completionDate: string | null,

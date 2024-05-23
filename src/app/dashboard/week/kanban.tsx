@@ -8,6 +8,8 @@ import { useMutation } from "@tanstack/react-query";
 import { UpdateTaskMutationInput, ITaskInput, Task } from "@/lib/types/planTypes";
 import { updateTask } from "@/lib/api/tasksApi";
 import dayjs from "dayjs";
+import { useAppDispatch } from "@/lib/store";
+import { setIsSingleTaskOpen, setSelectedTask } from "@/lib/store/modalSlice";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -177,6 +179,7 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
 }
 
 const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
+    const dispatch = useAppDispatch();
 
     // Help sync event types between React and Framer Motion
     const onDragStartHandler = (event: MouseEvent | TouchEvent | PointerEvent) => {
@@ -184,6 +187,11 @@ const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
             handleDragStart(event as unknown as React.DragEvent<HTMLDivElement>, task);
         }
     };
+
+    const handleClick = () => {
+        dispatch(setSelectedTask(task));
+        dispatch(setIsSingleTaskOpen(true));
+    }
 
     return (
         <>
@@ -194,6 +202,7 @@ const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
                 className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
                     rounded-md rounded-br-xl cursor-grab active:cursor-grabbing"
                 draggable="true"
+                onClick={handleClick}
                 onDragStart={onDragStartHandler}
             >
                 <p className="w-full p-2">{task.title}</p>
