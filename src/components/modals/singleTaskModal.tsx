@@ -62,10 +62,10 @@ export default function SingleTaskModal() {
         setEditMode(!editMode);
     }
 
-    // Execute function passed to modal
-    const handleDelete = () => {
-        console.log("TODO: delete task");
-    };
+    // // Execute function passed to modal
+    // const handleDelete = () => {
+    //     console.log("TODO: delete task");
+    // };
 
     useEffect(() => {
         setTitleVal(selectedTask?.title || "");
@@ -109,14 +109,14 @@ export default function SingleTaskModal() {
                             <Image src={EditIcon} alt="Edit icon" />
                             <p className="text-lg">{editMode ? "save" : "edit"}</p>
                         </button>
-                        <button
+                        {/* <button
                             onClick={handleDelete}
                             className={`flex flex-row items-center gap-2 py-1.5 px-4 border-none rounded-md bg-[#E4E4E4] 
                         drop-shadow-lg transition hover:scale-110 duration-300`}
                         >
                             <Image src={DeleteIcon} alt="Delete icon" />
                             <p className="text-lg">delete</p>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
                 <div className="flex flex-row gap-16 mt-4">
