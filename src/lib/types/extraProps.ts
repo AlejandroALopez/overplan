@@ -10,7 +10,7 @@ export interface SmallPlanProgressProps {
 }
 
 export interface PlanSelectorProps {
-  onSelect: ((selectedId: string) => void);
+  onSelect: ((selectedPlan: Plan) => void);
   plans: Plan[];
   activePlanId: string;
 }

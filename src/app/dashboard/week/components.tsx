@@ -37,8 +37,8 @@ const SmallProgressBar: React.FC<SmallPlanProgressProps> = ({ prog, week }) => {
 // Change active plan
 export const PlanSelector: React.FC<PlanSelectorProps> = ({ onSelect, plans, activePlanId }) => {
     
-    const selectPlan = (planId: string) => {
-        onSelect(planId);
+    const selectPlan = (plan: Plan) => {
+        onSelect(plan);
     }
 
     return (
@@ -48,7 +48,7 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({ onSelect, plans, act
                     return (
                         <button
                             key={plan._id}
-                            onClick={() => selectPlan(plan._id)}
+                            onClick={() => selectPlan(plan)}
                             className="flex flex-row items-center justify-between w-full border-b border-gray-200 px-1 py-1.5 rounded-md
                         cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300">
                             <p>{plan.goal}</p>

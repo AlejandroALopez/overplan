@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
-import { IMoveTasksInput, IPlanInput, Task } from "@/lib/types/planTypes";
+import { IMoveTasksInput, IPlanInput, Plan, Task } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { setActivePlan } from "@/lib/store/planSlice";
 import { setIsCreateTaskOpen } from "@/lib/store/modalSlice";
@@ -137,14 +137,15 @@ export default function Week() {
     }
 
     // Handle active plan selection from list
-    const handlePlanSelect = async (selectedPlanId: string) => {
+    const handlePlanSelect = async (selectedPlan: Plan) => {
         // Params: planId
         // Dispatch redux function ---> { ...user, activePlanId: planId }
         dispatch(setIsLoading(true));
         setShowPlansSelector(false);
 
         try {
-            dispatch(setUser({ ...userData, activePlanId: selectedPlanId }));
+            dispatch(setUser({ ...userData, activePlanId: selectedPlan._id }));
+            dispatch(setActivePlan(selectedPlan));
 
             await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
             await queryClient.refetchQueries({ queryKey: ['plan', activePlanId] });
