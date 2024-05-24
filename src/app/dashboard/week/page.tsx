@@ -7,6 +7,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { IMoveTasksInput, IPlanInput, Task } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { setActivePlan } from "@/lib/store/planSlice";
+import { setIsCreateTaskOpen } from "@/lib/store/modalSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek, usePlansByUserId } from "@/hooks/queries";
 import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
 import ExpandUp from "../../../../public/arrows/expandUp.svg";
@@ -143,7 +144,7 @@ export default function Week() {
         setShowPlansSelector(false);
 
         try {
-            dispatch(setUser({...userData, activePlanId: selectedPlanId}));
+            dispatch(setUser({ ...userData, activePlanId: selectedPlanId }));
 
             await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
             await queryClient.refetchQueries({ queryKey: ['plan', activePlanId] });
@@ -187,17 +188,26 @@ export default function Week() {
                     <ProgressBar prog={weekProg} />
                 </div>
                 {daysUntilWeekEnd > 0 && (
-                    <div className="flex flex-col justify-center items-center w-2/6 gap-4">
+                    <div className="flex flex-col justify-center items-center w-3/6 gap-4">
                         <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
                         <p className="text-xl">{planData.weekEndDate} ({daysUntilWeekEnd} {daysUntilWeekEnd > 1 ? 'days' : 'day'})</p>
-                        <button
-                            className={`py-4 px-6 border-none rounded-md bg-primary text-white text-lg drop-shadow-lg 
+                        <div className="flex flex-row gap-4">
+                            <button
+                                className="py-4 px-6 rounded-md bg-white border-primary border-[1px] text-primary text-lg drop-shadow-lg 
+                        transition hover:scale-110 duration-300"
+                                onClick={() => dispatch(setIsCreateTaskOpen(true))}
+                            >
+                                + Add Task
+                            </button>
+                            <button
+                                className={`py-4 px-6 border-none rounded-md bg-primary text-white text-lg drop-shadow-lg 
                         transition hover:scale-110 duration-300 ${(completedTasks !== cards.length) && "opacity-50"}`}
-                            disabled={(completedTasks !== cards.length)}
-                            onClick={() => handleNextWeekButton()}
-                        >
-                            {(planData?.currWeek === planData?.numWeeks) ? "Complete Plan" : "Advance to next week"}
-                        </button>
+                                disabled={(completedTasks !== cards.length)}
+                                onClick={() => handleNextWeekButton()}
+                            >
+                                {(planData?.currWeek === planData?.numWeeks) ? "Complete Plan" : "Advance to next week"}
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

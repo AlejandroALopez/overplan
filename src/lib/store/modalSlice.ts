@@ -13,24 +13,19 @@ export interface IModalState {
   // Single Task Modal data
   isSingleTaskOpen: boolean;
   selectedTask: Task | null;
+
+  // Create Task Modal data
+  isCreateTaskOpen: boolean;
 }
 
 const initialState: IModalState = {
   isSingleTaskOpen: false,
   isLoading: false,
   isConfirmOpen: false,
+  isCreateTaskOpen: false,
   message: "",
   onConfirm: null,
   selectedTask: null,
-//   selectedTask: {
-//     _id: "6649277f5f941de0c6ffba47",
-//     title: "Research basic cooking techniques",
-//     description: "Watch videos and read articles about basic cooking techniques like chopping, sautéing, and baking",
-//     // planId: "664927785f941de0c6ffba46",
-//     week: 1,
-//     status: "Backlog",
-//     completionDate: null,
-// },
 };
 
 export const modalSlice = createSlice({
@@ -39,6 +34,9 @@ export const modalSlice = createSlice({
   reducers: {
     setIsSingleTaskOpen: (state, action: PayloadAction<boolean>) => {
       state.isSingleTaskOpen = action.payload;
+    },
+    setIsCreateTaskOpen: (state, action: PayloadAction<boolean>) => {
+      state.isCreateTaskOpen = action.payload;
     },
     setSelectedTask: (state, action: PayloadAction<Task | null>) => {
       state.selectedTask = action.payload;
@@ -67,6 +65,7 @@ export const {
   setIsSingleTaskOpen,
   setIsConfirmOpen,
   setIsLoading,
+  setIsCreateTaskOpen,
   setSelectedTask,
   setMessage,
   setOnConfirm,
