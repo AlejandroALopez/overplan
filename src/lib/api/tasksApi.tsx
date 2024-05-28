@@ -3,9 +3,14 @@ import { IMoveTasksInput, ITaskInput, Task } from "../types/planTypes";
 
 // Get tasks by planId and week
 export const fetchTasksByPlanId = async (planId: string, week?: number) => {
+    const token = localStorage.getItem('token');
     const URL = 'http://localhost:8080/tasks?' + `planId=${planId}` + `${week ? `&week=${week}` : ''}`
 
-    const response = await fetch(URL);
+    const response = await fetch(URL, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
     if (!response.ok) {
         throw new Error('Failed to fetch tasks data');
     }
@@ -14,9 +19,15 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
 
 // Create task and return it
 export const createTask = async (taskBody: ITaskInput) => {
+    const token = localStorage.getItem('token');
     const URL = 'http://localhost:8080/tasks';
+
     try {
-        const response = await axios.post(URL, taskBody);
+        const response = await axios.post(URL, taskBody, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         console.log("Error creating task: ", error);
@@ -26,9 +37,15 @@ export const createTask = async (taskBody: ITaskInput) => {
 
 // Update task and return it
 export const updateTask = async (id: string, updatedTask: ITaskInput) => {
+    const token = localStorage.getItem('token');
     const URL = 'http://localhost:8080/tasks/' + `${id}`;
+
     try {
-        const response = await axios.put(URL, updatedTask);
+        const response = await axios.put(URL, updatedTask, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         console.log("Error updating task: ", error);
@@ -38,9 +55,15 @@ export const updateTask = async (id: string, updatedTask: ITaskInput) => {
 
 // Move tasks
 export const moveTasks = async (input: IMoveTasksInput) => {
+    const token = localStorage.getItem('token');
     const URL = 'http://localhost:8080/tasks/move';
+    
     try {
-        const response = await axios.post(URL, {planId: input.planId, week: input.week});
+        const response = await axios.post(URL, { planId: input.planId, week: input.week }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
         return response.data;
     } catch (error) {
         console.log("Error moving tasks: ", error);

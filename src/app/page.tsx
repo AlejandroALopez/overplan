@@ -1,10 +1,23 @@
+'use client';
+
 // import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/header";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
 
   const app_name: string = "OverPlan AI";
+
+  useEffect(() => {
+    const token = new URL(window.location.href).searchParams.get('token');
+    if (token) {
+      localStorage.setItem('token', token);
+      router.push('/auth/login'); // Redirect to a protected page
+    }
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col">
