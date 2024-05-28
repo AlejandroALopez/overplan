@@ -12,6 +12,12 @@ export default function Header() {
             <Link href="/dashboard/week">
                 <button className="text-white text-xl font-semibold transition hover:scale-110 duration-300">My Week</button>
             </Link>
+            {/* <Link href="/auth/login">
+                <button className="text-white text-xl font-semibold transition hover:scale-110 duration-300">Login</button>
+            </Link> */}
+            <Link href="/auth/register">
+                <button className="text-white text-xl font-semibold transition hover:scale-110 duration-300">Register</button>
+            </Link>
         </div>
     );
 }
