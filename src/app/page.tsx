@@ -5,16 +5,22 @@ import Link from "next/link";
 import Header from "@/components/header";
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAppDispatch } from "@/lib/store";
+import { setUserData } from "@/lib/store/sessionSlice";
 
 export default function Home() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const app_name: string = "OverPlan AI";
 
   useEffect(() => {
     const token = new URL(window.location.href).searchParams.get('token');
-    if (token) {
+    const userData = new URL(window.location.href).searchParams.get('userData');
+
+    if (token && userData) {
       localStorage.setItem('token', token);
+      dispatch(setUserData(JSON.parse(userData)));
       router.push('/auth/login'); // Redirect to a protected page
     }
   }, []);

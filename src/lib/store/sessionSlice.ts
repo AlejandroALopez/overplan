@@ -4,6 +4,7 @@ import { User } from "../types/sessionTypes";
 
 export interface ISessionState {
   user: User;
+  userData: any;
 }
 
 // for testing
@@ -18,6 +19,7 @@ const user1: User = {
 
 const initialState: ISessionState = {
   user: user1,
+  userData: null,
 };
 
 export const sessionSlice = createSlice({
@@ -27,8 +29,11 @@ export const sessionSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
+    setUserData: (state, action: PayloadAction<any>) => {
+      state.userData = action.payload;
+    },
   },
 });
 
-export const { setUser } = sessionSlice.actions;
+export const { setUser, setUserData } = sessionSlice.actions;
 export const sessionReducer = sessionSlice.reducer;
