@@ -7,6 +7,7 @@ import LoadingModal from "@/components/modals/loadingModal";
 import ConfirmModal from "@/components/modals/confirmModal";
 import SingleTaskModal from "@/components/modals/singleTaskModal";
 import CreateTaskModal from "@/components/modals/createTaskModal";
+import withAuth from "@/lib/utils/withAuth";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   description: "Keep track of the tasks for the week",
 };
 
-export default function DashboardLayout({
+function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -35,4 +36,6 @@ export default function DashboardLayout({
       </body>
     </html>
   );
-}
+};
+
+export default DashboardLayout;

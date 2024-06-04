@@ -1,4 +1,5 @@
 import axios from "axios";
+import { redirect } from 'next/navigation';
 import { IPlanInput } from "../types/planTypes";
 import { refreshAccessToken } from "./authApi";
 
@@ -9,6 +10,7 @@ export const fetchPlanData = async (id: string) => {
     const URL = 'http://localhost:8080/plans/' + `${id}`;
 
     if (!token || !refreshToken) {
+        redirect(`/auth/login`);
         throw new Error('No tokens available');
     }
 
@@ -33,6 +35,7 @@ export const fetchPlanData = async (id: string) => {
             console.error('Failed to refresh token', error);
             // Handle the case where refresh token is also invalid/expired
             // For example, redirect to login page
+            redirect(`/auth/login`);
             return;
         }
     }
@@ -74,6 +77,7 @@ export const fetchPlansByUserId = async (userId: string) => {
             console.error('Failed to refresh token', error);
             // Handle the case where refresh token is also invalid/expired
             // For example, redirect to login page
+            redirect(`/auth/login`);
             return;
         }
     }
@@ -118,6 +122,7 @@ export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
+                    redirect(`/auth/login`);
                     return null;
                 }
             } else {

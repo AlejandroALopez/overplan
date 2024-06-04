@@ -1,4 +1,5 @@
 import axios from "axios";
+import { redirect } from 'next/navigation';
 import { IPlanInput, Plan } from "../types/planTypes";
 import { refreshAccessToken } from "./authApi";
 
@@ -32,6 +33,7 @@ export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
+                    redirect(`/auth/login`);
                     return null;
                 }
             } else {

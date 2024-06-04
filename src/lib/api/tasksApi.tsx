@@ -1,9 +1,12 @@
+'use client';
+
 import axios from "axios";
 import { IMoveTasksInput, ITaskInput, Task } from "../types/planTypes";
 import { refreshAccessToken } from "./authApi";
 
 // Get tasks by planId and week
 export const fetchTasksByPlanId = async (planId: string, week?: number) => {
+    
     let token = localStorage.getItem('token');
     let refreshToken = localStorage.getItem('refresh_token');
     const URL = 'http://localhost:8080/tasks?' + `planId=${planId}` + `${week ? `&week=${week}` : ''}`;
