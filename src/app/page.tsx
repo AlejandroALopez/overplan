@@ -16,10 +16,12 @@ export default function Home() {
 
   useEffect(() => {
     const token = new URL(window.location.href).searchParams.get('token');
+    const refreshToken = new URL(window.location.href).searchParams.get('refreshToken');
     const userData = new URL(window.location.href).searchParams.get('userData');
 
-    if (token && userData) {
+    if (token && refreshToken && userData) {
       localStorage.setItem('token', token);
+      localStorage.setItem('refresh_token', refreshToken);
       dispatch(setUserData(JSON.parse(userData)));
       router.push('/auth/login'); // Redirect to a protected page
     }

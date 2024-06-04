@@ -6,10 +6,12 @@ export const registerUser = async (input: IRegisterInput): Promise<IRegisterOutp
     try {
         const response = await axios.post('http://localhost:8080/auth/register', input);
         localStorage.setItem('token', response.data.access_token);
+        localStorage.setItem('refresh_token', response.data.refresh_token);
 
         return {
             success: true,
-            token: response.data.access_token
+            token: response.data.access_token,
+            refresh_token: response.data.refresh_token,
         };
 
     } catch (error) {
@@ -19,6 +21,24 @@ export const registerUser = async (input: IRegisterInput): Promise<IRegisterOutp
             success: false,
             message: `${error}`,
             token: null,
+            refresh_token: null,
         };
     }
 }
+
+export async function refreshAccessToken(refreshToken: string) {
+    const response = await fetch('http://localhost:8080/auth/refresh-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      return data.access_token;
+    } else {
+      throw new Error('Failed to refresh access token');
+    }
+  }

@@ -10,4 +10,5 @@ export interface IRegisterOutput {
     success: boolean,
     message?: string,
     token: string | null,
+    refresh_token: string | null,
 }
