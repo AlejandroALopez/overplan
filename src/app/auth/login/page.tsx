@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div className='flex justify-center my-12'>
-      <div className='flex flex-col bg-white gap-6 drop-shadow-lg rounded-lg py-4 px-8 lg:w-1/3 md:w-1/2 sm:w-2/3 w-full'>
+      <div className='flex flex-col bg-white gap-6 drop-shadow-lg rounded-lg p-8 lg:w-1/3 md:w-1/2 sm:w-2/3 w-full'>
         <p className='w-full text-center text-2xl font-semibold'>Log In</p>
         <div className='flex flex-col gap-4'>
           <p className='font-semibold'>Email</p>
@@ -60,6 +60,5 @@ export default function Home() {
         </div>
       </div>
     </div>
-
   );
 }

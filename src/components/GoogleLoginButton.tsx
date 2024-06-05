@@ -15,7 +15,7 @@ export default function GoogleLoginButton() {
         onClick={handleGoogleLogin}
       >
         <Image src={GoogleIcon} alt="Google icon" />
-        Sign in with Google
+        Sign up with Google
       </button>
     );
   }
