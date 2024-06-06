@@ -6,16 +6,26 @@ import { useState } from "react";
 import { usePathname } from 'next/navigation'
 import Home from "../../public/icons/home.svg";
 import Map from "../../public/icons/map.svg";
+import Medal from "../../public/icons/award.svg";
 import Menu from "../../public/icons/menu.svg";
+import Settings from "../../public/icons/settings.svg";
+import Logout from "../../public/icons/logout.svg";
+
 
 export default function Navigation() {
   const pathname = usePathname();
   const app_name: string = "OverPlan AI";
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+
+  const handleLogout = () => {
+    // TODO
+    // 1. Open Confirmation Modal
+    // 2. Pass it function to remove user data + remove tokens + redirect to login
+  }
 
   return (
     <>
@@ -37,8 +47,28 @@ export default function Navigation() {
             <Image src={Map} alt="my plans icon" />
             <p className="font-medium">My Plans</p>
           </Link>
+          {/* <Link href="/dashboard/medals" className={`flex flex-row items-center justify-center gap-4 w-11/12 py-3 bg-opacity-10 rounded-md
+          ${pathname === '/dashboard/medals' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+            <Image src={Medal} alt="my medals icon" />
+            <p className="font-medium">My Medals</p>
+          </Link> */}
+          <div className="bg-[#D9D9D9] h-0.5 w-11/12  rounded-md" />
+          <Link href="/dashboard/settings" className={`flex flex-row items-center justify-center gap-4 w-11/12 py-3 bg-opacity-10 rounded-md
+          ${pathname === '/dashboard/settings' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+            <Image src={Settings} alt="settings icon" />
+            <p className="font-medium">Settings</p>
+          </Link>
+          <button
+            onClick={handleLogout}
+            className='flex flex-row items-center justify-center gap-4 w-11/12 py-3 bg-opacity-10 rounded-md
+               transition hover:scale-105 duration-300'>
+            <Image src={Logout} alt="logout icon" />
+            <p className="font-medium">Log Out</p>
+          </button>
+          <div className="bg-[#D9D9D9] h-0.5 w-11/12 rounded-md" />
         </div>
       </div>
+      {/* Accordion Menu for Smaller Screens */}
       <div className={`w-full flex-wrap py-2 justify-evenly bg-[#f5f5f5] ${showMenu ? 'max-sm:flex sm:hidden' : 'hidden'}`}>
         <Link href="/dashboard/week" className={`flex flex-row items-center justify-center gap-4 w-56 py-3 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/week' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
