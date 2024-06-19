@@ -18,6 +18,7 @@ import { setIsConfirmOpen, setIsLoading, setMessage, setOnConfirm } from "@/lib/
 import { Kanban } from "./kanban";
 import { ProgressBar, PlanSelector } from './components';
 import { setUser } from "@/lib/store/sessionSlice";
+import Loading from "./loading";
 
 
 export default function Week() {
@@ -169,7 +170,9 @@ export default function Week() {
         else setShowCompletedSection(false);
     }, [planData])
 
-    if (isPendingPlan || isPendingTasks || isPendingPlans) return (<div>Loading...</div>)
+    if (isPendingPlan || isPendingTasks || isPendingPlans) return (
+        <Loading />
+    )
 
     if (errorPlan) return (<div>An error has occurred: {errorPlan.message} </div>)
     if (errorTasks) return (<div>An error has occurred: {errorTasks.message} </div>)

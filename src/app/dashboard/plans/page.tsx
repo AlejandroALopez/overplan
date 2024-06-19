@@ -8,6 +8,7 @@ import { Plan } from "@/lib/types/planTypes";
 import { usePlansByUserId } from "@/hooks/queries";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setMetricsPlan } from "@/lib/store/planSlice";
+import Loading from "./loading";
 
 // Week Progress based on tasks completed
 const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
@@ -44,7 +45,7 @@ export default function MyPlans() {
         if(plansData) setPlans(plansData);
     }, [plansData]);
 
-    if (isPending) return (<div>Loading...</div>)
+    if (isPending) return (<Loading />)
 
     if (error) return (<div>An error has occurred: {error.message} </div>)
 

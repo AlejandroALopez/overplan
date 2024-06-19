@@ -36,6 +36,9 @@ p {
   }
 }
 
+/* Loading Animation Spinner
+From: https://codepen.io/webhead/pen/WNoedWG */
+
 @keyframes loadingspinner {
   0% {
     transform: rotate(0deg);
@@ -45,7 +48,14 @@ p {
   }
 }
 
+/* For small loading modal  */
 .loading-spinner {
   @apply w-12 h-12 border-2 border-primary border-solid border-t-transparent rounded-full inline-block;
+  animation: loadingspinner 1s linear infinite;
+}
+
+/* For loading screen (e.g. dashboard UI)  */
+.big-loading-spinner {
+  @apply w-24 h-24 border-4 border-primary border-solid border-t-transparent rounded-full inline-block;
   animation: loadingspinner 1s linear infinite;
 }
