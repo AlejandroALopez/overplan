@@ -20,7 +20,9 @@ export default function RootLayout({
       <ReactQueryClientProvider>
         <StoreProvider>
           <html lang="en">
-            <body className={montserrat.className}>{children}</body>
+            <body className={montserrat.className}>
+              {children}
+            </body>
           </html>
         </StoreProvider>
       </ReactQueryClientProvider>
