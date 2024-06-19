@@ -19,6 +19,7 @@ import { Kanban } from "./kanban";
 import { ProgressBar, PlanSelector } from './components';
 import { setUser } from "@/lib/store/sessionSlice";
 import Loading from "./loading";
+import Error from "./error";
 
 
 export default function Week() {
@@ -84,7 +85,7 @@ export default function Week() {
 
         try {
             // If past end date, new end date will be end + 7. Else, today + 7
-            const autoMode = isDateBeforeOrToday(planData?.weekEndDate);
+            const autoMode: boolean = isDateBeforeOrToday(planData?.weekEndDate);
 
             // Update week progress
             await updatePlanMutation.mutateAsync({
@@ -170,13 +171,9 @@ export default function Week() {
         else setShowCompletedSection(false);
     }, [planData])
 
-    if (isPendingPlan || isPendingTasks || isPendingPlans) return (
-        <Loading />
-    )
+    if (isPendingPlan || isPendingTasks || isPendingPlans) return (<Loading />)
 
-    if (errorPlan) return (<div>An error has occurred: {errorPlan.message} </div>)
-    if (errorTasks) return (<div>An error has occurred: {errorTasks.message} </div>)
-    if (errorPlans) return (<div>An error has occurred: {errorPlans.message} </div>)
+    if (errorPlan || errorTasks || errorPlans) return (<Error />)
 
     return (
         <div className="flex flex-col w-full gap-1">
