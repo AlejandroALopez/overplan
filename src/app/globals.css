@@ -35,3 +35,17 @@ p {
     text-wrap: balance;
   }
 }
+
+@keyframes loadingspinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  @apply w-12 h-12 border-2 border-primary border-solid border-t-transparent rounded-full inline-block;
+  animation: loadingspinner 1s linear infinite;
+}

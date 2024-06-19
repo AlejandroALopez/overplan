@@ -33,7 +33,6 @@ export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
-                    redirect(`/auth/login`);
                     return null;
                 }
             } else {
