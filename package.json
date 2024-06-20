@@ -20,6 +20,7 @@
     "chart.js": "^4.4.3",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.0.28",
+    "js-cookie": "^3.0.5",
     "next": "14.1.4",
     "next-auth": "^4.24.7",
     "react": "^18",
@@ -29,6 +30,7 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -2,13 +2,11 @@
 
 import axios from "axios";
 import { IMoveTasksInput, ITaskInput, Task } from "../types/planTypes";
-import { refreshAccessToken } from "./authApi";
+import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
 // Get tasks by planId and week
 export const fetchTasksByPlanId = async (planId: string, week?: number) => {
-    
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/tasks?' + `planId=${planId}` + `${week ? `&week=${week}` : ''}`;
 
     if (!token || !refreshToken) {
@@ -24,8 +22,7 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
     if (response.status === 401) {
         // Token might be expired, try to refresh it
         try {
-            token = await refreshAccessToken(refreshToken);
-            localStorage.setItem('token', token || "");
+            token = await refreshAccessToken(refreshToken) || "";
 
             response = await fetch(URL, {
                 headers: {
@@ -48,8 +45,7 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
 
 // Create task and return it
 export const createTask = async (taskBody: ITaskInput) => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/tasks';
 
     if (!token || !refreshToken) {
@@ -68,8 +64,7 @@ export const createTask = async (taskBody: ITaskInput) => {
             if (error.response && error.response.status === 401) {
                 // Token might be expired, try to refresh it
                 try {
-                    token = await refreshAccessToken(refreshToken);
-                    localStorage.setItem('token', token || "");
+                    token = await refreshAccessToken(refreshToken) || "";
 
                     // Retry the request with the new token
                     const retryResponse = await axios.post(URL, taskBody, {
@@ -96,8 +91,7 @@ export const createTask = async (taskBody: ITaskInput) => {
 
 // Update task and return it
 export const updateTask = async (id: string, updatedTask: ITaskInput) => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/tasks/' + `${id}`;
 
     if (!token || !refreshToken) {
@@ -116,8 +110,7 @@ export const updateTask = async (id: string, updatedTask: ITaskInput) => {
             if (error.response && error.response.status === 401) {
                 // Token might be expired, try to refresh it
                 try {
-                    token = await refreshAccessToken(refreshToken);
-                    localStorage.setItem('token', token || "");
+                    token = await refreshAccessToken(refreshToken) || "";
 
                     // Retry the request with the new token
                     const retryResponse = await axios.put(URL, updatedTask, {
@@ -144,8 +137,7 @@ export const updateTask = async (id: string, updatedTask: ITaskInput) => {
 
 // Move incomplete tasks to the next week
 export const moveTasks = async (input: IMoveTasksInput) => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/tasks/move';
 
     if (!token || !refreshToken) {
@@ -164,8 +156,7 @@ export const moveTasks = async (input: IMoveTasksInput) => {
             if (error.response && error.response.status === 401) {
                 // Token might be expired, try to refresh it
                 try {
-                    token = await refreshAccessToken(refreshToken);
-                    localStorage.setItem('token', token || "");
+                    token = await refreshAccessToken(refreshToken) || "";
 
                     // Retry the request with the new token
                     const retryResponse = await axios.post(URL, { planId: input.planId, week: input.week }, {

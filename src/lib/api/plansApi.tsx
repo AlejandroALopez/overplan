@@ -1,16 +1,14 @@
 import axios from "axios";
 import { redirect } from 'next/navigation';
 import { IPlanInput } from "../types/planTypes";
-import { refreshAccessToken } from "./authApi";
+import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
 // GET plan by id
 export const fetchPlanData = async (id: string) => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/plans/' + `${id}`;
 
     if (!token || !refreshToken) {
-        redirect(`/auth/login`);
         throw new Error('No tokens available');
     }
 
@@ -23,8 +21,7 @@ export const fetchPlanData = async (id: string) => {
     if (response.status === 401) {
         // Token might be expired, try to refresh it
         try {
-            token = await refreshAccessToken(refreshToken);
-            localStorage.setItem('token', token || "");
+            token = await refreshAccessToken(refreshToken) || "";
 
             response = await fetch(URL, {
                 headers: {
@@ -35,7 +32,6 @@ export const fetchPlanData = async (id: string) => {
             console.error('Failed to refresh token', error);
             // Handle the case where refresh token is also invalid/expired
             // For example, redirect to login page
-            redirect(`/auth/login`);
             return;
         }
     }
@@ -48,8 +44,7 @@ export const fetchPlanData = async (id: string) => {
 
 // Get all plans by userId
 export const fetchPlansByUserId = async (userId: string) => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/plans?' + `userId=${userId}`;
 
     if (!token || !refreshToken) {
@@ -65,8 +60,7 @@ export const fetchPlansByUserId = async (userId: string) => {
     if (response.status === 401) {
         // Token might be expired, try to refresh it
         try {
-            token = await refreshAccessToken(refreshToken);
-            localStorage.setItem('token', token || "");
+            token = await refreshAccessToken(refreshToken) || "";
 
             response = await fetch(URL, {
                 headers: {
@@ -77,7 +71,7 @@ export const fetchPlansByUserId = async (userId: string) => {
             console.error('Failed to refresh token', error);
             // Handle the case where refresh token is also invalid/expired
             // For example, redirect to login page
-            redirect(`/auth/login`);
+            // redirect(`/auth/login`);
             return;
         }
     }
@@ -90,8 +84,7 @@ export const fetchPlansByUserId = async (userId: string) => {
 
 // Update plan and return it
 export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/plans/' + `${id}`;
 
     if (!token || !refreshToken) {
@@ -110,8 +103,7 @@ export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
             if (error.response && error.response.status === 401) {
                 // Token might be expired, try to refresh it
                 try {
-                    token = await refreshAccessToken(refreshToken);
-                    localStorage.setItem('token', token || "");
+                    token = await refreshAccessToken(refreshToken) || "";
 
                     // Retry the request with the new token
                     const retryResponse = await axios.put(URL, updatedPlan, {
@@ -122,7 +114,7 @@ export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
-                    redirect(`/auth/login`);
+                    // redirect(`/auth/login`);
                     return null;
                 }
             } else {

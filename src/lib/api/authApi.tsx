@@ -1,12 +1,13 @@
 import axios from "axios";
 import { IRegisterInput, IRegisterOutput } from "../types/authTypes";
+import { setTokensInCookies } from "../utils/auth";
 
 // Returns true if
 export const registerUser = async (input: IRegisterInput): Promise<IRegisterOutput> => {
     try {
         const response = await axios.post('http://localhost:8080/auth/register', input);
-        localStorage.setItem('token', response.data.access_token);
-        localStorage.setItem('refresh_token', response.data.refresh_token);
+        const { access_token, refresh_token } = response.data;
+        setTokensInCookies(access_token, refresh_token);
 
         return {
             success: true,

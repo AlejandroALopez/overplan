@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from "@/lib/store";
 import { setUserData } from "@/lib/store/sessionSlice";
+import { setTokensInCookies } from "@/lib/utils/auth";
 
 export default function Home() {
   const router = useRouter();
@@ -20,8 +21,9 @@ export default function Home() {
     const userData = new URL(window.location.href).searchParams.get('userData');
 
     if (token && refreshToken && userData) {
-      localStorage.setItem('token', token);
-      localStorage.setItem('refresh_token', refreshToken);
+      // localStorage.setItem('token', token);
+      // localStorage.setItem('refresh_token', refreshToken);
+      setTokensInCookies(token, refreshToken);
       dispatch(setUserData(JSON.parse(userData)));
       router.push('/auth/login'); // Redirect to a protected page
     }

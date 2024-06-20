@@ -1,12 +1,12 @@
 import axios from "axios";
 import { redirect } from 'next/navigation';
 import { IPlanInput, Plan } from "../types/planTypes";
-import { refreshAccessToken } from "./authApi";
+// import { refreshAccessToken } from "./authApi";
+import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
 // Create Plan. Returns Plan object
 export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
-    let token = localStorage.getItem('token');
-    let refreshToken = localStorage.getItem('refresh_token');
+    let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/plans';
 
     if (!token || !refreshToken) {
@@ -23,8 +23,7 @@ export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
             if (error.response && error.response.status === 401) {
                 // Token might be expired, try to refresh it
                 try {
-                    token = await refreshAccessToken(refreshToken);
-                    localStorage.setItem('token', token || "");
+                    token = await refreshAccessToken(refreshToken) || "";
 
                     // Retry the request with the new token
                     const retryResponse = await axios.post(URL, input, { headers: {
