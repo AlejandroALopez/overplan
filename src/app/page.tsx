@@ -25,7 +25,7 @@ export default function Home() {
       // localStorage.setItem('refresh_token', refreshToken);
       setTokensInCookies(token, refreshToken);
       dispatch(setUserData(JSON.parse(userData)));
-      router.push('/auth/login'); // Redirect to a protected page
+      router.push('/dashboard/week'); // Redirect to a protected page
     }
   }, []);
 

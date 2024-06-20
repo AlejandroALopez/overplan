@@ -1,6 +1,7 @@
 'use client';
 
 import axios from "axios";
+import { NextResponse } from "next/server";
 import { IMoveTasksInput, ITaskInput, Task } from "../types/planTypes";
 import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
@@ -31,9 +32,7 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            // Handle the case where refresh token is also invalid/expired
-            // For example, redirect to login page
-            return;
+            return NextResponse.redirect('http://localhost:8080/auth/login');
         }
     }
 

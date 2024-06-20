@@ -1,5 +1,5 @@
 import axios from "axios";
-import { redirect } from 'next/navigation';
+import { NextResponse } from 'next/server';
 import { IPlanInput } from "../types/planTypes";
 import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
@@ -30,9 +30,7 @@ export const fetchPlanData = async (id: string) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            // Handle the case where refresh token is also invalid/expired
-            // For example, redirect to login page
-            return;
+            return NextResponse.redirect('http://localhost:8080/auth/login');
         }
     }
 
@@ -69,12 +67,11 @@ export const fetchPlansByUserId = async (userId: string) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            // Handle the case where refresh token is also invalid/expired
-            // For example, redirect to login page
-            // redirect(`/auth/login`);
-            return;
+            return NextResponse.redirect('http://localhost:8080/auth/login');
         }
     }
+
+    // console.log('New response: ', response);
 
     if (!response.ok) {
         throw new Error('Failed to fetch plan data');
@@ -114,8 +111,7 @@ export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
-                    // redirect(`/auth/login`);
-                    return null;
+                    return NextResponse.redirect('http://localhost:8080/auth/login');
                 }
             } else {
                 console.error('Error updating plan:', error);

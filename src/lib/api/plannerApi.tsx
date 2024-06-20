@@ -1,7 +1,6 @@
 import axios from "axios";
-import { redirect } from 'next/navigation';
+import { NextResponse } from 'next/server';
 import { IPlanInput, Plan } from "../types/planTypes";
-// import { refreshAccessToken } from "./authApi";
 import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
 // Create Plan. Returns Plan object
@@ -32,6 +31,7 @@ export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
+                    // NextResponse.redirect('http://localhost:8080/auth/login');
                     return null;
                 }
             } else {

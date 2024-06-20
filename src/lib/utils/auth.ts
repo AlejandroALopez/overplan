@@ -15,7 +15,7 @@ export const refreshAccessToken = async (refreshToken: string): Promise<string |
       refresh_token: refreshToken,
     });
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       const { access_token } = response.data;
       Cookies.set('token', access_token, { expires: 1 }); // 1 day expiration
       Cookies.set('refresh_token', refreshToken, { expires: 7 }); // 7 days expiration
