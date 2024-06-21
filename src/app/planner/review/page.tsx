@@ -42,38 +42,32 @@ export default function ReviewPlan() {
         <>
             {mutation.isPending && (
                 <main className="flex min-h-screen flex-col justify-center items-center p-8">
-                    <div>
+                    <div className="flex flex-col items-center justify-center gap-12">
+                        <div className="big-loading-spinner"/>
                         <p className="text-2xl sm:text-3xl font-semibold">Your Plan is being created...</p>
                     </div>
                 </main>
             )}
             {!mutation.isPending && !mutation.isSuccess && (
                 <main className="flex min-h-screen flex-col items-center p-8">
-                    <p className="text-3xl font-semibold mt-12">{REVIEW_TITLE}</p>
-                    <div className="flex flex-col sm:flex-row flex-wrap w-full justify-evenly gap-4 mt-12 sm:mt-20">
-                        <div className="flex flex-row items-center gap-4 max-sm:w-3/4">
-                            <Image src={Compass} alt="goal icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
-                            <div className="flex flex-col justify-center gap-2 sm:w-3/4">
-                                <p className="font-semibold text-2xl">Goal</p>
-                                <p className="text-2xl w-11/12 text-ellipsis overflow-hidden">{goal}</p>
-                            </div>
+                    <p className="text-3xl font-semibold mt-8">{REVIEW_TITLE}</p>
+                    <div className="flex flex-col gap-12 mt-12">
+                        <div className="flex flex-col items-center gap-4">
+                            <Image src={Compass} alt="goal icon" />
+                            <p className="text-xl w-11/12 text-center text-ellipsis overflow-hidden">{goal}</p>
                         </div>
-                        <div className="flex flex-row items-center gap-4 max-sm:w-3/4">
-                            <Image src={Clock} alt="weeks icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
-                            <div className="flex flex-col justify-center gap-2">
-                                <p className="font-semibold text-2xl">Length</p>
-                                <p className="text-2xl">{weeks} weeks</p>
+                        <div className="flex flex-row flex-wrap justify-between items-center gap-8 sm:gap-0">
+                            <div className="flex flex-col items-center gap-4 w-full sm:w-fit">
+                                <Image src={Clock} alt="weeks icon" />
+                                <p className="text-xl text-center">{weeks} weeks</p>
                             </div>
-                        </div>
-                        <div className="flex flex-row items-center gap-4 max-sm:w-3/4">
-                            <Image src={Calendar} alt="date icon" className="w-24 h-24 md:w-28 md:h-28 xl:w-36 xl:h-36" />
-                            <div className="flex flex-col justify-center gap-2">
-                                <p className="font-semibold text-2xl">Start</p>
-                                <p className="text-2xl">{dayjs(startDate).format('dddd, MMM DD')}</p>
+                            <div className="flex flex-col items-center gap-4 w-full sm:w-fit">
+                                <Image src={Calendar} alt="date icon" />
+                                <p className="text-xl text-center">Start: {dayjs(startDate).format('dddd, MMM DD')}</p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row justify-between my-16 lg:my-36 w-full lg:w-1/2">
+                    <div className="flex flex-row justify-between my-12 lg:my-16 w-full md:w-1/2">
                         <Link href="/planner/dates">
                             <button
                                 className={`py-4 px-6 border-none rounded-md bg-primary 
