@@ -71,8 +71,6 @@ export const fetchPlansByUserId = async (userId: string) => {
         }
     }
 
-    // console.log('New response: ', response);
-
     if (!response.ok) {
         throw new Error('Failed to fetch plan data');
     }

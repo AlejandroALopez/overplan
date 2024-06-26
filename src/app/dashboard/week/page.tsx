@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
-import { IMoveTasksInput, IPlanInput, Plan, Task } from "@/lib/types/planTypes";
+import { IMoveTasksInput, IPlanInput, Plan, Task, Badge } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
+import { createBadge } from "@/lib/api/badgesApi";
 import { setActivePlan } from "@/lib/store/planSlice";
 import { setIsCreateTaskOpen } from "@/lib/store/modalSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek, usePlansByUserId } from "@/hooks/queries";
@@ -14,7 +15,10 @@ import ExpandUp from "../../../../public/arrows/expandUp.svg";
 import ExpandDown from "../../../../public/arrows/expandDown.svg";
 import dayjs from "dayjs";
 import { moveTasks } from "@/lib/api/tasksApi";
-import { setIsConfirmOpen, setIsLoading, setMessage, setOnConfirm } from "@/lib/store/modalSlice";
+import {
+    setIsConfirmOpen, setIsLoading, setMessage,
+    setOnConfirm, setIsPlanCompletedOpen, setCompletedPlan
+} from "@/lib/store/modalSlice";
 import { Kanban } from "./kanban";
 import { ProgressBar, PlanSelector } from './components';
 import { setUser } from "@/lib/store/sessionSlice";
@@ -58,6 +62,15 @@ export default function Week() {
         onError: () => {
             console.log('Error updating plan');
             dispatch(setIsLoading(false));
+        },
+    });
+
+    const createBadgeMutation = useMutation({
+        mutationFn: (badgeInput: Badge) => {
+            return createBadge(badgeInput);
+        },
+        onError: () => {
+            console.log('Error creating badge');
         },
     });
 
@@ -111,12 +124,37 @@ export default function Week() {
         }
     }
 
-    const completePlan = () => {
+    // Updates plan as complete, creates badge, and shows Plan Completed Modal
+    const completePlan = async () => {
         updatePlanMutation.mutate({
             completed: true,
         });
+
+        // Create Badge
+        const badgeBody: Badge = {
+            goal: planData.goal,
+            weeks: planData.numWeeks,
+            userId: userData._id,
+            planId: planData._id,
+            imageKey: "blue",
+            completionDate: dayjs(today).format('MM/DD/YYYY'),
+        }
+
+        try {
+            await createBadgeMutation.mutateAsync(badgeBody);
+        } catch (error) {
+            console.log('Error creating badge', error);
+            return;
+        }
+
+        // Open Modal with badge
+        dispatch(setCompletedPlan({ goal: planData.goal, weeks: planData.numWeeks }))
+        dispatch(setIsPlanCompletedOpen(true));
+
+        // TODO: Do something with the plan (hide?, change to another plan?)
     }
 
+    // Save updated plan on redux
     if (updatePlanMutation.isSuccess) {
         dispatch(setActivePlan(updatePlanMutation.data));
     }

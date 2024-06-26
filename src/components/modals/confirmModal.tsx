@@ -21,7 +21,7 @@ export default function ConfirmModal() {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-white bg-opacity-75"></div>
+            <div onClick={closeModal} className="absolute inset-0 bg-white bg-opacity-75"></div>
             <div className="relative bg-white rounded-lg shadow-lg w-96 max-w-md mx-auto p-6">
                 <p className="text-xl font-medium text-center">{message}</p>
                 <div className="flex flex-row justify-between mt-4">

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { usePathname } from 'next/navigation'
 import Home from "../../public/icons/home.svg";
 import Map from "../../public/icons/map.svg";
-import Medal from "../../public/icons/award.svg";
+import Badge from "../../public/icons/award.svg";
 import Menu from "../../public/icons/menu.svg";
 import Settings from "../../public/icons/settings.svg";
 import Logout from "../../public/icons/logout.svg";
@@ -47,10 +47,10 @@ export default function Navigation() {
             <Image src={Map} alt="my plans icon" />
             <p className="font-medium">My Plans</p>
           </Link>
-          {/* <Link href="/dashboard/medals" className={`flex flex-row items-center justify-center gap-4 w-11/12 py-3 bg-opacity-10 rounded-md
-          ${pathname === '/dashboard/medals' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
-            <Image src={Medal} alt="my medals icon" />
-            <p className="font-medium">My Medals</p>
+          {/* <Link href="/dashboard/badges" className={`flex flex-row items-center justify-center gap-4 w-11/12 py-3 bg-opacity-10 rounded-md
+          ${pathname === '/dashboard/badges' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+            <Image src={Badge} alt="my badges icon" />
+            <p className="font-medium">My Badges</p>
           </Link> */}
           <div className="bg-[#D9D9D9] h-0.5 w-11/12  rounded-md" />
           <Link href="/dashboard/settings" className={`flex flex-row items-center justify-center gap-4 w-11/12 py-3 bg-opacity-10 rounded-md

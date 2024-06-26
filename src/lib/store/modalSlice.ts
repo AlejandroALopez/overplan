@@ -5,7 +5,7 @@ import { Task } from "../types/planTypes";
 export interface IModalState {
   isLoading: boolean;
 
-  // Confirmation Modal data
+  // Confirmation Modal data (multiple uses)
   isConfirmOpen: boolean;
   message: string;
   onConfirm: (() => void) | null;
@@ -16,6 +16,10 @@ export interface IModalState {
 
   // Create Task Modal data
   isCreateTaskOpen: boolean;
+
+  // Plan Completed Modal data
+  isPlanCompletedOpen: boolean;
+  completedPlan: { goal: string; weeks: number };
 }
 
 const initialState: IModalState = {
@@ -23,7 +27,9 @@ const initialState: IModalState = {
   isLoading: false,
   isConfirmOpen: false,
   isCreateTaskOpen: false,
+  isPlanCompletedOpen: false,
   message: "",
+  completedPlan: { goal: "", weeks: 1 },
   onConfirm: null,
   selectedTask: null,
 };
@@ -47,6 +53,12 @@ export const modalSlice = createSlice({
     setIsConfirmOpen: (state, action: PayloadAction<boolean>) => {
       state.isConfirmOpen = action.payload;
     },
+    setIsPlanCompletedOpen: (state, action: PayloadAction<boolean>) => {
+      state.isPlanCompletedOpen = action.payload;
+    },
+    setCompletedPlan(state, action: PayloadAction<{goal: string, weeks: number}>) {
+      state.completedPlan = action.payload;
+    },
     setMessage(state, action: PayloadAction<string>) {
       state.message = action.payload;
     },
@@ -66,7 +78,9 @@ export const {
   setIsConfirmOpen,
   setIsLoading,
   setIsCreateTaskOpen,
+  setIsPlanCompletedOpen,
   setSelectedTask,
+  setCompletedPlan,
   setMessage,
   setOnConfirm,
   resetConfirmModal,
