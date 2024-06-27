@@ -21,12 +21,6 @@ export default function Navigation() {
     setShowMenu(!showMenu);
   };
 
-  const handleLogout = () => {
-    // TODO
-    // 1. Open Confirmation Modal
-    // 2. Pass it function to remove user data + remove tokens + redirect to login
-  }
-
   return (
     <>
       {/* Vertical Menu for Big Screens */}
@@ -37,9 +31,9 @@ export default function Navigation() {
             <Image src={Menu} alt="Menu" />
           </button>
         </div>
-        <div className="hidden sm:flex flex-row sm:flex-col items-center justify-between gap-4 mt-2 h-full">
+        <div className="hidden sm:flex flex-row sm:flex-col items-center justify-between mt-2 h-full">
           {/* Top Buttons */}
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full gap-1">
             <Link href="/dashboard/week" className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/week' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
               <Image src={Home} alt="my weeks icon" />
@@ -57,10 +51,10 @@ export default function Navigation() {
           </Link> */}
           </div>
           {/* Bottom Buttons */}
-          <div className="flex flex-col items-center w-full">
+          <div className="flex flex-col items-center w-full gap-1">
             <div className="bg-[#D9D9D9] h-0.5 w-11/12 mb-4  rounded-md" />
             <Link href="/dashboard/account" className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
-          ${pathname === '/dashboard/settings' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+          ${pathname === '/dashboard/account' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
               <Image src={User} alt="account icon" />
               <p className="font-medium">Account</p>
             </Link>
