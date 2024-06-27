@@ -1,5 +1,6 @@
 'use client';
 
+import { getTokensFromCookies } from '@/lib/utils/auth';
 import { loadStripe } from '@stripe/stripe-js';
 import { useState } from 'react';
 
@@ -16,7 +17,7 @@ export default function SubscriptionPage() {
             return;
         }
 
-        const token = localStorage.getItem('token');
+        const { token, refreshToken } = getTokensFromCookies();
         const response = await fetch('http://localhost:8080/subscriptions/checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -36,43 +37,49 @@ export default function SubscriptionPage() {
 
     return (
         <div className='flex flex-col items-center w-full gap-8 p-12 bg-white'>
+            {/* Headings */}
             <div className='flex flex-col items-center gap-8'>
-                <p className="text-4xl font-semibold text-center w-1/2">Achieve More With OverPlan AI Premium Plans</p>
-                <p className='text-lg text-[#808080] text-center w-3/4'>
+                <p className="text-3xl md:text-4xl font-semibold text-center w-full md:w-11/12 lg:w-1/2">Achieve More With OverPlan AI Pro Plan</p>
+                <p className='text-base md:text-lg text-[#808080] text-center w-11/12 md:w-3/4'>
                     Get the most out of OverPlan AI plan generator and our plan management tools.
-                    Progress through multiple plans, get more personalized tasks, and more with
-                    OverPlan premium subscriptions.
+                    Progress through multiple plans, get more personalized tasks, and more!
                 </p>
             </div>
-            {/* <h1>Choose a Plan</h1> */}
-            <div className='flex flex-row gap-4'>
+            {/* Buttons */}
+            <div className='flex flex-row items-center justify-center gap-4 my-4'>
                 <button
-                    className={`py-2 px-2 border-none bg-primary 
-                        ${annualOption ? "bg-opacity-15" : "text-white"} rounded-md
-                        transition hover:scale-105 duration-300`}
+                    className={`flex items-center justify-center rounded-2xl px-4 py-2 drop-shadow-lg
+                    transition hover:scale-110 duration-300 ${!annualOption ? "bg-primary" : "bg-white"}`}
                     onClick={() => setAnnualOption(false)}
                 >
-                    Monthly
+                    <p className={`md:text-lg font-medium ${!annualOption ? "text-white" : "text-black"}`}>Monthly</p>
                 </button>
                 <button
-                    className={`py-2 px-2 border-none bg-primary 
-                        ${!annualOption ? "bg-opacity-15" : "text-white"} rounded-md
-                        transition hover:scale-105 duration-300`}
+                    className={`flex items-center justify-center rounded-2xl px-4 py-2 drop-shadow-lg
+                    transition hover:scale-110 duration-300 ${annualOption ? "bg-primary" : "bg-white"}`}
                     onClick={() => setAnnualOption(true)}
                 >
-                    Annual (20% off)
+                    <p className={`md:text-lg font-medium ${annualOption ? "text-white" : "text-black"}`}>Yearly</p>
                 </button>
+                <div className="flex items-center justify-center h-6 px-2 bg-primary bg-opacity-20 ">
+                    <p className="text-primary font-medium">20% off</p>
+                </div>
             </div>
-            <div className='flex flex-row gap-16 flex-wrap'>
+            {/* Plans */}
+            <div className='flex flex-col-reverse lg:flex-row justify-center gap-16 mb-12"'>
                 {/* Free Plan */}
-                <div className='flex flex-col items-center px-12 py-4 gap-8 bg-[#CCCCCC] bg-opacity-10 rounded-md'>
-                    <p className='text-xl'>Free</p>
-                    <p className='text-3xl font-semibold'>$0/mo</p>
-                    <div className='flex flex-col'>
+                <div className="flex flex-col items-center bg-white rounded-2xl w-72 h-96 gap-4 drop-shadow-lg">
+                <div className={`w-full h-4 bg-gray-300 rounded-t-2xl`} />
+                    <p className="text-xl text-black font-medium">Free</p>
+                    <div className="flex flex-col items-center my-4 h-12">
+                        <p className="text-4xl text-black font-semibold">$0/mo</p>
+                    </div>
+                    <div className="flex flex-col items-center gap-2 w-full">
                         <p>1 Free Plan</p>
                     </div>
                     <button
-                        className='bg-[#B3B3B3] text-white rounded-md px-12 py-2 mt-12 drop-shadow-md'
+                        className="flex items-center justify-center rounded-2xl mt-auto m-4 py-3 px-14 text-primary
+                        transition hover:scale-110 hover:bg-primary hover:text-white duration-300 border-2 border-primary"
                         onClick={() => handleSubscribe(process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID || "")}
                         disabled
                     >
@@ -80,24 +87,26 @@ export default function SubscriptionPage() {
                     </button>
                 </div>
                 {/* Pro Plan */}
-                <div className='flex flex-col items-center px-12 py-4 gap-8 bg-primary bg-opacity-10 rounded-md'>
-                    <p className='text-xl'>Pro</p>
-                    <div className='flex flex-col items-center gap-1'>
-                        <p className='text-3xl font-semibold'>${annualOption ? "4" : "5"}/mo</p>
-                        <p className='text-sm text-[#808080]'>{annualOption ? "billed $48 annually" : "billed monthly"}</p>
+                <div className="flex flex-col items-center bg-white rounded-2xl w-72 h-96 gap-4 drop-shadow-lg">
+                <div className={`w-full h-4 bg-primary rounded-t-2xl`} />
+                    <p className="text-xl text-black font-medium">Pro</p>
+                    <div className="flex flex-col items-center my-4 h-12">
+                        <p className="text-4xl text-black font-semibold">${annualOption ? "4" : "5"}/mo</p>
+                        <p className="text-sm text-[#808080] mt-1">{annualOption ? "billed $48 annually" : "billed monthly"}</p>
                     </div>
-                    <div className='flex flex-col'>
-                        <p>1 Free Plan</p>
+                    <div className="flex flex-col items-center gap-2 w-full">
+                        <p>Up to 10 plans per month</p>
+                        <p>Multi Plan support</p>
                     </div>
                     <button
-                        className='bg-primary text-white rounded-md px-12 py-2 mt-12 drop-shadow-md
-                            transition hover:scale-105 duration-300'
+                        className="flex items-center justify-center rounded-2xl mt-auto m-4 py-3 px-14 text-primary
+                        transition hover:scale-110 hover:bg-primary hover:text-white duration-300 border-2 border-primary"
                         onClick={() => handleSubscribe(process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || "")}
                     >
                         Upgrade
                     </button>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
