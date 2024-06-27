@@ -67,6 +67,17 @@ export interface PlanResult {
 }
 
 export interface Badge {
+  _id: string;
+  goal: string;
+  weeks: number;
+  userId: string;
+  imageKey: string;
+  completionDate: string;
+  planId: string;
+}
+
+// For POST and PUT requests
+export interface IBadgeInput {
   goal: string;
   weeks: number;
   userId: string;

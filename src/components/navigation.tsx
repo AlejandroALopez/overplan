@@ -44,15 +44,15 @@ export default function Navigation() {
               <Image src={Map} alt="my plans icon" />
               <p className="font-medium">My Plans</p>
             </Link>
-            {/* <Link href="/dashboard/badges" className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
+            <Link href="/dashboard/badges" className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/badges' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
             <Image src={Badge} alt="my badges icon" />
             <p className="font-medium">My Badges</p>
-          </Link> */}
+          </Link>
           </div>
           {/* Bottom Buttons */}
           <div className="flex flex-col items-center w-full gap-1">
-            <div className="bg-[#D9D9D9] h-0.5 w-11/12 mb-4  rounded-md" />
+            <div className="bg-[#D9D9D9] h-0.5 w-11/12 mb-4 rounded-md" />
             <Link href="/dashboard/account" className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/account' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
               <Image src={User} alt="account icon" />

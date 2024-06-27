@@ -1,10 +1,10 @@
 import axios from "axios";
-import { Badge } from "../types/planTypes";
+import { IBadgeInput } from "../types/planTypes";
 import { NextResponse } from 'next/server';
 import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
 // Create badge and return it
-export const createBadge = async (badgeBody: Badge) => {
+export const createBadge = async (badgeBody: IBadgeInput) => {
     let { token, refreshToken } = getTokensFromCookies();
     const URL = 'http://localhost:8080/badges';
 

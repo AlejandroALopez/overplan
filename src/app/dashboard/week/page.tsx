@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
-import { IMoveTasksInput, IPlanInput, Plan, Task, Badge } from "@/lib/types/planTypes";
+import { IMoveTasksInput, IPlanInput, Plan, Task, IBadgeInput } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { createBadge } from "@/lib/api/badgesApi";
 import { setActivePlan } from "@/lib/store/planSlice";
@@ -66,7 +66,7 @@ export default function Week() {
     });
 
     const createBadgeMutation = useMutation({
-        mutationFn: (badgeInput: Badge) => {
+        mutationFn: (badgeInput: IBadgeInput) => {
             return createBadge(badgeInput);
         },
         onError: () => {
@@ -131,7 +131,7 @@ export default function Week() {
         });
 
         // Create Badge
-        const badgeBody: Badge = {
+        const badgeBody: IBadgeInput = {
             goal: planData.goal,
             weeks: planData.numWeeks,
             userId: userData._id,
