@@ -29,7 +29,7 @@ const planPersistConfig = {
 const sessionPersistConfig = {
   key: "session",
   storage: storage,
-  whitelist: [],
+  whitelist: ["userData"],
 }
 
 const rootReducer = combineReducers({

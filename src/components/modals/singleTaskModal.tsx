@@ -22,7 +22,7 @@ const column_text_colors: ColumnColorsType = {
 export default function SingleTaskModal() {
     const dispatch = useAppDispatch();
     const queryClient = useQueryClient();
-    const activePlanId = useAppSelector(state => state.session.user.activePlanId);
+    const activePlanId = useAppSelector(state => state.session.userData?.activePlanId);
     const { isSingleTaskOpen, selectedTask } = useAppSelector(state => state.modal);
     const [editMode, setEditMode] = useState<boolean>(false);
     const [titleVal, setTitleVal] = useState<string>(selectedTask?.title || "");

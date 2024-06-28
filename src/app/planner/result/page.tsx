@@ -7,7 +7,7 @@ import { ColumnColorsType } from "@/lib/types/weekProps";
 import { useAppSelector } from "@/lib/store";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
-import { Task } from "@/lib/types/planTypes";
+import { ITask } from "@/lib/types/planTypes";
 import { RESULT_SUBTITLE } from "@/lib/constants/plannerConstants";
 
 const status_bg_colors: ColumnColorsType = {
@@ -53,13 +53,13 @@ export default function Result() {
         enabled: !!activePlan?._id
     })
 
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<ITask[]>([]);
 
     useEffect(() => {
         if (tasksData) setTasks(tasksData);
     }, [tasksData]);
 
-    const filteredTasks = tasks?.filter((task: Task) => task.week === activeWeek);
+    const filteredTasks = tasks?.filter((task: ITask) => task.week === activeWeek);
 
     if (isPending) return (<div>Loading...</div>)
     if (error) return (<div>An error has occurred: {error.message} </div>)
@@ -77,7 +77,7 @@ export default function Result() {
                 ))}
             </div>
             <div className="flex flex-row flex-wrap gap-4 px-4 mt-8">
-                {filteredTasks?.map((task: Task) => (
+                {filteredTasks?.map((task: ITask) => (
                     <Task key={task._id} task={task} />
                 ))}
             </div>

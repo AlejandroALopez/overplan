@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Task } from "./planTypes";
+import { ITask } from "./planTypes";
 
 export interface ColumnProps {
     column: string,
-    cards: Task[],
-    setCards: Dispatch<SetStateAction<Task[]>>;
+    cards: ITask[],
+    setCards: Dispatch<SetStateAction<ITask[]>>;
 }
 
 export interface DropIndicatorProps {
@@ -12,11 +12,11 @@ export interface DropIndicatorProps {
     column: string,
 }
 
-export type HandleDragStartFunction = (e: React.DragEvent<HTMLDivElement>, card: Task) => void;
+export type HandleDragStartFunction = (e: React.DragEvent<HTMLDivElement>, card: ITask) => void;
 export type DragFunction = (e: React.DragEvent<HTMLDivElement>) => void;
 
 export interface CardProps {
-    task: Task,
+    task: ITask,
     handleDragStart: HandleDragStartFunction,
 }
 
@@ -25,6 +25,6 @@ export interface ColumnColorsType {
 }
 
 export interface KanbanProps {
-    cards: Task[],
-    setCards: Dispatch<SetStateAction<Task[]>>;
+    cards: ITask[],
+    setCards: Dispatch<SetStateAction<ITask[]>>;
 }

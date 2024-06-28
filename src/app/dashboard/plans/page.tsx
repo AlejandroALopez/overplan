@@ -32,9 +32,9 @@ export default function MyPlans() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const [plans, setPlans] = useState<Plan[]>([]);
-    const userData = useAppSelector(state => state.session.user);
+    const userData = useAppSelector(state => state.session.userData);
 
-    const { isPending, error, data: plansData } = usePlansByUserId(userData._id || "");
+    const { isPending, error, data: plansData } = usePlansByUserId(userData?.userId || "");
 
     const handleRowClick = (plan: Plan) => {
         // TODO: Add Loading

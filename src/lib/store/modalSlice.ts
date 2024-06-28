@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Task } from "../types/planTypes";
+import { ITask } from "../types/planTypes";
 
 export interface IModalState {
   isLoading: boolean;
@@ -12,7 +12,7 @@ export interface IModalState {
 
   // Single Task Modal data
   isSingleTaskOpen: boolean;
-  selectedTask: Task | null;
+  selectedTask: ITask | null;
 
   // Create Task Modal data
   isCreateTaskOpen: boolean;
@@ -44,7 +44,7 @@ export const modalSlice = createSlice({
     setIsCreateTaskOpen: (state, action: PayloadAction<boolean>) => {
       state.isCreateTaskOpen = action.payload;
     },
-    setSelectedTask: (state, action: PayloadAction<Task | null>) => {
+    setSelectedTask: (state, action: PayloadAction<ITask | null>) => {
       state.selectedTask = action.payload;
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {

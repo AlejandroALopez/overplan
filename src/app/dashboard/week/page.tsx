@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
-import { IMoveTasksInput, IPlanInput, Plan, Task, IBadgeInput } from "@/lib/types/planTypes";
+import { IMoveTasksInput, IPlanInput, Plan, ITask, IBadgeInput } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { createBadge } from "@/lib/api/badgesApi";
 import { setActivePlan } from "@/lib/store/planSlice";
@@ -21,23 +21,24 @@ import {
 } from "@/lib/store/modalSlice";
 import { Kanban } from "./kanban";
 import { ProgressBar, PlanSelector } from './components';
-import { setUser } from "@/lib/store/sessionSlice";
+import { setUserData } from "@/lib/store/sessionSlice";
 import Loading from "./loading";
 import Error from "./error";
+import { User } from "@/lib/types/sessionTypes";
 
 
 export default function Week() {
     const dispatch = useAppDispatch();
-    const activePlanId = useAppSelector(state => state.session.user.activePlanId);
-    const userData = useAppSelector(state => state.session.user);
+    const activePlanId = useAppSelector(state => state.session.userData?.activePlanId);
+    const userData = useAppSelector(state => state.session.userData);
     const queryClient = useQueryClient();
     const today = dayjs();
 
-    const { isPending: isPendingPlans, error: errorPlans, data: allPlansData } = usePlansByUserId(userData._id || "");
-    const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(activePlanId);
+    const { isPending: isPendingPlans, error: errorPlans, data: allPlansData } = usePlansByUserId(userData?.userId || "");
+    const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(activePlanId || "");
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
-    const [cards, setCards] = useState<Task[]>([]);
+    const [cards, setCards] = useState<ITask[]>([]);
     const [showPlansSelector, setShowPlansSelector] = useState<boolean>(false);
     const [showCompletedSection, setShowCompletedSection] = useState<boolean>(false);
     const completedTasks = cards.filter((c) => c.status === 'Completed').length;
@@ -57,7 +58,7 @@ export default function Week() {
 
     const updatePlanMutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
-            return updatePlan(activePlanId, planInput);
+            return updatePlan(activePlanId || "", planInput);
         },
         onError: () => {
             console.log('Error updating plan');
@@ -134,7 +135,7 @@ export default function Week() {
         const badgeBody: IBadgeInput = {
             goal: planData.goal,
             weeks: planData.numWeeks,
-            userId: userData._id,
+            userId: userData?.userId || "",
             planId: planData._id,
             imageKey: "blue",
             completionDate: dayjs(today).format('MM/DD/YYYY'),
@@ -184,7 +185,7 @@ export default function Week() {
         setShowPlansSelector(false);
 
         try {
-            dispatch(setUser({ ...userData, activePlanId: selectedPlan._id }));
+            dispatch(setUserData({ ...userData as User, activePlanId: selectedPlan._id }));
             dispatch(setActivePlan(selectedPlan));
 
             await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
@@ -223,7 +224,7 @@ export default function Week() {
                             <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
                     </div>
-                    {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={allPlansData} activePlanId={activePlanId} />}
+                    {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={allPlansData} activePlanId={activePlanId || ""} />}
                     <ProgressBar prog={weekProg} />
                 </div>
                 {daysUntilWeekEnd > 0 && (

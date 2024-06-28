@@ -1,4 +1,4 @@
-export interface Task {
+export interface ITask {
   _id: string;
   title: string;
   description: string;
@@ -63,7 +63,7 @@ export interface Plan {
 export interface PlanResult {
   goal: string;
   numWeeks: number;
-  tasks: Task[]; // ordered by week using a function
+  tasks: ITask[]; // ordered by week using a function
 }
 
 export interface Badge {

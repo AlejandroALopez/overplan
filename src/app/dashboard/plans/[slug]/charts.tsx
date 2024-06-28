@@ -1,15 +1,15 @@
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
-import { Task } from '@/lib/types/planTypes';
+import { ITask } from '@/lib/types/planTypes';
 
 ChartJS.register(ArcElement, Tooltip);
 
 interface WeekChartProps {
-    tasks: Task[];
+    tasks: ITask[];
 }
 
 interface OverallChartProps {
-    tasks: Task[];
+    tasks: ITask[];
     currWeek: number;
 }
 
@@ -28,7 +28,7 @@ export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
     };
 
     // Loop through the tasks array and count the statuses
-    tasks?.forEach((task: Task) => {
+    tasks?.forEach((task: ITask) => {
         if (statusCounts.hasOwnProperty(task.status)) {
             statusCounts[task.status]++;
         }
@@ -119,7 +119,7 @@ export const OverallSummaryChart: React.FC<OverallChartProps> = ({ tasks, currWe
     };
 
     // Loop through the tasks array and count the statuses
-    tasks?.forEach((task: Task) => {
+    tasks?.forEach((task: ITask) => {
         if (task.status === "Completed" && task.week !== currWeek) {
             statusCounts['Done (past weeks)']++;
         } else if (task.status === "Completed" && task.week === currWeek) {

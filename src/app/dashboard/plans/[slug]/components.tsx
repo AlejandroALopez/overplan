@@ -7,7 +7,7 @@ import { TopMetricsProps } from "@/lib/types/metricsProps";
 import dayjs from "dayjs";
 import { WeekProps, TaskProps, WeekSelectorProps } from "@/lib/types/plannerProps";
 import { ColumnColorsType } from "@/lib/types/weekProps";
-import { Task } from "@/lib/types/planTypes";
+import { ITask } from "@/lib/types/planTypes";
 
 export const TopMetrics: React.FC<TopMetricsProps> = ({ plan, tasks }) => {
     const today = dayjs().format('MM/DD/YYYY');
@@ -92,7 +92,7 @@ export const WeekSelector: React.FC<WeekSelectorProps> = ({ weeksArray, activeWe
                 </div>
             </div>
             <div className="flex flex-row flex-wrap gap-4">
-                {filteredTasks?.map((task: Task) => (
+                {filteredTasks?.map((task: ITask) => (
                     <Task key={task._id} task={task} />
                 ))}
             </div>

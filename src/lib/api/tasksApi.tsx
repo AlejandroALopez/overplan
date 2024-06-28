@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { NextResponse } from "next/server";
-import { IMoveTasksInput, ITaskInput, Task } from "../types/planTypes";
+import { IMoveTasksInput, ITaskInput } from "../types/planTypes";
 import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 
 // Get tasks by planId and week

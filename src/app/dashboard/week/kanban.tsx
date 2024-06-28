@@ -5,7 +5,7 @@ import {
     HandleDragStartFunction, DragFunction, ColumnColorsType
 } from '@/lib/types/weekProps';
 import { useMutation } from "@tanstack/react-query";
-import { UpdateTaskMutationInput, ITaskInput, Task } from "@/lib/types/planTypes";
+import { UpdateTaskMutationInput, ITaskInput, ITask } from "@/lib/types/planTypes";
 import { updateTask } from "@/lib/api/tasksApi";
 import dayjs from "dayjs";
 import { useAppDispatch } from "@/lib/store";

@@ -1,6 +1,6 @@
-import { Plan, Task } from "./planTypes";
+import { Plan, ITask } from "./planTypes";
 
 export interface TopMetricsProps {
   plan: Plan | null;
-  tasks: Task[];
+  tasks: ITask[];
 }

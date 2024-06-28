@@ -10,11 +10,11 @@ import Loading from "./loading";
 import Error from "./error";
 
 export default function MyBadges() {
-    const userData = useAppSelector(state => state.session.user);
+    const userData = useAppSelector(state => state.session.userData);
 
     const [badges, setBadges] = useState<Badge[]>([]);
 
-    const { isPending, error, data: badgesData } = useBadgesByUserId(userData._id || "");
+    const { isPending, error, data: badgesData } = useBadgesByUserId(userData?.userId || "");
 
     useEffect(() => {
         if(badgesData) setBadges(badgesData);

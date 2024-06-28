@@ -1,8 +1,10 @@
 export interface User {
-    _id: string,
+    userId: string,
     firstName: string,
     lastName: string,
     email: string,
+    provider?: string,
     tier: string,
+    tokens: number,
     activePlanId: string,
 }

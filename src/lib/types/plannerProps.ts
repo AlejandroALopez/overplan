@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Task } from './planTypes';
+import { ITask } from './planTypes';
 
 export interface WeekOptionProps {
     weeks: number;
@@ -16,9 +16,9 @@ export interface WeekSelectorProps {
     activeWeek: number;
     setActiveWeek: Dispatch<SetStateAction<number>>;
     weeksArray: null[];
-    filteredTasks: Task[];
+    filteredTasks: ITask[];
 }
 
 export interface TaskProps {
-    task: Task
+    task: ITask
 }

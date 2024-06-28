@@ -5,13 +5,13 @@ import { useAppSelector } from "@/lib/store";
 import { TopMetrics, WeekSelector } from "./components";
 import { useAllTasks } from "@/hooks/queries";
 import { useEffect, useState } from "react";
-import { Plan, Task } from "@/lib/types/planTypes";
+import { Plan, ITask } from "@/lib/types/planTypes";
 import { OverallSummaryChart, WeekSummaryChart } from "./charts";
 
 
 export default function SinglePlan() {
     const selectedPlan: Plan | null = useAppSelector(state => state.plan.metricsPlan);
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useState<ITask[]>([]);
 
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useAllTasks(selectedPlan?._id || "");
     const weekTasks = tasks.filter((t) => t.week === selectedPlan?.currWeek);
