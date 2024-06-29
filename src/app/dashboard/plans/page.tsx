@@ -19,8 +19,8 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
     };
 
     return (
-        <div className="flex flex-row justify-center items-center gap-4">
-            <div className="h-3 w-5/12 bg-primary bg-opacity-25 rounded-3xl">
+        <div className="flex flex-col-reverse md:flex-row justify-center items-center gap-4">
+            <div className="h-3 w-full md:w-5/12 bg-primary bg-opacity-25 rounded-3xl">
                 <div className="h-full bg-primary rounded-3xl" style={progressBarStyle} />
             </div>
             <p>{(prog * 100).toFixed(0)}%</p>
@@ -43,7 +43,7 @@ export default function MyPlans() {
     };
 
     useEffect(() => {
-        if(plansData) setPlans(plansData);
+        if (plansData) setPlans(plansData);
     }, [plansData]);
 
     if (isPending) return (<Loading />)
@@ -51,28 +51,29 @@ export default function MyPlans() {
     if (error) return (<Error />)
 
     return (
-        <div className="flex flex-col w-full bg-white gap-12 p-8">
-            <div className="flex flex-row justify-between w-full">
+        <div className="flex flex-col bg-white gap-12 p-8 w-full">
+            {/* Headings */}
+            <div className="flex flex-row items-center justify-between w-full">
                 <p className="text-3xl font-medium">My Plans</p>
-                <Link href="/planner/goal" className={`py-4 px-6 mr-8 border-none rounded-md bg-primary
-                        text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300`}>
-                    Create Plan
+                <Link href="/planner/goal" className="py-4 px-6 lg:mr-8 border-none rounded-md bg-primary
+                    drop-shadow-lg transition hover:scale-110 duration-300">
+                    <p className="text-xl text-white">Create Plan</p>
                 </Link>
             </div>
-            <div className="overflow-x-auto">
-                <table className="table-auto w-full">
+            <div className="overflow-x-scroll lg:overflow-x-auto">
+                <table className="table-auto min-w-[600px] lg:w-full">
                     <thead>
                         <tr>
-                            <th className="text-gray-400 text-xl font-normal border-b border-gray-200 px-4 py-2">Goal</th>
-                            <th className="text-gray-400 text-xl font-normal border-b border-gray-200 px-4 py-2">Week</th>
-                            <th className="text-gray-400 text-xl font-normal border-b border-gray-200 px-4 py-2">Week Progress</th>
-                            <th className="text-gray-400 text-xl font-normal border-b border-gray-200 px-4 py-2">Week ends on</th>
+                            <th className="text-gray-400 md:text-xl font-normal border-b border-gray-200 px-4 py-2">Goal</th>
+                            <th className="text-gray-400 md:text-xl font-normal border-b border-gray-200 px-4 py-2">Week</th>
+                            <th className="text-gray-400 md:text-xl font-normal border-b border-gray-200 px-4 py-2">Week Progress</th>
+                            <th className="text-gray-400 md:text-xl font-normal border-b border-gray-200 px-4 py-2">Week ends on</th>
                         </tr>
                     </thead>
                     <tbody>
                         {plans.map((plan: Plan) => (
-                            <tr 
-                                key={plan._id} 
+                            <tr
+                                key={plan._id}
                                 className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300"
                                 onClick={() => handleRowClick(plan)}
                             >

@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { useAppSelector } from "@/lib/store";
 
 export default function AccountPage() {
-    // const plan: string = 'Free';
-    const plan: string = 'Pro';
+    const userData = useAppSelector(state => state.session.userData);
     const renewDate: string = "May 16th, 2024";
 
     const handleLogout = () => {
@@ -26,17 +26,17 @@ export default function AccountPage() {
             <p className='text-3xl sm:text-4xl font-semibold'>My Account</p>
             <div className='flex flex-col gap-2'>
                 <p className='text-lg sm:text-xl text-[#999999]'>Name</p>
-                <p className='text-lg sm:text-xl'>John Doe</p>
+                <p className='text-lg sm:text-xl'>{userData?.firstName} {userData?.lastName}</p>
             </div>
             <div className='flex flex-col gap-2'>
                 <p className='text-lg sm:text-xl text-[#999999]'>Email</p>
-                <p className='text-lg sm:text-xl'>john.doe@gmail.com</p>
+                <p className='text-lg sm:text-xl'>{userData?.email}</p>
             </div>
             <div className='flex flex-col gap-2'>
                 <p className='text-lg sm:text-xl text-[#999999]'>Subscription Plan</p>
                 <div className='flex flex-row items-center gap-6'>
-                    <p className='text-lg sm:text-xl'>{plan}</p>
-                    {plan === 'Free' &&
+                    <p className='text-lg sm:text-xl'>{userData?.tier}</p>
+                    {userData?.tier === 'Free' &&
                         <Link
                             href='/dashboard/subscriptions'
                             className='text-primary text-md transition hover:scale-105 duration-300'
@@ -46,7 +46,7 @@ export default function AccountPage() {
                     }
                 </div>
             </div>
-            {plan === 'Pro' &&
+            {userData?.tier === 'Pro' &&
                 <div className='flex flex-col gap-2'>
                     <p className='text-lg sm:text-xl text-[#999999]'>Renews on</p>
                     <div className='flex flex-row items-center gap-6'>
