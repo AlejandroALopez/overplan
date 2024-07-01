@@ -46,9 +46,9 @@ export default function Navigation() {
             </Link>
             <Link href="/dashboard/badges" className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/badges' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
-            <Image src={Badge} alt="my badges icon" />
-            <p className="font-medium">My Badges</p>
-          </Link>
+              <Image src={Badge} alt="my badges icon" />
+              <p className="font-medium">My Badges</p>
+            </Link>
           </div>
           {/* Bottom Buttons */}
           <div className="flex flex-col items-center w-full gap-1">
@@ -67,16 +67,32 @@ export default function Navigation() {
         </div>
       </div>
       {/* Accordion Menu for Smaller Screens */}
-      <div className={`w-full flex-wrap py-2 justify-evenly bg-[#f5f5f5] ${showMenu ? 'max-sm:flex sm:hidden' : 'hidden'}`}>
-        <Link href="/dashboard/week" className={`flex flex-row items-center justify-center gap-4 w-56 py-3 bg-opacity-10 rounded-md
+      <div className={`w-full flex-wrap py-2 justify-evenly bg-[#f7f7f7] ${showMenu ? 'max-sm:flex sm:hidden' : 'hidden'}`}>
+        <Link href="/dashboard/week" onClick={toggleMenu} className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/week' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
-          <Image src={Home} alt="my weeks icon" />
+          <Image src={Home} alt="my weeks icon (mobile)" />
           <p className="font-medium">My Week</p>
         </Link>
-        <Link href="/dashboard/plans" className={`flex flex-row items-center justify-center gap-4 w-56 py-3 bg-opacity-10 rounded-md
+        <Link href="/dashboard/plans" onClick={toggleMenu} className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
           ${pathname === '/dashboard/plans' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
-          <Image src={Map} alt="my plans icon" />
+          <Image src={Map} alt="my plans icon (mobile)" />
           <p className="font-medium">My Plans</p>
+        </Link>
+        <Link href="/dashboard/badges" onClick={toggleMenu} className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
+          ${pathname === '/dashboard/badges' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+          <Image src={Badge} alt="my badges icon (mobile)" />
+          <p className="font-medium">My Badges</p>
+        </Link>
+        <div className="bg-[#D9D9D9] h-0.5 w-11/12 my-2 rounded-md" />
+        <Link href="/dashboard/account" onClick={toggleMenu} className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
+          ${pathname === '/dashboard/account' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+          <Image src={User} alt="account icon (mobile)" />
+          <p className="font-medium">Account</p>
+        </Link>
+        <Link href="/dashboard/subscriptions" onClick={toggleMenu} className={`flex flex-row items-center gap-4 w-11/12 py-3 px-6 bg-opacity-10 rounded-md
+          ${pathname === '/dashboard/subscriptions' ? "bg-primary" : "bg-white"} transition hover:scale-105 duration-300`}>
+          <Image src={CreditCard} alt="subscriptions icon (mobile)" />
+          <p className="font-medium">Subscriptions</p>
         </Link>
       </div>
     </>
