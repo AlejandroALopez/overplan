@@ -31,10 +31,27 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 export default function MyPlans() {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const [plans, setPlans] = useState<Plan[]>([]);
-    const userData = useAppSelector(state => state.session.userData);
 
+    const [plans, setPlans] = useState<Plan[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+
+    const plansPerPage: number = 4
+    const totalPages: number = Math.ceil(plans.length / plansPerPage);
+
+    // Slicing Plans array for pages
+    const startIndex = (currentPage - 1) * plansPerPage;
+    const currentPlans = plans.slice(startIndex, startIndex + plansPerPage);
+
+    const userData = useAppSelector(state => state.session.userData);
     const { isPending, error, data: plansData } = usePlansByUserId(userData?.userId || "");
+
+    const handlePrevPage = () => {
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    };
 
     const handleRowClick = (plan: Plan) => {
         // TODO: Add Loading
@@ -51,7 +68,7 @@ export default function MyPlans() {
     if (error) return (<Error />)
 
     return (
-        <div className="flex flex-col bg-white gap-12 p-8 w-full">
+        <div className="flex flex-col bg-white gap-12 p-8 w-full min-h-screen">
             {/* Headings */}
             <div className="flex flex-row items-center justify-between w-full">
                 <p className="text-3xl font-medium">My Plans</p>
@@ -60,7 +77,7 @@ export default function MyPlans() {
                     <p className="text-xl text-white">Create Plan</p>
                 </Link>
             </div>
-            <div className="overflow-x-scroll lg:overflow-x-auto">
+            <div className="overflow-x-scroll lg:overflow-x-auto h-3/4 lg:h-1/2">
                 <table className="table-auto min-w-[600px] lg:w-full">
                     <thead>
                         <tr>
@@ -71,7 +88,7 @@ export default function MyPlans() {
                         </tr>
                     </thead>
                     <tbody>
-                        {plans.map((plan: Plan) => (
+                        {currentPlans.map((plan: Plan) => (
                             <tr
                                 key={plan._id}
                                 className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300"
@@ -85,6 +102,23 @@ export default function MyPlans() {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex flex-row items-center justify-center gap-4">
+                <button
+                    className="px-4 py-2 bg-primary rounded disabled:opacity-50"
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                >
+                    <p className="text-white">&lt;</p>
+                </button>
+                <span className="text-center w-24">Page {currentPage} of {totalPages}</span>
+                <button
+                    className="px-4 py-2 bg-primary rounded disabled:opacity-50"
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                >
+                    <p className="text-white">&gt;</p>
+                </button>
             </div>
         </div>
     );
