@@ -6,19 +6,22 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { useMutation } from "@tanstack/react-query";
+import { createPlan } from "@/lib/api/plannerApi";
+import { IPlanInput } from "@/lib/types/planTypes";
+import { makeSlug } from "@/lib/utils/formatFunctions";
+import { setActivePlan } from "@/lib/store/planSlice";
+import { REVIEW_TITLE } from "@/lib/constants/plannerConstants";
+import { setIsNoTokensOpen } from "@/lib/store/modalSlice";
 
+import Zap from "../../../../public/icons/zap.svg";
 import Compass from "../../../../public/icons/compass.svg";
 import Clock from "../../../../public/icons/clock.svg";
 import Calendar from "../../../../public/icons/calendar.svg";
-import { createPlan } from "@/lib/api/plannerApi";
-import { IPlanInput, Plan } from "@/lib/types/planTypes";
-import { makeSlug } from "@/lib/utils/formatFunctions";
-import { setActivePlan } from "@/lib/store/planSlice";
-import { REVIEW_TITLE, USER_ID } from "@/lib/constants/plannerConstants";
 
 export default function ReviewPlan() {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const userData = useAppSelector(state => state.session.userData);
     const goal = useAppSelector(state => state.input.goal);
     const weeks = useAppSelector(state => state.input.numWeeks);
     const startDate = useAppSelector(state => state.input.startDate); // TODO: Replace with redux state
@@ -38,12 +41,31 @@ export default function ReviewPlan() {
         dispatch(setActivePlan(mutation.data));
     }
 
+    // If enough tokens, create Plan. Else, display modal
+    const handleCreatePlan = () => {
+        if (userData?.tokens) {
+            // TODO: Remove 1 token (maybe on success)
+            mutation.mutate({
+                slug: slug,
+                userId: userData?.userId,
+                goal: goal,
+                numWeeks: weeks,
+                currWeek: 1,
+                weekProg: 0,
+                startDate: startDate,
+                weekEndDate: weekEndDate,
+            })
+        } else {
+            dispatch(setIsNoTokensOpen(true));
+        }
+    }
+
     return (
         <>
             {mutation.isPending && (
                 <main className="flex min-h-screen flex-col justify-center items-center p-8">
                     <div className="flex flex-col items-center justify-center gap-12">
-                        <div className="big-loading-spinner"/>
+                        <div className="big-loading-spinner" />
                         <p className="text-2xl sm:text-3xl font-semibold">Your Plan is being created...</p>
                     </div>
                 </main>
@@ -70,30 +92,25 @@ export default function ReviewPlan() {
                     <div className="flex flex-row justify-between my-12 lg:my-16 w-full md:w-1/2">
                         <Link href="/planner/dates">
                             <button
-                                className={`py-4 px-6 border-none rounded-md bg-primary 
-                                text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300`}
+                                className={`h-16 w-28 border-none rounded-md bg-primary 
+                                drop-shadow-lg transition hover:scale-110 duration-300`}
                             >
-                                &lt; Back
+                                <p className="text-white text-lg sm:text-xl">&lt; Back</p>
                             </button>
                         </Link>
-                        <button
-                            className={`py-4 px-6 border-none rounded-md bg-primary
-                                text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300`}
-                            onClick={() => {
-                                mutation.mutate({
-                                    slug: slug,
-                                    userId: USER_ID,
-                                    goal: goal,
-                                    numWeeks: weeks,
-                                    currWeek: 1,
-                                    weekProg: 0,
-                                    startDate: startDate,
-                                    weekEndDate: weekEndDate,
-                                })
-                            }}
-                        >
-                            Create Plan
-                        </button>
+                        <div className="flex flex-row gap-4">
+                            <button
+                                className={`h-16 w-40 border-none rounded-md bg-primary
+                                 drop-shadow-lg transition hover:scale-110 duration-300`}
+                                onClick={() => handleCreatePlan()}
+                            >
+                                <p className="text-white text-lg sm:text-xl">Create Plan</p>
+                            </button>
+                            <div className="flex flex-row px-4 py-4 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
+                                <Image src={Zap} alt="zap icon" />
+                                <p className="text-xl font-medium text-center">{userData?.tokens}</p>
+                            </div>
+                        </div>
                     </div>
                 </main>
             )}

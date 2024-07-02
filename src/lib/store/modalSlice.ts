@@ -20,6 +20,9 @@ export interface IModalState {
   // Plan Completed Modal data
   isPlanCompletedOpen: boolean;
   completedPlan: { goal: string; weeks: number };
+
+  // No Tokens Modal data
+  isNoTokensOpen: boolean;
 }
 
 const initialState: IModalState = {
@@ -28,6 +31,7 @@ const initialState: IModalState = {
   isConfirmOpen: false,
   isCreateTaskOpen: false,
   isPlanCompletedOpen: false,
+  isNoTokensOpen: false,
   message: "",
   completedPlan: { goal: "", weeks: 1 },
   onConfirm: null,
@@ -56,6 +60,9 @@ export const modalSlice = createSlice({
     setIsPlanCompletedOpen: (state, action: PayloadAction<boolean>) => {
       state.isPlanCompletedOpen = action.payload;
     },
+    setIsNoTokensOpen: (state, action: PayloadAction<boolean>) => {
+      state.isNoTokensOpen = action.payload;
+    },
     setCompletedPlan(state, action: PayloadAction<{goal: string, weeks: number}>) {
       state.completedPlan = action.payload;
     },
@@ -79,6 +86,7 @@ export const {
   setIsLoading,
   setIsCreateTaskOpen,
   setIsPlanCompletedOpen,
+  setIsNoTokensOpen,
   setSelectedTask,
   setCompletedPlan,
   setMessage,
