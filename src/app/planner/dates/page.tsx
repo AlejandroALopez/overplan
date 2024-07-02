@@ -38,7 +38,7 @@ export default function SetDates() {
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <main className="flex min-h-screen flex-col items-center p-8">
-                <p className="text-xl sm:text-2xl mt-8">
+                <p className="text-xl sm:text-2xl mt-8 text-center">
                     Goal: <span className="font-semibold">{goal}</span>
                 </p>
                 <p className="text-xl sm:text-2xl mt-4">{weeks} weeks</p>

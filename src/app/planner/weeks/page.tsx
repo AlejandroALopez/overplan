@@ -13,23 +13,23 @@ const WeekSelector: React.FC<WeekOptionProps> = ({ weeks, setWeeks }) => {
         <div className="flex flex-col my-12">
             <div className="flex flex-row items-center sm:gap-4 my-8">
                 <button
-                    className={`bg-[#A6A6A6] w-20 h-20 sm:w-24 sm:h-24 rounded-2xl drop-shadow-xl 
+                    className={`bg-[#A6A6A6] w-20 h-20 sm:w-20 sm:h-20 rounded-2xl drop-shadow-xl 
                     transition hover:scale-110 duration-300 cursor-pointer
-                    ${weeks >= MIN_WEEKS + 1 ? "bg-opacity-40" : "bg-opacity-10"}`}
+                    ${weeks >= MIN_WEEKS + 1 ? "bg-opacity-25" : "bg-opacity-10"}`}
                     onClick={() => (weeks >= MIN_WEEKS + 1) ? setWeeks(weeks - 1) : null}
                 >
-                    <p className="text-5xl sm:text-6xl">-</p>
+                    <p className="text-5xl">-</p>
                 </button>
                 <div className="flex items-center justify-center w-32 h-16 rounded-2xl border-none">
                     <p className="text-4xl sm:text-5xl">{weeks}</p>
                 </div>
                 <button
-                    className={`bg-[#A6A6A6] w-20 h-20 sm:w-24 sm:h-24 rounded-2xl drop-shadow-xl 
+                    className={`bg-[#A6A6A6] w-20 h-20 sm:w-20 sm:h-20 rounded-2xl drop-shadow-xl 
                     transition hover:scale-110 duration-300 cursor-pointer
-                    ${weeks <= MAX_WEEKS - 1 ? "bg-opacity-40" : "bg-opacity-10"}`}
+                    ${weeks <= MAX_WEEKS - 1 ? "bg-opacity-25" : "bg-opacity-10"}`}
                     onClick={() => (weeks <= MAX_WEEKS - 1) ? setWeeks(weeks + 1) : null}
                 >
-                    <p className="text-5xl sm:text-6xl">+</p>
+                    <p className="text-5xl">+</p>
                 </button>
             </div>
         </div>

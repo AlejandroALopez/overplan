@@ -22,16 +22,16 @@ export default function Goal() {
 
     return (
         <main className="flex min-h-screen flex-col items-center p-8">
-            <p className="text-2xl sm:text-3xl text-center mt-8">Let&apos;s build the best plan for you</p>
+            <p className="text-2xl sm:text-3xl text-center mt-8 font-light">Let&apos;s build the best plan for you</p>
             <p className="text-2xl sm:text-3xl text-center font-semibold mt-16">{GOAL_QUESTION}</p>
             <input
-                className="w-3/4 md:w-2/4 mt-16 p-8 border-[#808080] border-[1px] rounded-xl bg-[#A6A6A6] bg-opacity-25 text-lg md:text-xl"
+                className="w-3/4 md:w-2/4 mt-16 p-8 border-[#808080] border-[1px] rounded-xl bg-opacity-25 text-lg md:text-xl"
                 placeholder={GOAL_PLACEHOLDER}
                 value={selectedGoal}
                 onChange={e => setSelectedGoal(e.target.value)}
             />
             <div className="flex flex-row justify-between my-16 w-full lg:w-1/2">
-                <Link href="/">
+                <Link href="/dashboard/plans">
                     <button
                         className={`py-4 px-6 border-none rounded-md bg-primary 
                         text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300`}
