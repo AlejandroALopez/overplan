@@ -7,6 +7,7 @@ import ConfirmModal from "@/components/modals/confirmModal";
 import SingleTaskModal from "@/components/modals/singleTaskModal";
 import CreateTaskModal from "@/components/modals/createTaskModal";
 import PlanCompletedModal from "@/components/modals/planCompletedModal";
+import NoTokensModal from "@/components/modals/noTokensModal";
 import withAuth from "@/hoc/withAuth";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
@@ -24,6 +25,7 @@ function DashboardLayout({
       <SingleTaskModal />
       <CreateTaskModal />
       <PlanCompletedModal />
+      <NoTokensModal />
       <main className="bg-[#E6E6E6] flex flex-col sm:flex-row min-h-screen gap-1">
         <Navigation />
         {children}

@@ -34,12 +34,12 @@ export default function NoTokensModal() {
                     </p>)
                 }
                 {(userData?.tier === 'Free')
-                    ? (<Link href={"/dashboard/subscriptions"}
+                    ? (<Link href={"/dashboard/subscriptions"} onClick={closeModal}
                         className={`py-4 px-6 border-none rounded-md bg-primary 
                             drop-shadow-lg transition hover:scale-110 duration-300`}>
                         <p className="text-white text-xl ">Upgrade Account</p>
                     </Link>)
-                    : (<Link href={"/dashboard/week"}
+                    : (<Link href={"/dashboard/week"} onClick={closeModal}
                         className={`py-4 px-6 border-none rounded-md bg-primary 
                             drop-shadow-lg transition hover:scale-110 duration-300`}>
                         <p className="text-white text-xl ">Go to Dashboard</p>
