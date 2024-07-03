@@ -67,37 +67,36 @@ export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
 
     return (
         <div className="flex flex-row items-center justify-center gap-12">
-            <div className='w-64 h-64'>
+            <div className='relative min-w-1/3 min-h-1/3 xl:h-[30vh] xl:w-[15vw]'>
                 <Pie
                     data={data}
-                // {...props}
                 />
             </div>
-            <div className='flex flex-col p-4 gap-4'>
-                <div className='flex flex-row items-center gap-12'>
+            <div className='flex flex-col p-4 gap-7'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskCompleted bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskCompleted bg-opacity-75' />
                         <p className='w-28'>Completed</p>
                     </div>
                     <p>{statusCounts['Completed']}</p>
                 </div>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskInProgress bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskInProgress bg-opacity-75' />
                         <p className='w-28'>In Progress</p>
                     </div>
                     <p>{statusCounts['In Progress']}</p>
                 </div>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskActive bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskActive bg-opacity-75' />
                         <p className='w-28'>Active</p>
                     </div>
                     <p>{statusCounts['Active']}</p>
                 </div>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskBacklog bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskBacklog bg-opacity-75' />
                         <p className='w-28'>Backlog</p>
                     </div>
                     <p>{statusCounts['Backlog']}</p>
@@ -164,16 +163,15 @@ export const OverallSummaryChart: React.FC<OverallChartProps> = ({ tasks, currWe
 
     return (
         <div className="flex flex-row items-center justify-center gap-12">
-            <div className='w-64 h-64'>
+            <div className='relative min-w-1/3 min-h-1/3 xl:h-[30vh] xl:w-[15vw]'>
                 <Pie
                     data={data}
-                // {...props}
                 />
             </div>
             <div className='flex flex-col p-4 gap-4'>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-[#9EFA9E] bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-[#9EFA9E] bg-opacity-75' />
                         <div className='flex flex-col'>
                             <p className='w-28'>Done</p>
                             <p className='w-28 text-sm text-[#B3B3B3]'>(past weeks)</p>
@@ -181,9 +179,9 @@ export const OverallSummaryChart: React.FC<OverallChartProps> = ({ tasks, currWe
                     </div>
                     <p>{statusCounts['Done (past weeks)']}</p>
                 </div>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskCompleted bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskCompleted bg-opacity-75' />
                         <div className='flex flex-col'>
                             <p className='w-28'>Done</p>
                             <p className='w-28 text-sm text-[#B3B3B3]'>(this week)</p>
@@ -191,9 +189,9 @@ export const OverallSummaryChart: React.FC<OverallChartProps> = ({ tasks, currWe
                     </div>
                     <p>{statusCounts['Done (this week)']}</p>
                 </div>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskInProgress bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskInProgress bg-opacity-75' />
                         <div className='flex flex-col'>
                             <p className='w-28'>Remaining</p>
                             <p className='w-28 text-sm text-[#B3B3B3]'>(this week)</p>
@@ -201,9 +199,9 @@ export const OverallSummaryChart: React.FC<OverallChartProps> = ({ tasks, currWe
                     </div>
                     <p>{statusCounts['Remaining (this week)']}</p>
                 </div>
-                <div className='flex flex-row items-center gap-12'>
+                <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-8 h-8 bg-taskBacklog bg-opacity-75' />
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskBacklog bg-opacity-75' />
                         <div className='flex flex-col'>
                             <p className='w-28'>Remaining</p>
                             <p className='w-28 text-sm text-[#B3B3B3]'>(next weeks)</p>
