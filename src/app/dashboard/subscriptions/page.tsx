@@ -1,15 +1,22 @@
 'use client';
 
 import { getTokensFromCookies } from '@/lib/utils/auth';
+import { useAppSelector } from "@/lib/store";
 import { loadStripe } from '@stripe/stripe-js';
 import { useState } from 'react';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "");
 
 export default function SubscriptionPage() {
+    const userData = useAppSelector(state => state.session.userData);
     const [annualOption, setAnnualOption] = useState<boolean>(true);
 
     const handleSubscribe = async (priceId: string) => {
+        if(!userData) {
+            console.error('User data not available');
+            return;
+        }
+
         const stripe = await stripePromise;
 
         if (!stripe) {
@@ -21,7 +28,7 @@ export default function SubscriptionPage() {
         const response = await fetch('http://localhost:8080/subscriptions/checkout-session', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ priceId }),
+            body: JSON.stringify({ userId: userData.userId, email: userData.email, priceId }),
         });
 
         const { sessionId } = await response.json();
