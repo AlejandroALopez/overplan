@@ -99,14 +99,13 @@ export default function Week() {
 
         try {
             // If past end date, new end date will be end + 7. Else, today + 7
-            const autoMode: boolean = isDateBeforeOrToday(planData?.weekEndDate);
 
             // Update week progress
             await updatePlanMutation.mutateAsync({
                 currWeek: planData.currWeek + 1,
                 numWeeks: (planData.numWeeks === planData.currWeek) ? planData.numWeeks + 1 : planData.numWeeks,
                 weekProg: 0,
-                weekEndDate: autoMode ? dayjs(planData.weekEndDate).add(7, 'day').format('MM/DD/YYYY') : today.add(7, 'day').format('MM/DD/YYYY'),
+                weekEndDate: today.add(7, 'day').format('MM/DD/YYYY'),
             });
 
             // Move incomplete tasks to next week
