@@ -1,17 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { useAppSelector } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { setIsConfirmOpen, setMessage, setOnConfirm } from "@/lib/store/modalSlice";
+import { removeTokensInCookies } from '@/lib/utils/auth';
 
 export default function AccountPage() {
+    const router = useRouter();
+    const dispatch = useAppDispatch();
     const userData = useAppSelector(state => state.session.userData);
     const renewDate: string = "May 16th, 2024";
 
+    // Remove tokens and redirect to login
     const handleLogout = () => {
-        console.log('TODO');
-        // TODO
-        // 1. Open Confirmation Modal
-        // 2. Pass it function to remove user data + remove tokens + redirect to login
+        removeTokensInCookies();
+        router.push("/auth/login");
     }
 
     const handleCancelSubscription = () => {
@@ -20,6 +24,12 @@ export default function AccountPage() {
         // 1. Open Confirmation Modal
         // 2. Pass it function to cancel sub on stripe + remove benefits + success modal
     }
+
+    const openConfirmModal = (message: string, onConfirm: () => void) => {
+        dispatch(setMessage(message));
+        dispatch(setOnConfirm(onConfirm));
+        dispatch(setIsConfirmOpen(true));
+    };
 
     return (
         <div className='flex flex-col w-full gap-6 sm:gap-8 p-12 bg-white min-h-screen'>
@@ -63,7 +73,7 @@ export default function AccountPage() {
             <button
                 className="py-3 px-6 w-fit mt-8 rounded-md bg-white border-primary border-[1px] text-lg font-medium text-primary
                 drop-shadow-lg transition hover:scale-105 hover:bg-primary hover:text-white duration-300"
-                onClick={() => handleLogout()}
+                onClick={() => openConfirmModal("Are you sure you want to log out?", handleLogout)}
             >
                 Log Out
             </button>

@@ -39,3 +39,9 @@ export const setTokensInCookies = (token: string, refreshToken: string) => {
   Cookies.set('token', token, { expires: 1 }); // 1 day expiration
   Cookies.set('refresh_token', refreshToken, { expires: 7 }); // 7 days expiration
 };
+
+// Function to remove tokens in cookies
+export const removeTokensInCookies = () => {
+  Cookies.remove('token');
+  Cookies.remove('refresh_token');
+}
