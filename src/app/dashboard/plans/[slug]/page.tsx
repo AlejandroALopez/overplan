@@ -7,7 +7,8 @@ import { useAllTasks } from "@/hooks/queries";
 import { useEffect, useState } from "react";
 import { Plan, ITask } from "@/lib/types/planTypes";
 import { OverallSummaryChart, WeekSummaryChart } from "./charts";
-
+import Loading from "../loading";
+import Error from "../error";
 
 export default function SinglePlan() {
     const selectedPlan: Plan | null = useAppSelector(state => state.plan.metricsPlan);
@@ -25,9 +26,9 @@ export default function SinglePlan() {
         if (tasksData) setTasks(tasksData);
     }, [tasksData]);
 
-    if (isPendingTasks) return (<div>Loading...</div>);
+    if (isPendingTasks) return (<Loading />);
 
-    if (errorTasks) return (<div>An error has occurred: {errorTasks.message} </div>);
+    if (errorTasks) return (<Error />);
 
     return (
         <div className="flex flex-col w-full gap-1">

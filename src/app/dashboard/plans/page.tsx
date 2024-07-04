@@ -24,10 +24,10 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 
     return (
         <div className="flex flex-col-reverse md:flex-row justify-center items-center gap-4">
-            <div className="h-3 w-full md:w-5/12 bg-primary bg-opacity-25 rounded-3xl">
+            <div className="h-3 w-24 bg-primary bg-opacity-25 rounded-3xl">
                 <div className="h-full bg-primary rounded-3xl" style={progressBarStyle} />
             </div>
-            <p>{(prog * 100).toFixed(0)}%</p>
+            <p className="w-12">{(prog * 100).toFixed(0)}%</p>
         </div>
     )
 }

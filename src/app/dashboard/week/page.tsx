@@ -64,6 +64,11 @@ export default function Week() {
             console.log('Error updating plan');
             dispatch(setIsLoading(false));
         },
+        onSuccess: () => {
+            if(updatePlanMutation.data){
+                dispatch(setActivePlan(updatePlanMutation.data));
+            }
+        }
     });
 
     const createBadgeMutation = useMutation({
@@ -154,11 +159,6 @@ export default function Week() {
         // TODO: Do something with the plan (hide?, change to another plan?)
     }
 
-    // Save updated plan on redux
-    if (updatePlanMutation.isSuccess) {
-        dispatch(setActivePlan(updatePlanMutation.data));
-    }
-
     const openConfirmModal = (message: string, onConfirm: () => void) => {
         dispatch(setMessage(message));
         dispatch(setOnConfirm(onConfirm));
@@ -202,6 +202,14 @@ export default function Week() {
     useEffect(() => {
         if (tasksData) setCards(tasksData);
     }, [tasksData]);
+
+    useEffect(() => {
+        updatePlanMutation.mutate({
+            weekProg: weekProg,
+        });
+        // TODO: Update Plan on redux (active plan)
+        // TODO: Update Plan located in Plans list on redux (plans)
+    }, [weekProg]);
 
     useEffect(() => {
         // Controls the section that appears when week end date is reached

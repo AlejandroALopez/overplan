@@ -72,7 +72,7 @@ export default function CreateTaskModal() {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div onClick={closeModal} className="absolute inset-0 bg-white bg-opacity-75"></div>
-            <div className="relative bg-white rounded-lg shadow-lg w-7/12 mx-auto p-6">
+            <div className="relative bg-white rounded-lg shadow-lg w-11/12 md:w-7/12 mx-auto p-6">
                 <div className="flex flex-row items-center justify-between">
                     <p className="text-3xl font-medium">New Task</p>
                     <button
@@ -90,15 +90,14 @@ export default function CreateTaskModal() {
                     <p className="text-lg text-[#999999]">Week:</p>
                     <p className="text-lg font-medium">{activePlan?.currWeek || 1}</p>
                 </div>
-                <input
-                    className="w-7/12 text-lg text-gray-600 px-4 py-2 font-medium mt-2 border-[#808080] border-[1px] rounded-md bg-[#A6A6A6] bg-opacity-25"
+                <textarea
+                    className="w-full md:w-7/12 text-lg px-4 py-2 mt-2 font-medium border-[#808080] border-[1px] rounded-md"
                     placeholder="Title for your task"
                     value={titleVal}
                     onChange={e => setTitleVal(e.target.value)}
                 />
                 <textarea
-                    className="w-full text-lg text-gray-600 px-4 py-2 font-medium mt-4 border-[#808080] 
-                        border-[1px] rounded-md bg-[#A6A6A6] bg-opacity-25"
+                    className="w-full text-lg px-4 py-2 mt-4 border-[#808080] border-[1px] rounded-md"
                     placeholder="A helpful description"
                     value={descriptionVal}
                     onChange={e => setDescriptionVal(e.target.value)}

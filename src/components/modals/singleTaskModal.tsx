@@ -77,7 +77,7 @@ export default function SingleTaskModal() {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div onClick={closeModal} className="absolute inset-0 bg-white bg-opacity-75"></div>
-            <div className="relative bg-white rounded-lg shadow-lg w-7/12 mx-auto p-6">
+            <div className="relative bg-white rounded-lg shadow-lg w-11/12 md:w-7/12 mx-auto p-6">
                 <div className="flex flex-row items-center justify-between">
                     <p className="text-xl text-[#999999] text-center">Task</p>
                     <button
@@ -90,14 +90,14 @@ export default function SingleTaskModal() {
                 <div className="flex flex-row items-center justify-between mt-2">
                     {editMode
                         ? (
-                            <input
-                                className="w-7/12 text-lg text-gray-600 px-4 py-2 font-medium mt-2 border-[#808080] border-[1px] rounded-md bg-[#A6A6A6] bg-opacity-25"
+                            <textarea
+                                className="w-8/12 text-2xl font-medium px-4 py-2 mt-2 border-[#808080] border-[1px] rounded-md"
                                 value={titleVal}
                                 onChange={e => setTitleVal(e.target.value)}
                             />
                         )
                         : (
-                            <p className="text-2xl font-medium mt-2">{titleVal}</p>
+                            <p className="w-8/12 text-2xl font-medium mt-2">{titleVal}</p>
                         )
                     }
                     <div className="flex flex-row gap-4">
@@ -136,11 +136,11 @@ export default function SingleTaskModal() {
                     )}
                 </div>
                 <p className="text-xl text-[#999999] mt-4">Description</p>
-                <div className="mt-2 w-3/4">
+                <div className="mt-2 w-full md:w-3/4">
                     {editMode
                         ? (
                             <textarea
-                                className="w-full text-lg text-gray-600 px-4 py-2 font-medium mt-2 border-[#808080] border-[1px] rounded-md bg-[#A6A6A6] bg-opacity-25"
+                                className="w-full px-4 py-2 mt-2 border-[#808080] border-[1px] rounded-md"
                                 value={descriptionVal}
                                 onChange={e => setDescriptionVal(e.target.value)}
                             />
