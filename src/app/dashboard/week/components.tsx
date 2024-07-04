@@ -36,22 +36,25 @@ const SmallProgressBar: React.FC<SmallPlanProgressProps> = ({ prog, week }) => {
 
 // Change active plan
 export const PlanSelector: React.FC<PlanSelectorProps> = ({ onSelect, plans, activePlanId }) => {
-    
+
     const selectPlan = (plan: Plan) => {
         onSelect(plan);
     }
 
     return (
-        <div className="absolute z-10 w-11/12 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-5/12 bg-white border-2 border-[#E6E6E6] shadow-md px-4 py-2 mt-20 rounded-md">
+        <div
+            className="absolute top-[100px] flex flex-col overflow-y-scroll z-10 h-36 w-11/12 sm:w-8/12 md:w-7/12 lg:w-6/12 
+            bg-white border-2 border-[#E6E6E6] shadow-md px-4 py-2 rounded-md"
+        >
             {plans.map((plan: Plan) => {
                 if (plan._id !== activePlanId) {
                     return (
                         <button
                             key={plan._id}
                             onClick={() => selectPlan(plan)}
-                            className="flex flex-row items-center justify-between w-full border-b border-gray-200 px-1 py-1.5 rounded-md
+                            className="flex flex-row items-center justify-between w-full border-b border-gray-200 px-1 py-1.5 rounded-md gap-4
                         cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300">
-                            <p>{plan.goal}</p>
+                            <p className="text-left">{plan.goal}</p>
                             <SmallProgressBar prog={plan.weekProg} week={plan.currWeek} />
                         </button>
                     )

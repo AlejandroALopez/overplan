@@ -65,7 +65,7 @@ export default function Week() {
             dispatch(setIsLoading(false));
         },
         onSuccess: () => {
-            if(updatePlanMutation.data){
+            if (updatePlanMutation.data) {
                 dispatch(setActivePlan(updatePlanMutation.data));
             }
         }
@@ -225,11 +225,11 @@ export default function Week() {
         <div className="flex flex-col w-full gap-1">
             <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
                 <div className="flex flex-col justify-center w-4/6 gap-8">
-                    <div className="flex flex-row gap-4">
-                        <p className="text-3xl font-medium">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
-                        <button onClick={togglePlansSelector} className="shrink-0 transition hover:scale-110 duration-300">
+                    <div className="flex flex-row gap-2">
+                        <button onClick={togglePlansSelector} className="flex mt-2 shrink-0 transition hover:scale-110 duration-300">
                             <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
+                        <p className="text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
                     </div>
                     {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={allPlansData} activePlanId={activePlanId || ""} />}
                     <ProgressBar prog={weekProg} />
