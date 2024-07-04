@@ -11,9 +11,9 @@ const config: Config = {
       colors: {
         primary: "#1A79E5",
         secondary: "#4E1FAD",
-        taskBacklog: "#B81414",
-        taskActive: "#3014B8",
-        taskInProgress: "#7A14B8",
+        taskBacklog: "#EE686A",
+        taskActive: "#68ADEE",
+        taskInProgress: "#7B68EE",
         taskCompleted: "#14B814",
       },
       backgroundImage: {
