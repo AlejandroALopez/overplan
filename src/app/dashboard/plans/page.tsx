@@ -123,6 +123,7 @@ export default function MyPlans() {
                     </button>
                 </div>
             </div>
+            {/* Plans Table */}
             <div className="overflow-x-scroll lg:overflow-x-auto h-3/4 lg:h-1/2">
                 <table className="table-auto min-w-[600px] lg:w-full">
                     <thead>
@@ -149,6 +150,7 @@ export default function MyPlans() {
                     </tbody>
                 </table>
             </div>
+            {/* Page Selector */}
             <div className="flex flex-row items-center justify-center gap-4">
                 <button
                     className="px-4 py-2 bg-primary rounded disabled:opacity-50"
