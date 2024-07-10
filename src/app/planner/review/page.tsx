@@ -78,14 +78,14 @@ export default function ReviewPlan() {
                             <Image src={Compass} alt="goal icon" />
                             <p className="text-xl w-11/12 text-center text-ellipsis overflow-hidden">{goal}</p>
                         </div>
-                        <div className="flex flex-row flex-wrap justify-between items-center gap-8 sm:gap-0">
+                        <div className="flex flex-row flex-wrap justify-between items-center gap-8 sm:gap-12">
                             <div className="flex flex-col items-center gap-4 w-full sm:w-fit">
                                 <Image src={Clock} alt="weeks icon" />
                                 <p className="text-xl text-center">{weeks} weeks</p>
                             </div>
                             <div className="flex flex-col items-center gap-4 w-full sm:w-fit">
                                 <Image src={Calendar} alt="date icon" />
-                                <p className="text-xl text-center">Start: {dayjs(startDate).format('dddd, MMM DD')}</p>
+                                <p className="text-xl text-center">{dayjs(startDate).format('ddd, MMM DD')}</p>
                             </div>
                         </div>
                     </div>

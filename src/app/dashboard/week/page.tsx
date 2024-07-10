@@ -132,9 +132,14 @@ export default function Week() {
 
     // Updates plan as complete, creates badge, and shows Plan Completed Modal
     const completePlan = async () => {
-        updatePlanMutation.mutate({
+        // Update plan on database
+        updatePlanMutation.mutate({ 
             completed: true,
         });
+
+        // Update plan on redux and state
+        dispatch(setActivePlan({...planData, completed: true}));
+        setPlans(plans.filter((plan: Plan) => plan._id !== planData._id));
 
         // Create Badge
         const badgeBody: IBadgeInput = {
@@ -156,8 +161,7 @@ export default function Week() {
         // Open Modal with badge
         dispatch(setCompletedPlan({ goal: planData.goal, weeks: planData.numWeeks }))
         dispatch(setIsPlanCompletedOpen(true));
-
-        // TODO: Do something with the plan (hide?, change to another plan?)
+        setShowCompletedSection(true);
     }
 
     const openConfirmModal = (message: string, onConfirm: () => void) => {
@@ -242,7 +246,7 @@ export default function Week() {
                     {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={plans} activePlanId={activePlanId || ""} />}
                     <ProgressBar prog={weekProg} />
                 </div>
-                {daysUntilWeekEnd > 0 && (
+                {(daysUntilWeekEnd > 0 && !showCompletedSection) && (
                     <div className="flex flex-col justify-center items-center w-3/6 gap-4">
                         <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
                         <p className="text-xl">{planData.weekEndDate} ({daysUntilWeekEnd} {daysUntilWeekEnd > 1 ? 'days' : 'day'})</p>

@@ -61,7 +61,13 @@ export default function Result() {
 
     const filteredTasks = tasks?.filter((task: ITask) => task.week === activeWeek);
 
-    if (isPending) return (<div>Loading...</div>)
+    if (isPending) return (
+        <main className="flex min-h-screen flex-col justify-center items-center p-8">
+            <div className="flex flex-col items-center justify-center gap-12">
+                <div className="big-loading-spinner" />
+                <p className="text-2xl sm:text-3xl font-semibold">Your Plan is being created...</p>
+            </div>
+        </main>)
     if (error) return (<div>An error has occurred: {error.message} </div>)
 
     return (
