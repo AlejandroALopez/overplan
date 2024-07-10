@@ -10,11 +10,13 @@ import Badge from "../../public/icons/award.svg";
 import Menu from "../../public/icons/menu.svg";
 import User from "../../public/icons/user.svg";
 import CreditCard from "../../public/icons/creditCard.svg";
+import { useAppSelector } from "@/lib/store";
 
 
 export default function Navigation() {
   const pathname = usePathname();
   const app_name: string = "OverPlan AI";
+  const userData = useAppSelector(state => state.session.userData);
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const toggleMenu = () => {
@@ -24,7 +26,7 @@ export default function Navigation() {
   return (
     <>
       {/* Vertical Menu for Big Screens */}
-      <div className="flex flex-row sm:flex-col gap-8 m-0 sm:w-52 shrink-0 px-4 py-2 sm:px-0 sm:py-8 bg-white text-center min-h-full">
+      <div className="flex flex-row sm:flex-col gap-8 m-0 sm:w-56 shrink-0 px-4 py-2 sm:px-0 sm:py-8 bg-white text-center min-h-full">
         <div className="flex text-center justify-between sm:justify-center items-center w-full">
           <p className="text-2xl font-semibold">{app_name}</p>
           <button onClick={toggleMenu} className="sm:hidden">
@@ -50,6 +52,20 @@ export default function Navigation() {
               <p className="font-medium">My Badges</p>
             </Link>
           </div>
+          {/* Upgrade Plan Component */}
+          {(userData?.tier === 'Free') && (
+            <div className="flex flex-col items-center gap-4 px-2 py-4 bg-[#FAFAFA] drop-shadow-md rounded-sm w-10/12">
+              <p>You are on a <span className="font-semibold">Free Plan</span></p>
+              <p className="text-center text-sm">Upgrade your account to achieve much more!</p>
+              <Link
+                href="/dashboard/subscriptions"
+                className="py-2 px-4 border-none rounded-md bg-primary
+                drop-shadow-lg transition hover:scale-105 duration-300"
+              >
+                <p className="text-white text-lg">Upgrade</p>
+              </Link>
+            </div>
+          )}
           {/* Bottom Buttons */}
           <div className="flex flex-col items-center w-full gap-1">
             <div className="bg-[#D9D9D9] h-0.5 w-11/12 mb-4 rounded-md" />

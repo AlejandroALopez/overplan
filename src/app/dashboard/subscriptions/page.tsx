@@ -46,7 +46,7 @@ export default function SubscriptionPage() {
         <div className='flex flex-col items-center w-full gap-8 p-12 bg-white'>
             {/* Headings */}
             <div className='flex flex-col items-center gap-8'>
-                <p className="text-3xl md:text-4xl font-semibold text-center w-full md:w-11/12 lg:w-1/2">Achieve More With OverPlan AI Pro Plan</p>
+                <p className="text-3xl md:text-4xl font-semibold text-center w-full md:w-11/12 lg:w-1/2">Achieve More With OverPlan AI Pro</p>
                 <p className='text-base md:text-lg text-[#808080] text-center w-11/12 md:w-3/4'>
                     Get the most out of OverPlan AI plan generator and our plan management tools.
                     Progress through multiple plans, get more personalized tasks, and more!
