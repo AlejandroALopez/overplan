@@ -39,6 +39,7 @@ export default function Week() {
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
     const [cards, setCards] = useState<ITask[]>([]);
+    const [plans, setPlans] = useState<Plan[]>([]);
     const [showPlansSelector, setShowPlansSelector] = useState<boolean>(false);
     const [showCompletedSection, setShowCompletedSection] = useState<boolean>(false);
     const completedTasks = cards.filter((c) => c.status === 'Completed').length;
@@ -203,6 +204,13 @@ export default function Week() {
         if (tasksData) setCards(tasksData);
     }, [tasksData]);
 
+    // Hide completed plans
+    useEffect(() => {
+        if (allPlansData) {
+            setPlans(allPlansData.filter((plan: Plan) => plan.completed === false));
+        }
+    }, [allPlansData]);
+
     useEffect(() => {
         updatePlanMutation.mutate({
             weekProg: weekProg,
@@ -231,7 +239,7 @@ export default function Week() {
                         </button>
                         <p className="text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
                     </div>
-                    {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={allPlansData} activePlanId={activePlanId || ""} />}
+                    {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={plans} activePlanId={activePlanId || ""} />}
                     <ProgressBar prog={weekProg} />
                 </div>
                 {daysUntilWeekEnd > 0 && (

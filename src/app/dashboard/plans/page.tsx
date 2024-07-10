@@ -34,17 +34,21 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 
 export default function MyPlans() {
     const router = useRouter();
-    const dispatch = useAppDispatch();
+    const dispatch: any = useAppDispatch();
 
+    const [isArchiveMode, setIsArchiveMode] = useState<boolean>(false);
     const [plans, setPlans] = useState<Plan[]>([]);
+    const [archivedPlans, setArchivedPlans] = useState<Plan[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    const plansPerPage: number = 4
+    const plansPerPage: number = 4;
     const totalPages: number = Math.ceil(plans.length / plansPerPage);
+    const totalPagesArchived: number = Math.ceil(archivedPlans.length / plansPerPage);
 
     // Slicing Plans array for pages
     const startIndex = (currentPage - 1) * plansPerPage;
     const currentPlans = plans.slice(startIndex, startIndex + plansPerPage);
+    const currentPlansArchived = archivedPlans.slice(startIndex, startIndex + plansPerPage);
 
     const userData = useAppSelector(state => state.session.userData);
     const { isPending, error, data: plansData } = usePlansByUserId(userData?.userId || "");
@@ -54,7 +58,7 @@ export default function MyPlans() {
     };
 
     const handleNextPage = () => {
-        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+        setCurrentPage((prev) => Math.min(prev + 1, (isArchiveMode ? totalPagesArchived : totalPages)));
     };
 
     const handleRowClick = (plan: Plan) => {
@@ -62,18 +66,27 @@ export default function MyPlans() {
         dispatch(setMetricsPlan(plan));
         router.push(`/dashboard/plans/${encodeURIComponent(plan.slug)}`);
     };
-    
+
     // If enough tokens, redirect to planner. Else, display modal
     const handleCreatePlan = () => {
-        if(userData?.tokens && userData?.tokens > 0) {
+        if (userData?.tokens && userData?.tokens > 0) {
             router.push("/planner/goal");
         } else {
             dispatch(setIsNoTokensOpen(true));
         }
     }
 
+    // Swap to archived plans, or back to active plans
+    const toggleArchived = () => {
+        setIsArchiveMode(!isArchiveMode);
+        setCurrentPage(1);
+    }
+
     useEffect(() => {
-        if (plansData) setPlans(plansData);
+        if (plansData) {
+            setPlans(plansData.filter((plan: Plan) => plan.completed === false));
+            setArchivedPlans(plansData.filter((plan: Plan) => plan.completed === true))
+        }
     }, [plansData]);
 
     if (isPending) return (<Loading />)
@@ -84,18 +97,29 @@ export default function MyPlans() {
         <div className="flex flex-col bg-white gap-12 p-8 w-full min-h-screen">
             {/* Headings */}
             <div className="flex flex-row items-center justify-between w-full">
-                <p className="text-3xl font-medium">My Plans</p>
+                <div className="flex flex-col items-start gap-2">
+                    <p className="text-2xl md:text-3xl font-medium">{isArchiveMode ? "My Completed Plans" : "My Plans"}</p>
+                    <button
+                        onClick={() => toggleArchived()}
+                    >
+                        <p 
+                        className="text-primary text-center transition hover:scale-105 duration-300"
+                        >
+                            See {isArchiveMode ? "active" : "completed"} plans
+                        </p>
+                    </button>
+                </div>
                 <div className="flex flex-row gap-4">
-                    <div className="flex flex-row px-4 py-4 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
+                    <div className="flex flex-row items-center justify-center px-4 h-16 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
                         <Image src={Zap} alt="zap icon" />
                         <p className="text-xl font-medium text-center">{userData?.tokens}</p>
                     </div>
-                    <button 
+                    <button
                         onClick={handleCreatePlan}
-                        className="py-4 px-6 lg:mr-8 border-none rounded-md bg-primary
+                        className="px-6 lg:mr-8 h-16 border-none rounded-md bg-primary
                             drop-shadow-lg transition hover:scale-110 duration-300"
                     >
-                        <p className="text-xl text-white">Create Plan</p>
+                        <p className="text-lg sm:text-xl text-white">Create Plan</p>
                     </button>
                 </div>
             </div>
@@ -110,7 +134,7 @@ export default function MyPlans() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentPlans.map((plan: Plan) => (
+                        {(isArchiveMode ? currentPlansArchived : currentPlans).map((plan: Plan) => (
                             <tr
                                 key={plan._id}
                                 className="cursor-pointer hover:bg-primary hover:bg-opacity-10 duration-300"
@@ -133,11 +157,11 @@ export default function MyPlans() {
                 >
                     <p className="text-white">&lt;</p>
                 </button>
-                <span className="text-center w-24">Page {currentPage} of {totalPages}</span>
+                <span className="text-center w-24">Page {currentPage} of {(isArchiveMode ? totalPagesArchived : totalPages)}</span>
                 <button
                     className="px-4 py-2 bg-primary rounded disabled:opacity-50"
                     onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
+                    disabled={currentPage === (isArchiveMode ? totalPagesArchived : totalPages)}
                 >
                     <p className="text-white">&gt;</p>
                 </button>
