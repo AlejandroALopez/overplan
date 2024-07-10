@@ -54,7 +54,7 @@ export const TopMetrics: React.FC<TopMetricsProps> = ({ plan, tasks }) => {
 
 const status_bg_colors: ColumnColorsType = {
     "Backlog": "bg-taskBacklog",
-    "Active": "bg-taskActive",
+    "Today": "bg-taskToday",
     "In Progress": "bg-taskInProgress",
     "Completed": "bg-taskCompleted",
 }

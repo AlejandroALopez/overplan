@@ -12,7 +12,7 @@ import { RESULT_SUBTITLE } from "@/lib/constants/plannerConstants";
 
 const status_bg_colors: ColumnColorsType = {
     "Backlog": "bg-taskBacklog",
-    "Active": "bg-taskActive",
+    "Today": "bg-taskToday",
     "In Progress": "bg-taskInProgress",
     "Completed": "bg-taskCompleted",
 }

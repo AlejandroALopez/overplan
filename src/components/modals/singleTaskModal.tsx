@@ -14,7 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const column_text_colors: ColumnColorsType = {
     "Backlog": "text-taskBacklog",
-    "Active": "text-taskActive",
+    "Today": "text-taskToday",
     "In Progress": "text-taskInProgress",
     "Completed": "text-taskCompleted",
 }

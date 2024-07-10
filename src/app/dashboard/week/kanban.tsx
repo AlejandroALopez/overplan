@@ -14,21 +14,21 @@ import { setIsSingleTaskOpen, setSelectedTask } from "@/lib/store/modalSlice";
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
     "Backlog": "text-taskBacklog",
-    "Active": "text-taskActive",
+    "Today": "text-taskToday",
     "In Progress": "text-taskInProgress",
     "Completed": "text-taskCompleted",
 }
 
 const column_bg_colors: ColumnColorsType = {
     "Backlog": "bg-taskBacklog",
-    "Active": "bg-taskActive",
+    "Today": "bg-taskToday",
     "In Progress": "bg-taskInProgress",
     "Completed": "bg-taskCompleted",
 }
 
 const column_border_colors: ColumnColorsType = {
     "Backlog": "border-taskBacklog",
-    "Active": "border-taskActive",
+    "Today": "border-taskToday",
     "In Progress": "border-taskInProgress",
     "Completed": "border-taskCompleted",
 }
@@ -226,7 +226,7 @@ export const Kanban: React.FC<KanbanProps> = ({ cards, setCards }) => {
     return (
         <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
             <Column column={"Backlog"} cards={cards} setCards={setCards} />
-            <Column column={"Active"} cards={cards} setCards={setCards} />
+            <Column column={"Today"} cards={cards} setCards={setCards} />
             <Column column={"In Progress"} cards={cards} setCards={setCards} />
             <Column column={"Completed"} cards={cards} setCards={setCards} />
         </div>

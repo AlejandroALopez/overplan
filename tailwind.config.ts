@@ -12,7 +12,7 @@ const config: Config = {
         primary: "#1A79E5",
         secondary: "#4E1FAD",
         taskBacklog: "#EE686A",
-        taskActive: "#68ADEE",
+        taskToday: "#68ADEE",
         taskInProgress: "#7B68EE",
         taskCompleted: "#14B814",
       },

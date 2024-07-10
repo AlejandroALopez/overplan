@@ -22,7 +22,7 @@ export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
     // Initialize counters for each status
     const statusCounts: StatusCountProps = {
         'Completed': 0,
-        'Active': 0,
+        'Today': 0,
         'In Progress': 0,
         'Backlog': 0,
     };
@@ -38,12 +38,12 @@ export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
     const datasetsData = [
         statusCounts['Completed'],
         statusCounts['In Progress'],
-        statusCounts['Active'],
+        statusCounts['Today'],
         statusCounts['Backlog']
     ];
 
     const data = {
-        labels: ['Completed', 'In Progress', 'Active', 'Backlog'],
+        labels: ['Completed', 'In Progress', 'Today', 'Backlog'],
         datasets: [
             {
                 label: '# of tasks',
@@ -51,7 +51,7 @@ export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
                 backgroundColor: [
                     'rgba(20, 184, 20, 0.2)', // completed
                     'rgba(122, 20, 184, 0.2)', // in progress
-                    'rgba(48, 20, 184, 0.2)', // active
+                    'rgba(48, 20, 184, 0.2)', // today
                     'rgba(184, 20, 20, 0.2)', // backlog
                 ],
                 borderColor: [
@@ -89,10 +89,10 @@ export const WeekSummaryChart: React.FC<WeekChartProps> = ({ tasks }) => {
                 </div>
                 <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
-                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskActive bg-opacity-75' />
-                        <p className='w-28'>Active</p>
+                        <div className='w-6 h-6 md:w-8 md:h-8 bg-taskToday bg-opacity-75' />
+                        <p className='w-28'>Today</p>
                     </div>
-                    <p>{statusCounts['Active']}</p>
+                    <p>{statusCounts['Today']}</p>
                 </div>
                 <div className='flex flex-row items-center gap-4 md:gap-10'>
                     <div className='flex flex-row items-center gap-4'>
