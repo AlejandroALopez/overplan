@@ -4,8 +4,6 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const refreshToken = request.cookies.get('refresh_token')?.value;
 
-  console.log('Tokens: ', token, refreshToken);
-
   if (!token || !refreshToken) {
     if (!request.nextUrl.pathname.startsWith('/auth/login')) {
       return NextResponse.redirect(new URL('/auth/login', request.url));

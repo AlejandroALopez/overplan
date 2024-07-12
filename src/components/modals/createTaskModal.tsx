@@ -27,6 +27,9 @@ export default function CreateTaskModal() {
         onError: () => {
             console.log('Error creating plan');
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['plans'] });
+        }
     });
 
     const closeModal = () => {

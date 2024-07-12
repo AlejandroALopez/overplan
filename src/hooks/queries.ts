@@ -33,18 +33,18 @@ export function useAllTasks(planId: string) {
 
 // Get array of Plans by userId
 export function usePlansByUserId(userId: string) {
-    return useQuery({
-        queryKey: ['plans', userId],
-        queryFn: () => fetchPlansByUserId(userId),
-        enabled: !!userId
-    });
+  return useQuery({
+    queryKey: ["plans", userId],
+    queryFn: () => fetchPlansByUserId(userId),
+    enabled: !!userId,
+  });
 }
 
 // Get array of Badges by userId
 export function useBadgesByUserId(userId: string) {
   return useQuery({
-      queryKey: ['badges', userId],
-      queryFn: () => fetchBadgesByUserId(userId),
-      enabled: !!userId
+    queryKey: ["badges", userId],
+    queryFn: () => fetchBadgesByUserId(userId),
+    enabled: !!userId,
   });
 }

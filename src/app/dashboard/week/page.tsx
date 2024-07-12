@@ -29,14 +29,15 @@ import { User } from "@/lib/types/sessionTypes";
 
 export default function Week() {
     const dispatch = useAppDispatch();
-    const activePlanId = useAppSelector(state => state.session.userData?.activePlanId);
+    const activePlanId = useAppSelector(state => state.session.userData?.activePlanId); // user active plan
+    const activePlan = useAppSelector(state => state.plan.activePlan);
     const userData = useAppSelector(state => state.session.userData);
     const queryClient = useQueryClient();
     const today = dayjs();
 
-    const { isPending: isPendingPlans, error: errorPlans, data: allPlansData } = usePlansByUserId(userData?.userId || "");
-    const { isPending: isPendingPlan, error: errorPlan, data: planData } = usePlanByPlanId(activePlanId || "");
-    const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
+    const { isPending: isPendingPlans, error: errorPlans, data: allPlansData, isSuccess: allPlansSuccess } = usePlansByUserId(userData?.userId || "");
+    const { isPending: isPendingPlan, error: errorPlan, data: planData, isSuccess: planSuccess } = usePlanByPlanId(activePlanId || "");
+    const { isPending: isPendingTasks, error: errorTasks, data: tasksData, isSuccess: taskSuccess } = useTasksByPlanIdAndWeek(planData?._id, planData?.currWeek);
 
     const [cards, setCards] = useState<ITask[]>([]);
     const [plans, setPlans] = useState<Plan[]>([]);
@@ -81,6 +82,18 @@ export default function Week() {
         },
     });
 
+    if (taskSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['weekTasks'] });
+    }
+
+    if (planSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['plan'] });
+    }
+
+    if (allPlansSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['plans'] });
+    }
+
     const togglePlansSelector = () => {
         setShowPlansSelector(!showPlansSelector);
     };
@@ -96,6 +109,7 @@ export default function Week() {
     // Checks if the last week of the active plan is completed
     // NOTE: To be used for conditional rendering when date is past weekEndDate
     const isPlanCompleted = () => {
+        if(planData?.completed) return true;
         return (planData?.numWeeks === planData?.currWeek) && (cards.length === completedTasks);
     }
 
@@ -104,8 +118,6 @@ export default function Week() {
         dispatch(setIsLoading(true));
 
         try {
-            // If past end date, new end date will be end + 7. Else, today + 7
-
             // Update week progress
             await updatePlanMutation.mutateAsync({
                 currWeek: planData.currWeek + 1,
@@ -133,12 +145,12 @@ export default function Week() {
     // Updates plan as complete, creates badge, and shows Plan Completed Modal
     const completePlan = async () => {
         // Update plan on database
-        updatePlanMutation.mutate({ 
+        updatePlanMutation.mutate({
             completed: true,
         });
 
         // Update plan on redux and state
-        dispatch(setActivePlan({...planData, completed: true}));
+        dispatch(setActivePlan({ ...planData, completed: true }));
         setPlans(plans.filter((plan: Plan) => plan._id !== planData._id));
 
         // Create Badge
@@ -183,8 +195,6 @@ export default function Week() {
 
     // Handle active plan selection from list
     const handlePlanSelect = async (selectedPlan: Plan) => {
-        // Params: planId
-        // Dispatch redux function ---> { ...user, activePlanId: planId }
         dispatch(setIsLoading(true));
         setShowPlansSelector(false);
 
@@ -195,13 +205,32 @@ export default function Week() {
             await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
             await queryClient.refetchQueries({ queryKey: ['plan', activePlanId] });
 
-            // Then invalidate the weekTasks query
             await queryClient.invalidateQueries({ queryKey: ['weekTasks', activePlanId] });
 
             dispatch(setIsLoading(false));
         } catch (error) {
             console.log('Error selecting plan', error);
+            dispatch(setIsLoading(false));
         }
+    }
+
+    // Update Plan progression
+    const handleUpdateProg = (newNumCompletedTasks: number) => {
+        const newProg: number = parseFloat((newNumCompletedTasks / (cards.length || 1)).toFixed(2));
+
+        updatePlanMutation.mutate({
+            weekProg: newProg,
+        });
+
+        // Update active plan
+        dispatch(setActivePlan({ ...activePlan as Plan, weekProg: newProg }));
+
+        // Update plan on array
+        setPlans(prevPlans =>
+            prevPlans.map((plan: Plan) =>
+                plan._id === activePlan?._id ? { ...plan, weekProg: newProg } : plan
+            )
+        );
     }
 
     useEffect(() => {
@@ -216,18 +245,12 @@ export default function Week() {
     }, [allPlansData]);
 
     useEffect(() => {
-        updatePlanMutation.mutate({
-            weekProg: weekProg,
-        });
-        // TODO: Update Plan on redux (active plan)
-        // TODO: Update Plan located in Plans list on redux (plans)
-    }, [weekProg]);
-
-    useEffect(() => {
         // Controls the section that appears when week end date is reached
-        if (isDateBeforeOrToday(planData?.weekEndDate)) setShowCompletedSection(true);
+        if (planData?.completed === true || isDateBeforeOrToday(planData?.weekEndDate)) {
+            setShowCompletedSection(true);
+        }
         else setShowCompletedSection(false);
-    }, [planData])
+    }, [planData]);
 
     if (isPendingPlan || isPendingTasks || isPendingPlans) return (<Loading />)
 
@@ -236,7 +259,7 @@ export default function Week() {
     return (
         <div className="flex flex-col w-full gap-1">
             <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
-                <div className="flex flex-col justify-center w-4/6 gap-8">
+                <div className="flex flex-col w-4/6 gap-8 py-8">
                     <div className="flex flex-row gap-2">
                         <button onClick={togglePlansSelector} className="flex mt-2 shrink-0 transition hover:scale-110 duration-300">
                             <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
@@ -244,7 +267,7 @@ export default function Week() {
                         <p className="text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
                     </div>
                     {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={plans} activePlanId={activePlanId || ""} />}
-                    <ProgressBar prog={weekProg} />
+                    {!planData.completed && <ProgressBar prog={weekProg} />}
                 </div>
                 {(daysUntilWeekEnd > 0 && !showCompletedSection) && (
                     <div className="flex flex-col justify-center items-center w-3/6 gap-4">
@@ -300,7 +323,7 @@ export default function Week() {
                         {planData?.active && isDateBeforeOrToday(planData?.startDate) // if today >= start
                             ?    // Plan active and started
                             (
-                                <Kanban cards={cards} setCards={setCards} />
+                                <Kanban cards={cards} setCards={setCards} updateFn={handleUpdateProg} completedTasks={completedTasks} />
                             )
                             :    // Plan paused or starts later
                             (

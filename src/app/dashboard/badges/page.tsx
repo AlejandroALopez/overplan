@@ -6,10 +6,12 @@ import { useBadgesByUserId } from "@/hooks/queries";
 import { useAppSelector } from "@/lib/store";
 import { Badge } from "@/lib/types/planTypes";
 import { badgeSelector } from "@/lib/constants/badgesConstants";
+import { useQueryClient } from "@tanstack/react-query";
 import Loading from "./loading";
 import Error from "./error";
 
 export default function MyBadges() {
+    const queryClient = useQueryClient();
     const userData = useAppSelector(state => state.session.userData);
 
     const [badges, setBadges] = useState<Badge[]>([]);
@@ -21,7 +23,7 @@ export default function MyBadges() {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentBadges = badges.slice(startIndex, startIndex + itemsPerPage);
 
-    const { isPending, error, data: badgesData } = useBadgesByUserId(userData?.userId || "");
+    const { isPending, error, data: badgesData, isSuccess } = useBadgesByUserId(userData?.userId || "");
 
     const handlePrevPage = () => {
         setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -34,6 +36,10 @@ export default function MyBadges() {
     useEffect(() => {
         if (badgesData) setBadges(badgesData);
     }, [badgesData]);
+
+    if(isSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['badges'] });
+    }
 
     if (isPending) return (<Loading />)
     if (error) return (<Error />)

@@ -33,7 +33,7 @@ const column_border_colors: ColumnColorsType = {
     "Completed": "border-taskCompleted",
 }
 
-const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
+const Column: React.FC<ColumnProps> = ({ column, cards, setCards, updateFn, completedTasks }) => {
     const [active, setActive] = useState<boolean>(false);
     const filteredCards = cards.filter((c) => c.status === column);
 
@@ -104,6 +104,7 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
 
         if (before !== cardId) { // if same card, don't do anything + double check
             let copy = [...cards];
+            let numCompleted: number = completedTasks;
 
             let cardToTransfer = copy.find((c) => c._id === cardId);
             if (!cardToTransfer) return;
@@ -113,9 +114,12 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
 
             if (prevStatus === column) { // same column, keep completion date
                 newCompletionDate = cardToTransfer.completionDate;
-            } else if (column === 'Completed') {
+            } else if (column === 'Completed') { // new completed task, add to counter
                 newCompletionDate = dayjs().format('MM/DD/YYYY');
-            } else null;
+                numCompleted++;
+            } else if (prevStatus === 'Completed' && column !== 'Completed') { // remove completed task, sub counter
+                numCompleted--;
+            }
 
             cardToTransfer = {
                 ...cardToTransfer, status: column,
@@ -130,8 +134,6 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
                 }
             })
 
-            // TODO: Update Prog locally and on database
-
             copy = copy.filter((c) => c._id !== cardId); // filter out that card (remove copy)
 
             const moveToBack = before === "-1";
@@ -145,6 +147,8 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards }) => {
             }
 
             setCards(copy);
+
+            updateFn(numCompleted); // callback to update Plan
         }
     }
 
@@ -222,13 +226,13 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
     )
 }
 
-export const Kanban: React.FC<KanbanProps> = ({ cards, setCards }) => {
+export const Kanban: React.FC<KanbanProps> = ({ cards, setCards, updateFn, completedTasks }) => {
     return (
         <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
-            <Column column={"Backlog"} cards={cards} setCards={setCards} />
-            <Column column={"Today"} cards={cards} setCards={setCards} />
-            <Column column={"In Progress"} cards={cards} setCards={setCards} />
-            <Column column={"Completed"} cards={cards} setCards={setCards} />
+            <Column column={"Backlog"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
+            <Column column={"Today"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
+            <Column column={"In Progress"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
+            <Column column={"Completed"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
         </div>
     )
 }

@@ -10,10 +10,12 @@ import { usePlansByUserId } from "@/hooks/queries";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setMetricsPlan } from "@/lib/store/planSlice";
 import { setIsNoTokensOpen } from "@/lib/store/modalSlice";
+import { useQueryClient } from "@tanstack/react-query";
 
 import Zap from "../../../../public/icons/zap.svg";
 import Loading from "./loading";
 import Error from "./error";
+
 
 // Week Progress based on tasks completed
 const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
@@ -35,6 +37,7 @@ const ProgressBar: React.FC<PlanProgressProps> = ({ prog }) => {
 export default function MyPlans() {
     const router = useRouter();
     const dispatch: any = useAppDispatch();
+    const queryClient = useQueryClient();
 
     const [isArchiveMode, setIsArchiveMode] = useState<boolean>(false);
     const [plans, setPlans] = useState<Plan[]>([]);
@@ -51,7 +54,7 @@ export default function MyPlans() {
     const currentPlansArchived = archivedPlans.slice(startIndex, startIndex + plansPerPage);
 
     const userData = useAppSelector(state => state.session.userData);
-    const { isPending, error, data: plansData } = usePlansByUserId(userData?.userId || "");
+    const { isPending, error, data: plansData, isSuccess } = usePlansByUserId(userData?.userId || "");
 
     const handlePrevPage = () => {
         setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -88,6 +91,10 @@ export default function MyPlans() {
             setArchivedPlans(plansData.filter((plan: Plan) => plan.completed === true))
         }
     }, [plansData]);
+
+    if (isSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['plans'] });
+    }
 
     if (isPending) return (<Loading />)
 

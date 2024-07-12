@@ -17,7 +17,6 @@ export const planSlice = createSlice({
   initialState,
   reducers: {
     setActivePlan: (state, action: PayloadAction<Plan | null>) => {
-      console.log("Active Plan now: ", action.payload);
       state.activePlan = action.payload;
     },
     setMetricsPlan: (state, action: PayloadAction<Plan | null>) => {

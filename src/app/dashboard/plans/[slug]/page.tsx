@@ -7,14 +7,16 @@ import { useAllTasks } from "@/hooks/queries";
 import { useEffect, useState } from "react";
 import { Plan, ITask } from "@/lib/types/planTypes";
 import { OverallSummaryChart, WeekSummaryChart } from "./charts";
+import { useQueryClient } from "@tanstack/react-query";
 import Loading from "../loading";
 import Error from "../error";
 
 export default function SinglePlan() {
+    const queryClient = useQueryClient();
     const selectedPlan: Plan | null = useAppSelector(state => state.plan.metricsPlan);
     const [tasks, setTasks] = useState<ITask[]>([]);
 
-    const { isPending: isPendingTasks, error: errorTasks, data: tasksData } = useAllTasks(selectedPlan?._id || "");
+    const { isPending: isPendingTasks, error: errorTasks, data: tasksData, isSuccess } = useAllTasks(selectedPlan?._id || "");
     const weekTasks = tasks.filter((t) => t.week === selectedPlan?.currWeek);
 
     // Week Selector params
@@ -25,6 +27,10 @@ export default function SinglePlan() {
     useEffect(() => {
         if (tasksData) setTasks(tasksData);
     }, [tasksData]);
+
+    if (isSuccess) {
+        queryClient.invalidateQueries({ queryKey: ['metricsTasks'] });
+    }
 
     if (isPendingTasks) return (<Loading />);
 
