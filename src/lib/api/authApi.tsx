@@ -1,7 +1,7 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { IRegisterInput, ILoginInput } from "../types/authTypes";
 
-export const registerUser = async (input: IRegisterInput): Promise<void> => {
+export const registerUser = async (input: IRegisterInput): Promise<string | null> => {
   try {
     const response = await axios.post('http://localhost:8080/auth/register', input);
 
@@ -9,8 +9,18 @@ export const registerUser = async (input: IRegisterInput): Promise<void> => {
       window.location.href = response.data.redirectUrl;
     }
 
-  } catch (error) {
-    console.error('Registration failed', error);
+    return null;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response && error.response.data.message) {
+        return error.response.data.message;
+      }
+      console.error('Register failed', error);
+      return null
+    } else {
+      console.error('Unexpected register error: ', error);
+      return null;
+    }
   }
 }
 
