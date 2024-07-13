@@ -17,14 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <ReactQueryClientProvider>
-        <StoreProvider>
-          <html lang="en">
-            <body className={montserrat.className}>
-              {children}
-            </body>
-          </html>
-        </StoreProvider>
-      </ReactQueryClientProvider>
+    <ReactQueryClientProvider>
+      <StoreProvider>
+        <html lang="en">
+          <body className={montserrat.className}>
+            {children}
+          </body>
+        </html>
+      </StoreProvider>
+    </ReactQueryClientProvider>
   );
 }

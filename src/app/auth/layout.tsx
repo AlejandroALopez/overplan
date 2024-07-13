@@ -10,22 +10,20 @@ export const metadata: Metadata = {
   description: "Login or Signup to start using OverPlan AI",
 };
 
-function DashboardLayout({
+function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
 
   return (
-    <html lang="en">
-      <body className={`${montserrat.className}`}>
-        <main className="bg-[#FAFAFA] flex flex-col min-h-screen p-8">
-          <p className="text-3xl font-semibold">OverPlan AI</p>
-          {children}
-        </main>
-      </body>
-    </html>
+    <div className={`${montserrat.className}`}>
+      <main className="bg-[#FAFAFA] flex flex-col min-h-screen p-8">
+        <p className="text-3xl font-semibold">OverPlan AI</p>
+        {children}
+      </main>
+    </div>
   );
 };
 
-export default DashboardLayout;
+export default AuthLayout;
