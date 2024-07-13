@@ -109,8 +109,8 @@ export default function MyPlans() {
                     <button
                         onClick={() => toggleArchived()}
                     >
-                        <p 
-                        className="text-primary text-center transition hover:scale-105 duration-300"
+                        <p
+                            className="text-primary text-center transition hover:scale-105 duration-300"
                         >
                             See {isArchiveMode ? "active" : "completed"} plans
                         </p>
@@ -131,7 +131,7 @@ export default function MyPlans() {
                 </div>
             </div>
             {/* Plans Table */}
-            <div className="overflow-x-scroll lg:overflow-x-auto h-3/4 lg:h-1/2">
+            { }<div className="overflow-x-scroll lg:overflow-x-auto h-3/4 lg:h-1/2">
                 <table className="table-auto min-w-[600px] lg:w-full">
                     <thead>
                         <tr>
@@ -158,23 +158,25 @@ export default function MyPlans() {
                 </table>
             </div>
             {/* Page Selector */}
-            <div className="flex flex-row items-center justify-center gap-4">
-                <button
-                    className="px-4 py-2 bg-primary rounded disabled:opacity-50"
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                >
-                    <p className="text-white">&lt;</p>
-                </button>
-                <span className="text-center w-24">Page {currentPage} of {(isArchiveMode ? totalPagesArchived : totalPages)}</span>
-                <button
-                    className="px-4 py-2 bg-primary rounded disabled:opacity-50"
-                    onClick={handleNextPage}
-                    disabled={currentPage === (isArchiveMode ? totalPagesArchived : totalPages)}
-                >
-                    <p className="text-white">&gt;</p>
-                </button>
-            </div>
+            {totalPages > 0 && (
+                <div className="flex flex-row items-center justify-center gap-4">
+                    <button
+                        className="px-4 py-2 bg-primary rounded disabled:opacity-50"
+                        onClick={handlePrevPage}
+                        disabled={currentPage === 1}
+                    >
+                        <p className="text-white">&lt;</p>
+                    </button>
+                    <span className="text-center w-24">Page {currentPage} of {(isArchiveMode ? totalPagesArchived : totalPages)}</span>
+                    <button
+                        className="px-4 py-2 bg-primary rounded disabled:opacity-50"
+                        onClick={handleNextPage}
+                        disabled={currentPage === (isArchiveMode ? totalPagesArchived : totalPages)}
+                    >
+                        <p className="text-white">&gt;</p>
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

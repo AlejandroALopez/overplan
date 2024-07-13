@@ -37,7 +37,7 @@ export default function MyBadges() {
         if (badgesData) setBadges(badgesData);
     }, [badgesData]);
 
-    if(isSuccess) {
+    if (isSuccess) {
         queryClient.invalidateQueries({ queryKey: ['badges'] });
     }
 
@@ -70,23 +70,25 @@ export default function MyBadges() {
                 </div>
             </div>
             {/* Page Selector */}
-            <div className="flex flex-row items-center justify-center gap-4">
-                <button
-                    className="px-4 py-2 bg-primary rounded disabled:opacity-50"
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                >
-                    <p className="text-white">&lt;</p>
-                </button>
-                <span className="text-center w-24">Page {currentPage} of {totalPages}</span>
-                <button
-                    className="px-4 py-2 bg-primary rounded disabled:opacity-50"
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                >
-                    <p className="text-white">&gt;</p>
-                </button>
-            </div>
+            {totalPages > 0 && (
+                <div className="flex flex-row items-center justify-center gap-4">
+                    <button
+                        className="px-4 py-2 bg-primary rounded disabled:opacity-50"
+                        onClick={handlePrevPage}
+                        disabled={currentPage === 1}
+                    >
+                        <p className="text-white">&lt;</p>
+                    </button>
+                    <span className="text-center w-24">Page {currentPage} of {totalPages}</span>
+                    <button
+                        className="px-4 py-2 bg-primary rounded disabled:opacity-50"
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                    >
+                        <p className="text-white">&gt;</p>
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
