@@ -3,24 +3,17 @@
 import Link from "next/link";
 import { useState } from 'react';
 import { registerUser } from '@/lib/api/authApi';
-import { useRouter } from "next/navigation";
 import GoogleLoginButton from '@/components/GoogleLoginButton';
-// import { useRouter } from 'next/router';
 
 export default function Register() {
     const [email, setEmail] = useState<string>("");
     const [pass, setPass] = useState<string>("");
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
-    const router = useRouter();
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        const registerData = await registerUser({ email, password: pass, firstName, lastName });
-
-        if (registerData.success) {
-            router.push(`/`); // TODO: Replace with dashboard after gaining access to token
-        }
+        await registerUser({ email, password: pass, firstName, lastName });
     };
 
     return (

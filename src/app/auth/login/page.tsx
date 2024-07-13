@@ -1,22 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { loginUser } from '@/lib/api/authApi';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
 
-export default function Home() {
-  const router = useRouter();
+export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [pass, setPass] = useState<string>("");
 
-  //   useEffect(() => {
-  //     const token = router.query.token;
-  //     if (token) {
-  //       localStorage.setItem('token', token);
-  //       router.push('/dashboard'); // Redirect to a protected page
-  //     }
-  //   }, [router.query]);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    await loginUser({ email, password: pass });
+  };
 
   return (
     <div className='flex justify-center my-12'>
@@ -41,6 +37,7 @@ export default function Home() {
         <button
           className={`p-3 border-none rounded-2xl bg-[#2A2A2A] text-white text-xl drop-shadow-lg 
             transition hover:scale-105 duration-300`}
+          onClick={handleSubmit}
         >
           <p className='text-white font-semibold'>Login</p>
         </button>

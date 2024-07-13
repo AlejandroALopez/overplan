@@ -21,8 +21,6 @@ export default function Home() {
     const userData = new URL(window.location.href).searchParams.get('userData');
 
     if (token && refreshToken && userData) {
-      // localStorage.setItem('token', token);
-      // localStorage.setItem('refresh_token', refreshToken);
       setTokensInCookies(token, refreshToken);
       dispatch(setUserData(JSON.parse(userData)));
       router.push('/dashboard/week'); // Redirect to a protected page
