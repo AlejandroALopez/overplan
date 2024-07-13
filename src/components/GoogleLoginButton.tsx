@@ -10,7 +10,7 @@ export default function GoogleLoginButton() {
   
     return (
       <button 
-        className="flex flex-row justify-center items-center border-2 border-[#D9D9D9] rounded-2xl gap-2
+        className="flex flex-row justify-center items-center border-2 border-[#D9D9D9] rounded-lg gap-2
           transition hover:scale-105 duration-300"
         onClick={handleGoogleLogin}
       >
