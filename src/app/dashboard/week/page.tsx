@@ -11,9 +11,8 @@ import { setActivePlan } from "@/lib/store/planSlice";
 import { setIsCreateTaskOpen } from "@/lib/store/modalSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek, usePlansByUserId } from "@/hooks/queries";
 import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
-import ExpandUp from "../../../../public/arrows/expandUp.svg";
-import ExpandDown from "../../../../public/arrows/expandDown.svg";
 import dayjs from "dayjs";
+import { User } from "@/lib/types/sessionTypes";
 import { moveTasks } from "@/lib/api/tasksApi";
 import {
     setIsConfirmOpen, setIsLoading, setMessage,
@@ -24,7 +23,9 @@ import { ProgressBar, PlanSelector } from './components';
 import { setUserData } from "@/lib/store/sessionSlice";
 import Loading from "./loading";
 import Error from "./error";
-import { User } from "@/lib/types/sessionTypes";
+import Empty from "./empty";
+import ExpandUp from "../../../../public/arrows/expandUp.svg";
+import ExpandDown from "../../../../public/arrows/expandDown.svg";
 
 
 export default function Week() {
@@ -251,6 +252,8 @@ export default function Week() {
         }
         else setShowCompletedSection(false);
     }, [planData]);
+
+    if(plans.length < 1) return (<Empty />)
 
     if (isPendingPlan || isPendingTasks || isPendingPlans) return (<Loading />)
 

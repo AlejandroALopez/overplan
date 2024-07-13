@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 // Get Plan object by planId
 export function usePlanByPlanId(planId: string) {
+  console.log('planId in usePlanByPlanId: ', planId);
   return useQuery({
     queryKey: ["plan", planId],
     queryFn: () => fetchPlanData(planId),
@@ -14,6 +15,7 @@ export function usePlanByPlanId(planId: string) {
 
 // Get array of Tasks by planId and week
 export function useTasksByPlanIdAndWeek(planId: string, week?: number) {
+  console.log('planId, week in useTasksByPlanIdAndWeek: ', planId, week);
   return useQuery({
     queryKey: ["weekTasks", planId],
     queryFn: () => fetchTasksByPlanId(planId, week),
