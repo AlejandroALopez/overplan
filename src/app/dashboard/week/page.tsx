@@ -14,6 +14,7 @@ import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
 import dayjs from "dayjs";
 import { User } from "@/lib/types/sessionTypes";
 import { moveTasks } from "@/lib/api/tasksApi";
+import { updateUser } from "@/lib/api/usersApi";
 import {
     setIsConfirmOpen, setIsLoading, setMessage,
     setOnConfirm, setIsPlanCompletedOpen, setCompletedPlan
@@ -72,6 +73,16 @@ export default function Week() {
                 dispatch(setActivePlan(updatePlanMutation.data));
             }
         }
+    });
+
+    const updateUserMutation = useMutation({
+        mutationFn: (userInput: Partial<User>) => {
+            return updateUser(userData?.userId || "", userInput);
+        },
+        onError: () => {
+            console.log('Error updating user');
+            dispatch(setIsLoading(false));
+        },
     });
 
     const createBadgeMutation = useMutation({
@@ -202,6 +213,10 @@ export default function Week() {
         try {
             dispatch(setUserData({ ...userData as User, activePlanId: selectedPlan._id }));
             dispatch(setActivePlan(selectedPlan));
+
+            updateUserMutation.mutate({
+                activePlanId: selectedPlan._id,
+            });
 
             await queryClient.invalidateQueries({ queryKey: ['plan', activePlanId] });
             await queryClient.refetchQueries({ queryKey: ['plan', activePlanId] });
