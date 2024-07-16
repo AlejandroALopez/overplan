@@ -48,28 +48,28 @@ export default function Register() {
                 <div className='flex flex-col gap-2'>
                     <p className='font-semibold'>First Name</p>
                     <input
-                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg bg-[#A6A6A6] bg-opacity-25 text-md md:text-lg"
+                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
                         placeholder={""}
                         value={firstName}
                         onChange={e => setFirstName(e.target.value)}
                     />
                     <p className='font-semibold'>Last Name</p>
                     <input
-                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg bg-[#A6A6A6] bg-opacity-25 text-md md:text-lg"
+                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
                         placeholder={""}
                         value={lastName}
                         onChange={e => setLastName(e.target.value)}
                     />
                     <p className='font-semibold'>Email</p>
                     <input
-                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg bg-[#A6A6A6] bg-opacity-25 text-md md:text-lg"
+                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
                         placeholder={"Enter email"}
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
                     <p className='font-semibold'>Password</p>
                     <input
-                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg bg-[#A6A6A6] bg-opacity-25 text-md md:text-lg"
+                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
                         placeholder={"Enter password"}
                         value={pass}
                         onChange={e => setPass(e.target.value)}

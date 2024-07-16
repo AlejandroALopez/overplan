@@ -15,14 +15,14 @@ export default function Login() {
     setErrorMsg("");
 
     // Handle empty fields
-    if(!email) {
+    if (!email) {
       setErrorMsg("Please enter your email");
       return;
-    } else if(!pass) {
+    } else if (!pass) {
       setErrorMsg("Please enter your password");
       return;
     }
-    
+
     // Call login route. Redirects on sucess, otherwise display error message
     const error = await loginUser({ email, password: pass });
 
@@ -41,15 +41,20 @@ export default function Login() {
         <div className='flex flex-col gap-2'>
           <p className='font-semibold'>Email</p>
           <input
-            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg bg-[#A6A6A6] bg-opacity-25 text-md md:text-lg"
+            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
             placeholder={"Enter email"}
             required={true}
             value={email}
             onChange={e => setEmail(e.target.value)}
           />
-          <p className='font-semibold'>Password</p>
+          <div className="flex flex-row items-center justify-between mt-2">
+            <p className='font-semibold'>Password</p>
+            <Link href="/auth/forgotPassword">
+              <p className="text-primary text-sm font-medium transition hover:scale-105 duration-300">Forgot password</p>
+            </Link>
+          </div>
           <input
-            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg bg-[#A6A6A6] bg-opacity-25 text-md md:text-lg"
+            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
             placeholder={"Enter password"}
             required={true}
             value={pass}
@@ -73,7 +78,7 @@ export default function Login() {
           <div className='flex flex-row gap-1'>
             <p className="text-[#999999]">Don&apos;t have an account?</p>
             <Link href="/auth/register">
-              <p className="text-primary font-medium underline transition hover:scale-105 duration-300">Sign up</p>
+              <p className="text-primary font-medium transition hover:scale-105 duration-300">Sign up</p>
             </Link>
           </div>
         </div>

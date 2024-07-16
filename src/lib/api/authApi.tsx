@@ -31,7 +31,7 @@ export const loginUser = async (input: ILoginInput): Promise<string | null> => {
     if (response && response.data.redirectUrl) {
       window.location.href = response.data.redirectUrl;
     }
-    
+
     return null;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -61,5 +61,25 @@ export async function refreshAccessToken(refreshToken: string) {
     return data.access_token;
   } else {
     throw new Error('Failed to refresh access token');
+  }
+}
+
+export async function sendResetPasswordLink(email: string): Promise<string> {
+  let message: string = "";
+  try {
+    const response = await axios.post('http://localhost:8080/auth/forgot-password', { email });
+    message = "Password reset link sent to your email";
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response && error.response.data.message) {
+        message = error.response.data.message;
+      }
+      console.error('Login failed', error);
+    } else {
+      console.error("Error sending password reset link");
+      message = "Error sending password reset link";
+    }
+  } finally {
+    return message;
   }
 }
