@@ -8,15 +8,16 @@ import GoogleLoginButton from '@/components/GoogleLoginButton';
 export default function Register() {
     const [email, setEmail] = useState<string>("");
     const [pass, setPass] = useState<string>("");
+    const [confirmPass, setConfirmPass] = useState<string>("");
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [errorMsg, setErrorMsg] = useState<string>("");
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMsg("");
 
-        // Handle empty fields
+        // Handle empty fields and password mismatch
         if (!firstName) {
             setErrorMsg("Please enter your first name");
             return;
@@ -28,6 +29,9 @@ export default function Register() {
             return;
         } else if (!pass) {
             setErrorMsg("Please enter your password");
+            return;
+        } else if(pass !== confirmPass) {
+            setErrorMsg("Please make sure your passwords match");
             return;
         }
 
@@ -45,26 +49,32 @@ export default function Register() {
                         <p className="text-red-500 text-sm w-full text-center">{errorMsg}</p>
                     </div>
                 )}
-                <div className='flex flex-col gap-2'>
+                <form
+                    onSubmit={handleSubmit}
+                    className='flex flex-col gap-2'
+                >
                     <p className='font-semibold'>First Name</p>
                     <input
+
                         className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
-                        placeholder={""}
+                        placeholder="Enter your first name"
                         value={firstName}
                         onChange={e => setFirstName(e.target.value)}
+                        required
                     />
                     <p className='font-semibold'>Last Name</p>
                     <input
                         className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
-                        placeholder={""}
+                        placeholder="Enter your last name"
                         value={lastName}
                         onChange={e => setLastName(e.target.value)}
+                        required
                     />
                     <p className='font-semibold'>Email</p>
                     <input
                         type="email"
                         className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
-                        placeholder={"Enter email"}
+                        placeholder="Enter your email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         required
@@ -73,19 +83,28 @@ export default function Register() {
                     <input
                         type="password"
                         className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
-                        placeholder={"Enter password"}
+                        placeholder="Enter your password"
                         value={pass}
                         onChange={e => setPass(e.target.value)}
                         required
                     />
-                </div>
-                <button
-                    className={`p-3 border-none rounded-lg bg-[#2A2A2A] text-white text-xl drop-shadow-lg 
+                    <p className='font-semibold'>Confirm Password</p>
+                    <input
+                        type="password"
+                        className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
+                        placeholder="Confirm your password"
+                        value={confirmPass}
+                        onChange={e => setConfirmPass(e.target.value)}
+                        required
+                    />
+                    <button
+                        className={`p-3 mt-4 border-none rounded-lg bg-[#2A2A2A] text-white text-xl drop-shadow-lg 
               transition hover:scale-105 duration-300`}
-                    onClick={handleSubmit}
-                >
-                    <p className='text-white font-semibold'>Create Account</p>
-                </button>
+                        type="submit"
+                    >
+                        <p className='text-white font-semibold'>Create Account</p>
+                    </button>
+                </form>
                 <div className='flex flex-col gap-2'>
                     <div className="flex flex-row items-center justify-center gap-2">
                         <div className="bg-[#D9D9D9] w-1/2 h-0.5" />

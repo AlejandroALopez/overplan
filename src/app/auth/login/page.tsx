@@ -10,7 +10,7 @@ export default function Login() {
   const [pass, setPass] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
 
@@ -38,14 +38,17 @@ export default function Login() {
             <p className="text-red-500 text-sm w-full text-center">{errorMsg}</p>
           </div>
         )}
-        <div className='flex flex-col gap-2'>
+        <form
+          className='flex flex-col gap-2'
+          onSubmit={handleSubmit}
+        >
           <p className='font-semibold'>Email</p>
           <input
             type="email"
-            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
-            placeholder={"Enter email"}
             value={email}
+            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
             onChange={e => setEmail(e.target.value)}
+            placeholder="Enter your email"
             required
           />
           <div className="flex flex-row items-center justify-between mt-2">
@@ -56,20 +59,21 @@ export default function Login() {
           </div>
           <input
             type="password"
-            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
-            placeholder={"Enter password"}
             value={pass}
+            className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
             onChange={e => setPass(e.target.value)}
+            placeholder="Enter your password"
             required
           />
-        </div>
-        <button
-          className={`p-3 border-none rounded-lg bg-[#2A2A2A] text-white text-xl drop-shadow-lg 
+          <button
+            type="submit"
+            className={`p-3 mt-4 border-none rounded-lg bg-[#2A2A2A] text-white text-xl drop-shadow-lg 
             transition hover:scale-105 duration-300`}
-          onClick={handleSubmit}
-        >
-          <p className='text-white font-semibold'>Login</p>
-        </button>
+            onClick={handleSubmit}
+          >
+            <p className='text-white font-semibold'>Login</p>
+          </button>
+        </form>
         <div className='flex flex-col gap-2'>
           <div className="flex flex-row items-center justify-center gap-2">
             <div className="bg-[#D9D9D9] w-1/2 h-0.5" />
@@ -84,7 +88,7 @@ export default function Login() {
             </Link>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
