@@ -62,17 +62,21 @@ export default function Register() {
                     />
                     <p className='font-semibold'>Email</p>
                     <input
+                        type="email"
                         className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
                         placeholder={"Enter email"}
                         value={email}
                         onChange={e => setEmail(e.target.value)}
+                        required
                     />
                     <p className='font-semibold'>Password</p>
                     <input
+                        type="password"
                         className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
                         placeholder={"Enter password"}
                         value={pass}
                         onChange={e => setPass(e.target.value)}
+                        required
                     />
                 </div>
                 <button

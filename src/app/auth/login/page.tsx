@@ -41,11 +41,12 @@ export default function Login() {
         <div className='flex flex-col gap-2'>
           <p className='font-semibold'>Email</p>
           <input
+            type="email"
             className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
             placeholder={"Enter email"}
-            required={true}
             value={email}
             onChange={e => setEmail(e.target.value)}
+            required
           />
           <div className="flex flex-row items-center justify-between mt-2">
             <p className='font-semibold'>Password</p>
@@ -54,11 +55,12 @@ export default function Login() {
             </Link>
           </div>
           <input
+            type="password"
             className="w-full px-4 py-2 border-[#808080] border-[1px] rounded-lg text-md md:text-lg"
             placeholder={"Enter password"}
-            required={true}
             value={pass}
             onChange={e => setPass(e.target.value)}
+            required
           />
         </div>
         <button

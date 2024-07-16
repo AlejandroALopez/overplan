@@ -74,10 +74,31 @@ export async function sendResetPasswordLink(email: string): Promise<string> {
       if (error.response && error.response.data.message) {
         message = error.response.data.message;
       }
-      console.error('Login failed', error);
+      console.error('Error sending password reset link: ', error);
     } else {
       console.error("Error sending password reset link");
       message = "Error sending password reset link";
+    }
+  } finally {
+    return message;
+  }
+}
+
+export async function resetPassword(token: string, pass: string): Promise<string> {
+  let message: string = "";
+
+  try {
+    const response = await axios.post('http://localhost:8080/auth/reset-password', { token, pass });
+    message = "Password reset successful";
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      if (error.response && error.response.data.message) {
+        message = error.response.data.message;
+      }
+      console.error('Error resetting password', error);
+    } else {
+      console.error("Error resetting password");
+      message = "Error resetting password";
     }
   } finally {
     return message;
