@@ -7,7 +7,7 @@ import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { IMoveTasksInput, IPlanInput, Plan, ITask, IBadgeInput } from "@/lib/types/planTypes";
 import { updatePlan } from "@/lib/api/plansApi";
 import { createBadge } from "@/lib/api/badgesApi";
-import { setActivePlan } from "@/lib/store/planSlice";
+import { setActivePlan, setNumTasks } from "@/lib/store/planSlice";
 import { setIsCreateTaskOpen } from "@/lib/store/modalSlice";
 import { usePlanByPlanId, useTasksByPlanIdAndWeek, usePlansByUserId } from "@/hooks/queries";
 import { isDateBeforeOrToday } from "@/lib/utils/dateFunctions";
@@ -250,7 +250,10 @@ export default function Week() {
     }
 
     useEffect(() => {
-        if (tasksData) setCards(tasksData);
+        if (tasksData) {
+            setCards(tasksData);
+            dispatch(setNumTasks(tasksData.length));
+        }
     }, [tasksData]);
 
     // Hide completed plans

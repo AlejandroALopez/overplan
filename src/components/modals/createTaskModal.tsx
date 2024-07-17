@@ -2,18 +2,21 @@
 
 import Image from "next/image";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
-import { setIsCreateTaskOpen } from "@/lib/store/modalSlice";
+import { setIsCreateTaskOpen, setIsLoading } from "@/lib/store/modalSlice";
 import { useState } from "react";
 import CloseIcon from "../../../public/icons/close.svg";
-import { ITaskInput } from "@/lib/types/planTypes";
+import { IPlanInput, ITaskInput } from "@/lib/types/planTypes";
 import { createTask } from "@/lib/api/tasksApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { setActivePlan, setNumTasks } from "@/lib/store/planSlice";
+import { updatePlan } from "@/lib/api/plansApi";
 
 
 export default function CreateTaskModal() {
     const dispatch = useAppDispatch();
     const queryClient = useQueryClient();
     const activePlan = useAppSelector(state => state.plan.activePlan);
+    const numTasks = useAppSelector(state => state.plan.numTasks); // useful for updating week prog on task creation
     const isCreateTaskOpen = useAppSelector(state => state.modal.isCreateTaskOpen);
 
     const [titleVal, setTitleVal] = useState<string>("");
@@ -29,6 +32,21 @@ export default function CreateTaskModal() {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['plans'] });
+        }
+    });
+
+    const updatePlanMutation = useMutation({
+        mutationFn: (planInput: IPlanInput) => {
+            return updatePlan(activePlan?._id || "", planInput);
+        },
+        onError: () => {
+            console.log('Error updating plan');
+            dispatch(setIsLoading(false));
+        },
+        onSuccess: () => {
+            if (updatePlanMutation.data) {
+                dispatch(setActivePlan(updatePlanMutation.data));
+            }
         }
     });
 
@@ -62,6 +80,14 @@ export default function CreateTaskModal() {
 
             // fetch week tasks again
             await queryClient.invalidateQueries({ queryKey: ['weekTasks', activePlan._id] });
+
+            // Update week progress
+            const numComplete = Math.ceil(activePlan.weekProg * numTasks);
+            const newProg = parseFloat((numComplete / (numTasks + 1)).toFixed(2));
+
+            await updatePlanMutation.mutateAsync({ weekProg: newProg });
+
+            dispatch(setNumTasks(numTasks + 1));
         } catch (error) {
             console.log('Error creating task', error);
         }
