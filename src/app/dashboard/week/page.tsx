@@ -121,7 +121,7 @@ export default function Week() {
     // Checks if the last week of the active plan is completed
     // NOTE: To be used for conditional rendering when date is past weekEndDate
     const isPlanCompleted = () => {
-        if(planData?.completed) return true;
+        if (planData?.completed) return true;
         return (planData?.numWeeks === planData?.currWeek) && (cards.length === completedTasks);
     }
 
@@ -271,7 +271,7 @@ export default function Week() {
         else setShowCompletedSection(false);
     }, [planData]);
 
-    if(plans.length < 1) return (<Empty />)
+    if (plans.length < 1) return (<Empty />)
 
     if (isPendingPlan || isPendingTasks || isPendingPlans) return (<Loading />)
 
@@ -279,59 +279,67 @@ export default function Week() {
 
     return (
         <div className="flex flex-col w-full gap-1">
-            <div className="flex flex-row bg-white w-full h-2/6 px-6 rounded-sm">
-                <div className="flex flex-col w-4/6 gap-8 py-8">
+            {/* Top Section */}
+            <div className="flex flex-col lg:flex-row bg-white w-full px-6 rounded-sm">
+                {/* Plan title and progress */}
+                <div className="flex flex-col w-full lg:w-4/6 gap-4 lg:gap-8 py-4 sm:py-8">
                     <div className="flex flex-row gap-2">
                         <button onClick={togglePlansSelector} className="flex mt-2 shrink-0 transition hover:scale-110 duration-300">
                             <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
-                        <p className="text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
+                        <p className="text-2xl lg:text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
                     </div>
                     {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={plans} activePlanId={activePlanId || ""} />}
                     {!planData.completed && <ProgressBar prog={weekProg} />}
                 </div>
+                {/* Week end date and buttons */}
                 {(daysUntilWeekEnd > 0 && !showCompletedSection) && (
-                    <div className="flex flex-col justify-center items-center w-3/6 gap-4">
-                        <p className="text-xl text-[#B3B3B3]">Week ends on:</p>
-                        <p className="text-xl">{planData.weekEndDate} ({daysUntilWeekEnd} {daysUntilWeekEnd > 1 ? 'days' : 'day'})</p>
+                    <div className="flex flex-col justify-center items-center w-full lg:w-3/6 gap-4 mb-6 lg:mb-0">
+                        <div className="flex flex-row lg:flex-col justify-center items-center gap-2">
+                            <p className="text-auto lg:text-xl text-[#B3B3B3]">Week ends on:</p>
+                            <p className="text-auto lg:text-xl">{planData.weekEndDate} ({daysUntilWeekEnd} {daysUntilWeekEnd > 1 ? 'days' : 'day'})</p>
+                        </div>
                         <div className="flex flex-row gap-4">
                             <button
-                                className="py-4 px-6 rounded-md bg-white border-primary border-[1px] text-primary text-lg drop-shadow-lg 
+                                className="py-2 px-3 lg:py-4 lg:px-6 rounded-md bg-white border-primary border-[1px] drop-shadow-lg 
                         transition hover:scale-110 duration-300"
                                 onClick={() => dispatch(setIsCreateTaskOpen(true))}
                             >
-                                + Add Task
+                                <p className="text-auto lg:text-lg text-primary">+ Add Task</p>
                             </button>
                             <button
-                                className={`py-4 px-6 border-none rounded-md bg-primary text-white text-lg drop-shadow-lg 
+                                className={`py-4 px-6 border-none rounded-md bg-primary drop-shadow-lg 
                         transition hover:scale-110 duration-300 ${(completedTasks !== cards.length) && "opacity-50"}`}
                                 disabled={(completedTasks !== cards.length)}
                                 onClick={() => handleNextWeekButton()}
                             >
-                                {(planData?.currWeek === planData?.numWeeks) ? "Complete Plan" : "Advance to next week"}
+                                <p className="text-auto sm:text-lg text-white">{(planData?.currWeek === planData?.numWeeks) ? "Complete Plan" : "Advance to next week"}</p>
                             </button>
                         </div>
                     </div>
                 )}
             </div>
+            {/* Content section */}
             {showCompletedSection ? ( // If conditions met, show either "Week Completed" or "Plan Completed" section
                 <>
                     {isPlanCompleted() ? ( // Plan Completed section
-                        <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
-                            <p className="text-3xl font-medium">Congratulations!</p>
-                            <p className="text-xl">You have completed all the tasks for this plan</p>
+                        <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 min-h-[55vh] sm:h-5/6 rounded-sm">
+                            <p className="text-2xl md:text-3xl font-medium">Congratulations!</p>
+                            <p className="text-lg md:text-xl">You have completed all the tasks for this plan</p>
                         </div>
                     ) : // Week Completed section
                         (
-                            <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
-                                <p className="text-3xl font-medium">Moving to Week {(planData?.currWeek || 0) + 1}</p>
-                                {planData?.currWeek === planData?.numWeeks && (<p className="text-xl text-[#B3B3B3]">Extra Week to complete remaining tasks</p>)}
+                            <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 min-h-[55vh] sm:h-5/6 rounded-sm">
+                                <p className="text-2xl md:text-3xl font-medium">Moving to Week {(planData?.currWeek || 0) + 1}</p>
+                                {planData?.currWeek === planData?.numWeeks && (
+                                    <p className="text-lg md:text-xl text-[#B3B3B3] w-[400px] text-center">Extra Week to complete remaining tasks</p>
+                                )}
                                 <button
                                     className="py-4 px-6 border-none rounded-md bg-primary
-                            text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
+                                        drop-shadow-lg transition hover:scale-110 duration-300"
                                     onClick={() => startNextWeek()}
                                 >
-                                    Continue
+                                    <p className="text-white text-lg md:text-xl">Continue</p>
                                 </button>
                             </div>
                         )
@@ -348,15 +356,15 @@ export default function Week() {
                             )
                             :    // Plan paused or starts later
                             (
-                                <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 h-5/6 rounded-sm">
-                                    <p className="text-xl">{planData?.active ? "Plan starts on:" : "Plan Paused"}</p>
-                                    {planData?.active && (<p className="text-3xl font-medium">{planData?.startDate}</p>)}
+                                <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 min-h-[55vh] sm:h-5/6 rounded-sm">
+                                    <p className="text-lg md:text-xl">{planData?.active ? "Plan starts on:" : "Plan Paused"}</p>
+                                    {planData?.active && (<p className="text-2xl md:text-3xl font-medium">{planData?.startDate}</p>)}
                                     <button
                                         className="py-4 px-6 border-none rounded-md bg-primary
-                            text-white text-xl drop-shadow-lg transition hover:scale-110 duration-300"
+                                            drop-shadow-lg transition hover:scale-110 duration-300"
                                         onClick={() => startPlanEarly()}
                                     >
-                                        {planData?.active ? "Start Now" : "Resume Plan"}
+                                        <p className="text-white text-lg md:text-xl">{planData?.active ? "Start Now" : "Resume Plan"}</p>
                                     </button>
                                 </div>
                             )
