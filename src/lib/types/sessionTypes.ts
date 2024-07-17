@@ -7,4 +7,6 @@ export interface User {
     tier: string,
     tokens: number,
     activePlanId: string,
+    subscriptionId?: string,
+    renewalDate?: number,
 }

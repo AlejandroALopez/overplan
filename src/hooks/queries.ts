@@ -1,6 +1,7 @@
 import { fetchBadgesByUserId } from "@/lib/api/badgesApi";
 import { fetchPlanData, fetchPlansByUserId } from "@/lib/api/plansApi";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
+import { fetchUserById } from "@/lib/api/usersApi";
 import { useQuery } from "@tanstack/react-query";
 
 // Get Plan object by planId
@@ -45,6 +46,15 @@ export function useBadgesByUserId(userId: string) {
   return useQuery({
     queryKey: ["badges", userId],
     queryFn: () => fetchBadgesByUserId(userId),
+    enabled: !!userId,
+  });
+}
+
+// Get User object by userId
+export function useUserById(userId: string) {
+  return useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => fetchUserById(userId),
     enabled: !!userId,
   });
 }

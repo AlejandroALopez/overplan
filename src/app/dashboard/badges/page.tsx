@@ -37,6 +37,7 @@ export default function MyBadges() {
         if (badgesData) setBadges(badgesData);
     }, [badgesData]);
 
+    // TODO: Revise this
     if (isSuccess) {
         queryClient.invalidateQueries({ queryKey: ['badges'] });
     }
