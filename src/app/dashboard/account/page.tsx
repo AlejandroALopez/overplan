@@ -1,16 +1,17 @@
 'use client';
 
 import Link from 'next/link';
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setIsConfirmOpen, setMessage, setOnConfirm } from "@/lib/store/modalSlice";
 import { removeTokensInCookies } from '@/lib/utils/auth';
+import { cancelSubscription } from '@/lib/api/subscriptionsApi';
 
 export default function AccountPage() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const userData = useAppSelector(state => state.session.userData);
-    const renewDate: string = "May 16th, 2024";
 
     // Remove tokens and redirect to login
     const handleLogout = () => {
@@ -19,10 +20,7 @@ export default function AccountPage() {
     }
 
     const handleCancelSubscription = () => {
-        console.log('TODO');
-        // TODO
-        // 1. Open Confirmation Modal
-        // 2. Pass it function to cancel sub on stripe + remove benefits + success modal
+        cancelSubscription(userData?.subscriptionId || "");
     }
 
     const openConfirmModal = (message: string, onConfirm: () => void) => {
@@ -60,9 +58,11 @@ export default function AccountPage() {
                 <div className='flex flex-col gap-2'>
                     <p className='text-lg sm:text-xl text-[#999999]'>Renews on</p>
                     <div className='flex flex-row items-center gap-6'>
-                        <p className='text-lg sm:text-xl'>{renewDate}</p>
+                        <p className='text-lg sm:text-xl'>
+                            {userData?.renewalDate && dayjs.unix(userData.renewalDate).format('MM/DD/YYYY')}
+                        </p>
                         <button
-                            onClick={() => handleCancelSubscription()}
+                            onClick={() => openConfirmModal("Are you sure you want to cancel your subscription?", handleCancelSubscription)}
                             className='text-[#EB4747] text-md transition hover:scale-105 duration-300'
                         >
                             Cancel Subscription
