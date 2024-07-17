@@ -131,7 +131,7 @@ export default function MyPlans() {
                 </div>
             </div>
             {/* Plans Table */}
-            { }<div className="overflow-x-scroll lg:overflow-x-auto h-3/4 lg:h-1/2">
+            <div className="overflow-x-scroll lg:overflow-x-auto h-3/4 lg:h-1/2">
                 <table className="table-auto min-w-[600px] lg:w-full">
                     <thead>
                         <tr>

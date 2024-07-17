@@ -163,14 +163,14 @@ const Column: React.FC<ColumnProps> = ({ column, cards, setCards, updateFn, comp
 
 
     return (
-        <div key={column} className="flex flex-col shrink-0 w-64 h-full text-center">
+        <div key={column} className="flex flex-col shrink-0 max-w-64 h-full text-center">
             <div className="flex flex-row items-center justify-between py-2">
                 <p className={`text-xl ${column_text_colors[column]}`}>{column}</p>
                 <p className={`text-xl ${column_text_colors[column]}`}>{filteredCards.length}</p>
             </div>
             <div
-                className={`w-full h-full ${column_bg_colors[column]} bg-opacity-5 border-[1px] rounded-md p-2
-                    ${column_border_colors[column]} ${active && "col-active opacity-50"} `}
+                className={`w-64 h-96 ${column_bg_colors[column]} bg-opacity-5 border-[1px] rounded-md p-2
+                    overflow-y-auto ${column_border_colors[column]} ${active && "col-active opacity-50"} `}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDragEnd}
@@ -228,7 +228,7 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
 
 export const Kanban: React.FC<KanbanProps> = ({ cards, setCards, updateFn, completedTasks }) => {
     return (
-        <div className="flex flex-row justify-between bg-white p-6 h-5/6 rounded-sm">
+        <div className="flex flex-row gap-5 sm:gap-10 bg-white p-6 min-h-[40vh] md:h-5/6 rounded-sm overflow-x-auto w-full">
             <Column column={"Backlog"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
             <Column column={"Today"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
             <Column column={"In Progress"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
