@@ -11,12 +11,15 @@ import { IPlanInput } from "@/lib/types/planTypes";
 import { makeSlug } from "@/lib/utils/formatFunctions";
 import { setActivePlan } from "@/lib/store/planSlice";
 import { REVIEW_TITLE } from "@/lib/constants/plannerConstants";
-import { setIsNoTokensOpen } from "@/lib/store/modalSlice";
+import { setIsLoading, setIsNoTokensOpen } from "@/lib/store/modalSlice";
 
 import Zap from "../../../../public/icons/zap.svg";
 import Compass from "../../../../public/icons/compass.svg";
 import Clock from "../../../../public/icons/clock.svg";
 import Calendar from "../../../../public/icons/calendar.svg";
+import { User } from "@/lib/types/sessionTypes";
+import { updateUser } from "@/lib/api/usersApi";
+import { setUserData } from "@/lib/store/sessionSlice";
 
 export default function ReviewPlan() {
     const router = useRouter();
@@ -29,23 +32,46 @@ export default function ReviewPlan() {
     const weekEndDate = dayjs(startDate).add(7, 'day').format('MM/DD/YYYY');
     const slug = makeSlug(goal);
 
-    const mutation = useMutation({
+    const createPlanMutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
             return createPlan(planInput);
         },
     });
 
-    if (mutation.isSuccess) {
+    const updateUserMutation = useMutation({
+        mutationFn: (userInput: Partial<User>) => {
+            return updateUser(userData?.userId || "", userInput);
+        },
+        onError: () => {
+            console.log('Error updating user');
+            dispatch(setIsLoading(false));
+        },
+    });
+
+    if (createPlanMutation.isSuccess) {
         dispatch(setActivePlan(null)); // reset plan
         router.push(`/planner/result`);
-        dispatch(setActivePlan(mutation.data));
+        dispatch(setActivePlan(createPlanMutation.data));
+
+        // Update active plan Id and tokens on User (redux and mutation)
+        if (userData) {
+            updateUserMutation.mutate({
+                activePlanId: createPlanMutation.data?._id || "",
+                tokens: (userData.tokens || 0) - 1,
+            });
+            dispatch(setUserData({
+                ...userData,
+                activePlanId: createPlanMutation.data?._id || "",
+                tokens: (userData.tokens || 0) - 1,
+            }));
+        }
     }
 
     // If enough tokens, create Plan. Else, display modal
     const handleCreatePlan = () => {
-        if (userData?.tokens) {
+        if (userData?.tokens && userData?.tokens > 0) {
             // TODO: Remove 1 token (maybe on success)
-            mutation.mutate({
+            createPlanMutation.mutate({
                 slug: slug,
                 userId: userData?.userId,
                 goal: goal,
@@ -62,7 +88,7 @@ export default function ReviewPlan() {
 
     return (
         <>
-            {mutation.isPending && (
+            {createPlanMutation.isPending && (
                 <main className="flex min-h-screen flex-col justify-center items-center p-8">
                     <div className="flex flex-col items-center justify-center gap-12">
                         <div className="big-loading-spinner" />
@@ -70,7 +96,7 @@ export default function ReviewPlan() {
                     </div>
                 </main>
             )}
-            {!mutation.isPending && !mutation.isSuccess && (
+            {!createPlanMutation.isPending && !createPlanMutation.isSuccess && (
                 <main className="flex min-h-screen flex-col items-center p-8">
                     <p className="text-3xl font-semibold mt-8">{REVIEW_TITLE}</p>
                     <div className="flex flex-col gap-12 mt-12">
@@ -89,6 +115,7 @@ export default function ReviewPlan() {
                             </div>
                         </div>
                     </div>
+                    {/* Buttons */}
                     <div className="flex flex-row justify-between my-12 lg:my-16 w-full md:w-1/2">
                         <Link href="/planner/dates">
                             <button

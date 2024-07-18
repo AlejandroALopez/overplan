@@ -9,6 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
 import { ITask } from "@/lib/types/planTypes";
 import { RESULT_SUBTITLE } from "@/lib/constants/plannerConstants";
+import Loading from "./loading";
+import Error from "./error";
 
 const status_bg_colors: ColumnColorsType = {
     "Backlog": "bg-taskBacklog",
@@ -61,14 +63,8 @@ export default function Result() {
 
     const filteredTasks = tasks?.filter((task: ITask) => task.week === activeWeek);
 
-    if (isPending) return (
-        <main className="flex min-h-screen flex-col justify-center items-center p-8">
-            <div className="flex flex-col items-center justify-center gap-12">
-                <div className="big-loading-spinner" />
-                <p className="text-2xl sm:text-3xl font-semibold">Your Plan is being created...</p>
-            </div>
-        </main>)
-    if (error) return (<div>An error has occurred: {error.message} </div>)
+    if (isPending) return (<Loading />)
+    if (error) return (<Error />)
 
     return (
         <main className="flex min-h-screen flex-col p-8">
