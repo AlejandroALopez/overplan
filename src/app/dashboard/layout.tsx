@@ -22,7 +22,7 @@ function DashboardLayout({
     <div className={`${montserrat.className}`}>
       <LoadingModal />
       <ConfirmModal />
-      <SingleTaskModal />
+      <SingleTaskModal edit={true}/>
       <CreateTaskModal />
       <PlanCompletedModal />
       <NoTokensModal />

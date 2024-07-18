@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { WeekProps, TaskProps } from "@/lib/types/plannerProps";
 import { ColumnColorsType } from "@/lib/types/weekProps";
-import { useAppSelector } from "@/lib/store";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { setIsSingleTaskOpen, setSelectedTask } from "@/lib/store/modalSlice";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
 import { ITask } from "@/lib/types/planTypes";
@@ -32,14 +33,22 @@ const Week: React.FC<WeekProps> = ({ week, activeWeek, setActiveWeek }) => {
 }
 
 const Task: React.FC<TaskProps> = ({ task }) => {
+    const dispatch = useAppDispatch();
+    
+    const handleClick = () => {
+        dispatch(setSelectedTask(task));
+        dispatch(setIsSingleTaskOpen(true));
+    }
+
     return (
-        <div
+        <button
             className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
-                    rounded-md rounded-br-xl"
+                rounded-md rounded-br-xl"
+            onClick={handleClick}
         >
             <p className="w-full p-2">{task.title}</p>
             <div className={`h-4 w-6 rounded-tl-md rounded-br-xl ${status_bg_colors[task.status]}`} />
-        </div>
+        </button>
     );
 }
 

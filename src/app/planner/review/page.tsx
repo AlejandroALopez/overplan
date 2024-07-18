@@ -65,6 +65,8 @@ export default function ReviewPlan() {
                 tokens: (userData.tokens || 0) - 1,
             }));
         }
+
+        console.log('How many times?');
     }
 
     // If enough tokens, create Plan. Else, display modal

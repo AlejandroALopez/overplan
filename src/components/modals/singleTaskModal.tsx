@@ -19,7 +19,10 @@ const column_text_colors: ColumnColorsType = {
     "Completed": "text-taskCompleted",
 }
 
-export default function SingleTaskModal() {
+export default function SingleTaskModal(
+    { edit }: Readonly<{
+        edit: boolean;
+    }>) {
     const dispatch = useAppDispatch();
     const queryClient = useQueryClient();
     const activePlanId = useAppSelector(state => state.session.userData?.activePlanId);
@@ -50,7 +53,7 @@ export default function SingleTaskModal() {
                 description: descriptionVal,
             }
 
-            try{
+            try {
                 await updateTaskMutation.mutateAsync(body);
 
                 // fetch week tasks again
@@ -88,6 +91,7 @@ export default function SingleTaskModal() {
                     </button>
                 </div>
                 <div className="flex flex-row items-center justify-between mt-2">
+                    {/* Title container */}
                     {editMode
                         ? (
                             <textarea
@@ -100,16 +104,18 @@ export default function SingleTaskModal() {
                             <p className="w-8/12 text-2xl font-medium mt-2">{titleVal}</p>
                         )
                     }
-                    <div className="flex flex-row gap-4">
-                        <button
-                            onClick={handleEdit}
-                            className={`flex flex-row items-center gap-2 py-1.5 px-4 border-none rounded-md bg-[#E4E4E4] 
+                    {/* Edit/Delete buttons */}
+                    {edit && (
+                        <div className="flex flex-row gap-4">
+                            <button
+                                onClick={handleEdit}
+                                className={`flex flex-row items-center gap-2 py-1.5 px-4 border-none rounded-md bg-[#E4E4E4] 
                             drop-shadow-lg transition hover:scale-110 duration-300`}
-                        >
-                            <Image src={EditIcon} alt="Edit icon" />
-                            <p className="text-lg">{editMode ? "save" : "edit"}</p>
-                        </button>
-                        {/* <button
+                            >
+                                <Image src={EditIcon} alt="Edit icon" />
+                                <p className="text-lg">{editMode ? "save" : "edit"}</p>
+                            </button>
+                            {/* <button
                             onClick={handleDelete}
                             className={`flex flex-row items-center gap-2 py-1.5 px-4 border-none rounded-md bg-[#E4E4E4] 
                         drop-shadow-lg transition hover:scale-110 duration-300`}
@@ -117,8 +123,10 @@ export default function SingleTaskModal() {
                             <Image src={DeleteIcon} alt="Delete icon" />
                             <p className="text-lg">delete</p>
                         </button> */}
-                    </div>
+                        </div>
+                    )}
                 </div>
+                {/* More info */}
                 <div className="flex flex-row gap-16 mt-4">
                     <div className="flex flex-row gap-2">
                         <p className="text-[#999999]">Week:</p>
@@ -135,6 +143,7 @@ export default function SingleTaskModal() {
                         </div>
                     )}
                 </div>
+                {/* Description container */}
                 <p className="text-xl text-[#999999] mt-4">Description</p>
                 <div className="mt-2 w-full md:w-3/4">
                     {editMode

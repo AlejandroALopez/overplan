@@ -6,7 +6,7 @@ export interface IAuthState {
 }
 
 const initialState: IAuthState = {
-  authState: "loool",
+  authState: "",
 };
 
 export const authSlice = createSlice({
