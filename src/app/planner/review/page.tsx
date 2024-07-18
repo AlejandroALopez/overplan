@@ -20,6 +20,7 @@ import Calendar from "../../../../public/icons/calendar.svg";
 import { User } from "@/lib/types/sessionTypes";
 import { updateUser } from "@/lib/api/usersApi";
 import { setUserData } from "@/lib/store/sessionSlice";
+import { useState } from "react";
 
 export default function ReviewPlan() {
     const router = useRouter();
@@ -31,6 +32,8 @@ export default function ReviewPlan() {
 
     const weekEndDate = dayjs(startDate).add(7, 'day').format('MM/DD/YYYY');
     const slug = makeSlug(goal);
+
+    const [hasRunSuccessBlock, setHasRunSuccessBlock] = useState(false); // ensure success runs only once
 
     const createPlanMutation = useMutation({
         mutationFn: (planInput: IPlanInput) => {
@@ -50,11 +53,11 @@ export default function ReviewPlan() {
 
     if (createPlanMutation.isSuccess) {
         dispatch(setActivePlan(null)); // reset plan
-        router.push(`/planner/result`);
         dispatch(setActivePlan(createPlanMutation.data));
 
         // Update active plan Id and tokens on User (redux and mutation)
-        if (userData) {
+        if (userData && !hasRunSuccessBlock) {
+            setHasRunSuccessBlock(true);
             updateUserMutation.mutate({
                 activePlanId: createPlanMutation.data?._id || "",
                 tokens: (userData.tokens || 0) - 1,
@@ -65,8 +68,8 @@ export default function ReviewPlan() {
                 tokens: (userData.tokens || 0) - 1,
             }));
         }
-
-        console.log('How many times?');
+        
+        router.push(`/planner/result`);
     }
 
     // If enough tokens, create Plan. Else, display modal
