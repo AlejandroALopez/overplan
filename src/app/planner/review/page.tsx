@@ -60,8 +60,7 @@ export default function ReviewPlan() {
             setHasRunSuccessBlock(true);
             updateUserMutation.mutate({
                 activePlanId: createPlanMutation.data?._id || "",
-                tokens: (userData.tokens || 0) - 1,
-            });
+            }); // tokens already updated on API
             dispatch(setUserData({
                 ...userData,
                 activePlanId: createPlanMutation.data?._id || "",
