@@ -330,7 +330,7 @@ export default function Week() {
             {showCompletedSection ? ( // If conditions met, show either "Week Completed" or "Plan Completed" section
                 <>
                     {isPlanCompleted() ? ( // Plan Completed section
-                        <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 min-h-[55vh] sm:h-5/6 rounded-sm">
+                        <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 min-h-[90vh] sm:h-5/6 rounded-sm">
                             <p className="text-2xl md:text-3xl font-medium">Congratulations!</p>
                             <p className="text-lg md:text-xl">You have completed all the tasks for this plan</p>
                             {/* Button to obtain Badge, if plan completes automatically */}
