@@ -54,7 +54,7 @@ export default function AccountPage() {
                     }
                 </div>
             </div>
-            {userData?.tier === 'Pro' &&
+            {userData?.tier !== 'Free' &&
                 <div className='flex flex-col gap-2'>
                     <p className='text-lg sm:text-xl text-[#999999]'>Renews on</p>
                     <div className='flex flex-row items-center gap-6'>
