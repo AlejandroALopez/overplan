@@ -60,7 +60,7 @@ export default function MyBadges() {
                             key={badge._id}
                             className="flex flex-row gap-4"
                         >
-                            <Image src={badgeSelector[badge.imageKey]} alt="blue badge" />
+                            <Image src={badgeSelector[badge.imageKey]} alt={`badge ${badge._id}`} />
                             <div className="flex flex-col gap-2">
                                 <p className="text-xl font-medium">{badge.goal}</p>
                                 <p className="text-md">{badge.weeks} weeks</p>

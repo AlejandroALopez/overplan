@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { User } from "@/lib/types/sessionTypes";
 import { moveTasks } from "@/lib/api/tasksApi";
 import { updateUser } from "@/lib/api/usersApi";
+import { badgeColorPicker } from "@/lib/constants/badgesConstants";
 import {
     setIsConfirmOpen, setIsLoading, setMessage,
     setOnConfirm, setIsPlanCompletedOpen, setCompletedPlan
@@ -171,7 +172,7 @@ export default function Week() {
             weeks: planData.numWeeks,
             userId: userData?.userId || "",
             planId: planData._id,
-            imageKey: "blue",
+            imageKey: badgeColorPicker(planData.numWeeks),
             completionDate: dayjs(today).format('MM/DD/YYYY'),
         }
 
