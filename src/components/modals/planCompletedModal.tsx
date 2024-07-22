@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { useAppSelector, useAppDispatch } from "@/lib/store";
 import { setIsPlanCompletedOpen } from "@/lib/store/modalSlice";
-import Badge from "../../../public/badges/blueBadge.svg";
-
+import { badgeColorPicker, badgeSelector } from "@/lib/constants/badgesConstants";
 
 export default function PlanCompletedModal() {
     const dispatch = useAppDispatch();
@@ -24,7 +23,7 @@ export default function PlanCompletedModal() {
                 <div className="flex flex-col items-center gap-4">
                     <p className="text-2xl sm:text-3xl font-semibold text-center">Congratulations!</p>
                     <p className="text-lg sm:text-xl text-[#666666] text-center">You successfully completed your goal and earned a badge!</p>
-                    <Image src={Badge} alt="badge" className="my-4" />
+                    <Image src={badgeSelector[badgeColorPicker(completedPlan.weeks)]} alt="badge" className="my-4" />
                     <p className="text-2xl sm:text-3xl font-medium text-center">{completedPlan.goal}</p>
                     <p className="text-lg sm:text-xl font-regular text-center">{completedPlan.weeks} weeks</p>
                 </div>

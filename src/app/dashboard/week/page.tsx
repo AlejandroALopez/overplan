@@ -206,6 +206,12 @@ export default function Week() {
         }
     }
 
+    // Receive badge when plan is completed automatically
+    const handleReceiveBadge = () => {
+        const message = 'Complete this plan and receive badge?';
+        openConfirmModal(message, completePlan);
+    }
+
     // Handle active plan selection from list
     const handlePlanSelect = async (selectedPlan: Plan) => {
         dispatch(setIsLoading(true));
@@ -327,6 +333,16 @@ export default function Week() {
                         <div className="flex flex-col items-center justify-center gap-6 bg-white p-6 min-h-[55vh] sm:h-5/6 rounded-sm">
                             <p className="text-2xl md:text-3xl font-medium">Congratulations!</p>
                             <p className="text-lg md:text-xl">You have completed all the tasks for this plan</p>
+                            {/* Button to obtain Badge, if plan completes automatically */}
+                            {!planData.completed && (
+                                <button
+                                    className="py-4 px-6 border-none rounded-md bg-primary drop-shadow-lg 
+                                        transition hover:scale-110 duration-300"
+                                    onClick={() => handleReceiveBadge()}
+                                >
+                                    <p className="text-auto sm:text-lg text-white">Receive Badge</p>
+                                </button>
+                            )}
                         </div>
                     ) : // Week Completed section
                         (
