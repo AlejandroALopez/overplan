@@ -12,7 +12,7 @@ export default function SubscriptionPage() {
     const [annualOption, setAnnualOption] = useState<boolean>(true);
 
     const handleSubscribe = async (priceId: string) => {
-        if(!userData) {
+        if (!userData) {
             console.error('User data not available');
             return;
         }
@@ -76,7 +76,7 @@ export default function SubscriptionPage() {
             <div className='flex flex-col-reverse lg:flex-row justify-center gap-16 mb-12"'>
                 {/* Free Plan */}
                 <div className="flex flex-col items-center bg-white rounded-2xl w-72 h-96 gap-4 drop-shadow-lg">
-                <div className={`w-full h-4 bg-gray-300 rounded-t-2xl`} />
+                    <div className={`w-full h-4 bg-gray-300 rounded-t-2xl`} />
                     <p className="text-xl text-black font-medium">Free</p>
                     <div className="flex flex-col items-center my-4 h-12">
                         <p className="text-4xl text-black font-semibold">$0/mo</p>
@@ -84,18 +84,19 @@ export default function SubscriptionPage() {
                     <div className="flex flex-col items-center gap-2 w-full">
                         <p>1 Free Plan</p>
                     </div>
-                    <button
-                        className="flex items-center justify-center rounded-2xl mt-auto m-4 py-3 px-14 text-primary
+                    {userData?.tier === 'Free' && (
+                        <button
+                            className="flex items-center justify-center rounded-2xl mt-auto m-4 py-3 w-3/4 text-primary font-medium
                         transition hover:scale-110 hover:bg-primary hover:text-white duration-300 border-2 border-primary"
-                        onClick={() => handleSubscribe(process.env.NEXT_PUBLIC_STRIPE_FREE_PRICE_ID || "")}
-                        disabled
-                    >
-                        Your Plan
-                    </button>
+                            disabled
+                        >
+                            Your Plan
+                        </button>
+                    )}
                 </div>
                 {/* Pro Plan */}
                 <div className="flex flex-col items-center bg-white rounded-2xl w-72 h-96 gap-4 drop-shadow-lg">
-                <div className={`w-full h-4 bg-primary rounded-t-2xl`} />
+                    <div className={`w-full h-4 bg-primary rounded-t-2xl`} />
                     <p className="text-xl text-black font-medium">Pro</p>
                     <div className="flex flex-col items-center my-4 h-12">
                         <p className="text-4xl text-black font-semibold">${annualOption ? "4" : "5"}/mo</p>
@@ -106,11 +107,12 @@ export default function SubscriptionPage() {
                         <p>Multi Plan support</p>
                     </div>
                     <button
-                        className="flex items-center justify-center rounded-2xl mt-auto m-4 py-3 px-14 text-primary
+                        className="flex items-center justify-center rounded-2xl mt-auto m-4 py-3 w-3/4 text-primary font-medium
                         transition hover:scale-110 hover:bg-primary hover:text-white duration-300 border-2 border-primary"
                         onClick={() => handleSubscribe(process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID || "")}
+                        disabled={userData?.tier === 'Pro'}
                     >
-                        Upgrade
+                        {userData?.tier === 'Pro' ? 'Your Plan' : 'Upgrade'}
                     </button>
                 </div>
             </div>
