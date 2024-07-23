@@ -9,8 +9,8 @@ export default function Error() {
             <div className="flex flex-col items-center justify-center gap-8 bg-white w-full px-6 rounded-sm">
                 <Image src={ExpandDown} alt="error icon" />
                 <p className="text-3xl font-medium text-center">Whoops! There was a problem</p>
-                <p className="text-lg md:text-xl text-center">Try refreshing the page or see our {" "}
-                    <span className="text-primary font-medium">Help Center</span> for more information</p>
+                <p className="text-lg md:text-xl text-center">Try refreshing the page or contact support at {" "}
+                    <span className="text-primary font-medium">overplanai.support@gmail.com</span></p>
             </div>
         </div>
     )

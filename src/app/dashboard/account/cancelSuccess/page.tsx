@@ -7,7 +7,7 @@ import { useUserById } from '@/hooks/queries';
 import Loading from './loading';
 import Error from './error';
 
-export default function PaymentSuccessPage() {
+export default function CancelSuccessPage() {
     const dispatch = useAppDispatch();
     const userData = useAppSelector(state => state.session.userData);
 
@@ -37,8 +37,8 @@ export default function PaymentSuccessPage() {
 
     return (
         <div className='flex flex-col items-center justify-center w-full gap-8 p-12 bg-white'>
-            <p className='text-3xl font-semibold text-center'>Thanks for upgrading to Pro!</p>
-            <p className='text-lg text-center'>Enjoy up to 10 plans per month</p>
+            <p className='text-3xl font-semibold text-center'>Your subscription was canceled successfully</p>
+            <p className='text-lg text-center'>Your tokens won't be recharged, but you can still use the ones you have left.</p>
         </div>
     );
 }

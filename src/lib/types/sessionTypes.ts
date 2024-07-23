@@ -9,4 +9,5 @@ export interface User {
     activePlanId: string,
     subscriptionId?: string,
     renewalDate?: number,
+    subActive?: boolean,
 }

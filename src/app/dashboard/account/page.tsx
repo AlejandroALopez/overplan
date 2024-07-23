@@ -19,8 +19,11 @@ export default function AccountPage() {
         router.push("/auth/login");
     }
 
-    const handleCancelSubscription = () => {
-        cancelSubscription(userData?.subscriptionId || "");
+    const handleCancelSubscription = async () => {
+        const res = await cancelSubscription(userData?.subscriptionId || "");
+        if (res.cancel_at_period_end) {
+            router.push("/dashboard/account/cancelSuccess");
+        }
     }
 
     const openConfirmModal = (message: string, onConfirm: () => void) => {
@@ -56,17 +59,19 @@ export default function AccountPage() {
             </div>
             {userData?.tier !== 'Free' &&
                 <div className='flex flex-col gap-2'>
-                    <p className='text-lg sm:text-xl text-[#999999]'>Renews on</p>
+                    <p className='text-lg sm:text-xl text-[#999999]'>{userData?.subActive ? "Renews on" : "Expires on"}</p>
                     <div className='flex flex-row items-center gap-6'>
                         <p className='text-lg sm:text-xl'>
                             {userData?.renewalDate && dayjs.unix(userData.renewalDate).format('MM/DD/YYYY')}
                         </p>
-                        <button
-                            onClick={() => openConfirmModal("Are you sure you want to cancel your subscription?", handleCancelSubscription)}
-                            className='text-[#EB4747] text-md transition hover:scale-105 duration-300'
-                        >
-                            Cancel Subscription
-                        </button>
+                        {userData?.subActive && (
+                            <button
+                                onClick={() => openConfirmModal("Are you sure you want to cancel your subscription?", handleCancelSubscription)}
+                                className='text-[#EB4747] text-md transition hover:scale-105 duration-300'
+                            >
+                                Cancel Subscription
+                            </button>
+                        )}
                     </div>
                 </div>
             }
