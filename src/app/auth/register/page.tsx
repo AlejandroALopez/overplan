@@ -115,7 +115,7 @@ export default function Register() {
                     <div className='flex flex-row gap-1'>
                         <p className="text-[#999999]">Already have an account?</p>
                         <Link href="/auth/login">
-                            <p className="text-primary font-medium underline transition hover:scale-105 duration-300">Log in</p>
+                            <p className="text-primary font-medium transition hover:scale-105 duration-300">Log in</p>
                         </Link>
                     </div>
                 </div>

@@ -2,27 +2,40 @@
 
 // import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from "@/lib/store";
 import { setUserData } from "@/lib/store/sessionSlice";
-import { setTokensInCookies } from "@/lib/utils/auth";
+import { getTokensFromCookies, setTokensInCookies } from "@/lib/utils/auth";
+import Loading from "./loading";
 
 export default function Home() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
+    setIsLoading(true);
     const token = new URL(window.location.href).searchParams.get('token');
     const refreshToken = new URL(window.location.href).searchParams.get('refreshToken');
     const userData = new URL(window.location.href).searchParams.get('userData');
 
-    if (token && refreshToken && userData) {
+    if (token && refreshToken && userData) { // checks for successful auth
       setTokensInCookies(token, refreshToken);
       dispatch(setUserData(JSON.parse(userData)));
       router.push('/dashboard/week'); // Redirect to a protected page
+    } else { // checks if cookies already present
+      const { token, refreshToken } = getTokensFromCookies();
+      if (token && refreshToken) {
+        router.push('/dashboard/week'); // Redirect to a protected page
+      }
     }
+
+    setIsLoading(false);
   }, []);
+
+  if(isLoading) return <Loading />
 
   return (
     <div className="flex flex-col p-8 min-h-screen bg-[#FAFAFA]">
