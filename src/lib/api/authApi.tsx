@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IRegisterInput, ILoginInput } from "../types/authTypes";
+import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 export const registerUser = async (input: IRegisterInput): Promise<string | null> => {
   try {
@@ -26,7 +27,7 @@ export const registerUser = async (input: IRegisterInput): Promise<string | null
 
 export const loginUser = async (input: ILoginInput): Promise<string | null> => {
   try {
-    const response = await axios.post('http://localhost:8080/auth/login', input);
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, input);
 
     if (response && response.data.redirectUrl) {
       window.location.href = response.data.redirectUrl;

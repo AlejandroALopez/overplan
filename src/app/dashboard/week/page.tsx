@@ -278,7 +278,7 @@ export default function Week() {
         else setShowCompletedSection(false);
     }, [planData]);
 
-    if (plans.length < 1 || activePlanId === "") return (<Empty />)
+    if (plans.length < 1 || (activePlanId === "" || !activePlanId)) return (<Empty />)
 
     if (isPendingPlan || isPendingTasks || isPendingPlans) return (<Loading />)
 
