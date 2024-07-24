@@ -26,7 +26,7 @@ export default function Empty() {
                 <Image src={EmptyIcon} alt="empty icon" />
                 <p className="text-3xl font-medium text-center">No Plans Yet</p>
                 <p className="text-lg md:text-xl text-center max-w-[600px]">
-                    It looks like you haven't created any plans yet.
+                    It looks like you haven&apos;t created any plans yet.
                     Start by creating a new plan to organize your tasks and stay on track with your goals.
                 </p>
                 <button

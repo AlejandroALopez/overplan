@@ -30,7 +30,7 @@ export default function NoTokensModal() {
                         <span className="text-primary font-medium">up to 10 AI-generated plans every month.</span>
                     </p>)
                     : (<p className="text-lg font-normal text-center">
-                        You'll get more plans soon. Meanwhile, focus on progressing with your current plans.
+                        You&apos;ll get more plans soon. Meanwhile, focus on progressing with your current plans.
                     </p>)
                 }
                 {(userData?.tier === 'Free')

@@ -38,7 +38,7 @@ export default function CancelSuccessPage() {
     return (
         <div className='flex flex-col items-center justify-center w-full gap-8 p-12 bg-white'>
             <p className='text-3xl font-semibold text-center'>Your subscription was canceled successfully</p>
-            <p className='text-lg text-center'>Your tokens won't be recharged, but you can still use the ones you have left.</p>
+            <p className='text-lg text-center'>Your tokens won&apos;t be recharged, but you can still use the ones you have left.</p>
         </div>
     );
 }
