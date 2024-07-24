@@ -6,7 +6,7 @@ import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 // GET plan by id
 export const fetchPlanData = async (id: string) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/plans/' + `${id}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/plans/` + `${id}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -30,7 +30,7 @@ export const fetchPlanData = async (id: string) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            return NextResponse.redirect('http://localhost:8080/auth/login');
+            return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
         }
     }
 
@@ -43,7 +43,7 @@ export const fetchPlanData = async (id: string) => {
 // Get all plans by userId
 export const fetchPlansByUserId = async (userId: string) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/plans?' + `userId=${userId}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/plans?` + `userId=${userId}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -67,7 +67,7 @@ export const fetchPlansByUserId = async (userId: string) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            return NextResponse.redirect('http://localhost:8080/auth/login');
+            return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
         }
     }
 
@@ -80,7 +80,7 @@ export const fetchPlansByUserId = async (userId: string) => {
 // Update plan and return it
 export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/plans/' + `${id}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/plans/` + `${id}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -109,7 +109,7 @@ export const updatePlan = async (id: string, updatedPlan: IPlanInput) => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update plan:', refreshError);
-                    return NextResponse.redirect('http://localhost:8080/auth/login');
+                    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
                 }
             } else {
                 console.error('Error updating plan:', error);

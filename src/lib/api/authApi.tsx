@@ -1,10 +1,9 @@
 import axios from "axios";
 import { IRegisterInput, ILoginInput } from "../types/authTypes";
-import { URL } from "next/dist/compiled/@edge-runtime/primitives/url";
 
 export const registerUser = async (input: IRegisterInput): Promise<string | null> => {
   try {
-    const response = await axios.post('http://localhost:8080/auth/register', input);
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, input);
 
     if (response && response.data.redirectUrl) {
       window.location.href = response.data.redirectUrl;
@@ -49,7 +48,7 @@ export const loginUser = async (input: ILoginInput): Promise<string | null> => {
 }
 
 export async function refreshAccessToken(refreshToken: string) {
-  const response = await fetch('http://localhost:8080/auth/refresh-token', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -68,7 +67,7 @@ export async function refreshAccessToken(refreshToken: string) {
 export async function sendResetPasswordLink(email: string): Promise<string> {
   let message: string = "";
   try {
-    const response = await axios.post('http://localhost:8080/auth/forgot-password', { email });
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`, { email });
     message = "Password reset link sent to your email";
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -89,7 +88,7 @@ export async function resetPassword(token: string, pass: string): Promise<string
   let message: string = "";
 
   try {
-    const response = await axios.post('http://localhost:8080/auth/reset-password', { token, pass });
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, { token, pass });
     message = "Password reset successful";
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

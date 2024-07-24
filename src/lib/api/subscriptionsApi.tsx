@@ -7,7 +7,7 @@ import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 // Cancel subscription by sub id
 export const cancelSubscription = async (subscriptionId: string) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/subscriptions/cancel-subscription';
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/cancel-subscription`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');

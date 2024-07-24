@@ -25,7 +25,7 @@ export default function SubscriptionPage() {
         }
 
         const { token, refreshToken } = getTokensFromCookies();
-        const response = await fetch('http://localhost:8080/subscriptions/checkout-session', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscriptions/checkout-session`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
             body: JSON.stringify({ userId: userData.userId, email: userData.email, priceId }),

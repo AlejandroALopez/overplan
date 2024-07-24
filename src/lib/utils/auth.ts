@@ -11,7 +11,7 @@ export const isTokenExpired = (token: string): boolean => {
 // Function to refresh the access token using the refresh token
 export const refreshAccessToken = async (refreshToken: string): Promise<string | null> => {
   try {
-    const response = await axios.post('http://localhost:8080/auth/refresh-token', {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`, {
       refresh_token: refreshToken,
     });
 

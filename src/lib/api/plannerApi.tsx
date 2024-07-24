@@ -6,7 +6,7 @@ import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 // Create Plan. Returns Plan object
 export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/plans';
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/plans`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -30,8 +30,8 @@ export const createPlan = async (input: IPlanInput): Promise<Plan | null> => {
                     }});
                     return retryResponse.data;
                 } catch (refreshError) {
-                    console.error('Failed to refresh token and update plan:', refreshError);
-                    // NextResponse.redirect('http://localhost:8080/auth/login');
+                    console.error('Failed to refresh token and create plan:', refreshError);
+                    // NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
                     return null;
                 }
             } else {

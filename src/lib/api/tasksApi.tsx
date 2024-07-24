@@ -8,7 +8,7 @@ import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 // Get tasks by planId and week
 export const fetchTasksByPlanId = async (planId: string, week?: number) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/tasks?' + `planId=${planId}` + `${week ? `&week=${week}` : ''}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/tasks?` + `planId=${planId}` + `${week ? `&week=${week}` : ''}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -32,7 +32,7 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            return NextResponse.redirect('http://localhost:8080/auth/login');
+            return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
         }
     }
 
@@ -45,7 +45,7 @@ export const fetchTasksByPlanId = async (planId: string, week?: number) => {
 // Create task and return it
 export const createTask = async (taskBody: ITaskInput) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/tasks';
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/tasks`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -91,7 +91,7 @@ export const createTask = async (taskBody: ITaskInput) => {
 // Update task and return it
 export const updateTask = async (id: string, updatedTask: ITaskInput) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/tasks/' + `${id}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/tasks/` + `${id}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -137,7 +137,7 @@ export const updateTask = async (id: string, updatedTask: ITaskInput) => {
 // Move incomplete tasks to the next week
 export const moveTasks = async (input: IMoveTasksInput) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/tasks/move';
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/tasks/move`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');

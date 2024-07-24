@@ -6,7 +6,7 @@ import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 // Create badge and return it
 export const createBadge = async (badgeBody: IBadgeInput) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/badges';
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/badges`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -35,7 +35,7 @@ export const createBadge = async (badgeBody: IBadgeInput) => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and creating badge:', refreshError);
-                    return NextResponse.redirect('http://localhost:8080/auth/login');
+                    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
                 }
             } else {
                 console.error('Error creating badge:', error);
@@ -52,7 +52,7 @@ export const createBadge = async (badgeBody: IBadgeInput) => {
 // Get all badges by userId
 export const fetchBadgesByUserId = async (userId: string) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/badges?' + `userId=${userId}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/badges?` + `userId=${userId}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -76,7 +76,7 @@ export const fetchBadgesByUserId = async (userId: string) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            return NextResponse.redirect('http://localhost:8080/auth/login');
+            return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
         }
     }
 

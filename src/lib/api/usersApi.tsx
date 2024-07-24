@@ -8,7 +8,7 @@ import { getTokensFromCookies, refreshAccessToken } from "../utils/auth";
 // GET user by Id
 export const fetchUserById = async (id: string) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/users/' + `${id}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/users/` + `${id}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -32,7 +32,7 @@ export const fetchUserById = async (id: string) => {
             });
         } catch (error) {
             console.error('Failed to refresh token', error);
-            return NextResponse.redirect('http://localhost:8080/auth/login');
+            return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
         }
     }
 
@@ -45,7 +45,7 @@ export const fetchUserById = async (id: string) => {
 // Update user and return it
 export const updateUser = async (id: string, updatedUser: Partial<User>) => {
     let { token, refreshToken } = getTokensFromCookies();
-    const URL = 'http://localhost:8080/users/' + `${id}`;
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/users/` + `${id}`;
 
     if (!token || !refreshToken) {
         throw new Error('No tokens available');
@@ -74,7 +74,7 @@ export const updateUser = async (id: string, updatedUser: Partial<User>) => {
                     return retryResponse.data;
                 } catch (refreshError) {
                     console.error('Failed to refresh token and update user:', refreshError);
-                    return NextResponse.redirect('http://localhost:8080/auth/login');
+                    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/login`);
                 }
             } else {
                 console.error('Error updating user:', error);
