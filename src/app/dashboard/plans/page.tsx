@@ -65,7 +65,6 @@ export default function MyPlans() {
     };
 
     const handleRowClick = (plan: Plan) => {
-        // TODO: Add Loading
         dispatch(setMetricsPlan(plan));
         router.push(`/dashboard/plans/${encodeURIComponent(plan.slug)}`);
     };

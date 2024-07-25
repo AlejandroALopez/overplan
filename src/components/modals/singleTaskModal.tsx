@@ -65,11 +65,6 @@ export default function SingleTaskModal(
         setEditMode(!editMode);
     }
 
-    // // Execute function passed to modal
-    // const handleDelete = () => {
-    //     console.log("TODO: delete task");
-    // };
-
     useEffect(() => {
         setTitleVal(selectedTask?.title || "");
         setDescriptionVal(selectedTask?.description || "");
