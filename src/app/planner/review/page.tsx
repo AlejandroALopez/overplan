@@ -28,7 +28,7 @@ export default function ReviewPlan() {
     const userData = useAppSelector(state => state.session.userData);
     const goal = useAppSelector(state => state.input.goal);
     const weeks = useAppSelector(state => state.input.numWeeks);
-    const startDate = useAppSelector(state => state.input.startDate); // TODO: Replace with redux state
+    const startDate = useAppSelector(state => state.input.startDate);
 
     const weekEndDate = dayjs(startDate).add(7, 'day').format('MM/DD/YYYY');
     const slug = makeSlug(goal);
@@ -74,7 +74,6 @@ export default function ReviewPlan() {
     // If enough tokens, create Plan. Else, display modal
     const handleCreatePlan = () => {
         if (userData?.tokens && userData?.tokens > 0) {
-            // TODO: Remove 1 token (maybe on success)
             createPlanMutation.mutate({
                 slug: slug,
                 userId: userData?.userId,
