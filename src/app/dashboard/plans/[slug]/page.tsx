@@ -17,12 +17,18 @@ export default function SinglePlan() {
     const [tasks, setTasks] = useState<ITask[]>([]);
 
     const { isPending: isPendingTasks, error: errorTasks, data: tasksData, isSuccess } = useAllTasks(selectedPlan?._id || "");
+
     const weekTasks = tasks.filter((t) => t.week === selectedPlan?.currWeek);
 
     // Week Selector params
     const [activeWeek, setActiveWeek] = useState<number>(selectedPlan?.currWeek || 1);
     const weeksArray: null[] = new Array(selectedPlan?.numWeeks).fill(null);
-    const filteredTasks = tasks.filter((t) => t.week === activeWeek);
+
+    // Filter tasks by week and sort by status
+    const statusOrder = ['Backlog', 'Today', 'In Progress', 'Completed'];
+    const filteredTasks = tasks.filter((t) => t.week === activeWeek).sort((a, b) => {
+        return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+    });
 
     useEffect(() => {
         if (tasksData) setTasks(tasksData);
@@ -62,8 +68,8 @@ export default function SinglePlan() {
             </div>
             {/* Week Selector */}
             <div className="bg-white w-full">
-                <WeekSelector 
-                    weeksArray={weeksArray} 
+                <WeekSelector
+                    weeksArray={weeksArray}
                     activeWeek={activeWeek}
                     setActiveWeek={setActiveWeek}
                     filteredTasks={filteredTasks}
