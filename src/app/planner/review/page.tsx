@@ -122,21 +122,21 @@ export default function ReviewPlan() {
                     <div className="flex flex-row justify-between my-12 lg:my-16 w-full md:w-1/2">
                         <Link href="/planner/dates">
                             <button
-                                className={`h-16 w-28 border-none rounded-md bg-primary 
+                                className={`h-12 w-20 sm:h-16 sm:w-28 border-none rounded-md bg-primary 
                                 drop-shadow-lg transition hover:scale-110 duration-300`}
                             >
-                                <p className="text-white text-lg sm:text-xl">&lt; Back</p>
+                                <p className="text-white text-auto sm:text-xl">&lt; Back</p>
                             </button>
                         </Link>
                         <div className="flex flex-row gap-4">
                             <button
-                                className={`h-16 w-40 border-none rounded-md bg-primary
+                                className={`h-12 w-32 sm:h-16 sm:w-40 border-none rounded-md bg-primary
                                  drop-shadow-lg transition hover:scale-110 duration-300`}
                                 onClick={() => handleCreatePlan()}
                             >
-                                <p className="text-white text-lg sm:text-xl">Create Plan</p>
+                                <p className="text-white text-auto sm:text-xl">Create Plan</p>
                             </button>
-                            <div className="flex flex-row px-4 py-4 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
+                            <div className="flex flex-row p-2 sm:p-4 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
                                 <Image src={Zap} alt="zap icon" />
                                 <p className="text-xl font-medium text-center">{userData?.tokens}</p>
                             </div>
