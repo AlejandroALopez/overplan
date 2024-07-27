@@ -276,6 +276,7 @@ export default function Week() {
             setShowCompletedSection(true);
         }
         else setShowCompletedSection(false);
+        dispatch(setActivePlan(planData));
     }, [planData]);
 
     if (plans.length < 1 || (activePlanId === "" || !activePlanId)) return (<Empty />)

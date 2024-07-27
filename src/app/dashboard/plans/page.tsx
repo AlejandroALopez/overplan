@@ -8,7 +8,7 @@ import { PlanProgressProps } from "@/lib/types/extraProps";
 import { Plan } from "@/lib/types/planTypes";
 import { usePlansByUserId } from "@/hooks/queries";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { setMetricsPlan } from "@/lib/store/planSlice";
+import { setActivePlan, setMetricsPlan } from "@/lib/store/planSlice";
 import { setIsNoTokensOpen } from "@/lib/store/modalSlice";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -38,6 +38,7 @@ export default function MyPlans() {
     const router = useRouter();
     const dispatch: any = useAppDispatch();
     const queryClient = useQueryClient();
+    const activePlan = useAppSelector(state => state.plan.activePlan);
 
     const [isArchiveMode, setIsArchiveMode] = useState<boolean>(false);
     const [plans, setPlans] = useState<Plan[]>([]);
@@ -66,6 +67,7 @@ export default function MyPlans() {
 
     const handleRowClick = (plan: Plan) => {
         dispatch(setMetricsPlan(plan));
+        if(!activePlan) dispatch(setActivePlan(plan));
         router.push(`/dashboard/plans/${encodeURIComponent(plan.slug)}`);
     };
 
