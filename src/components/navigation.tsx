@@ -10,12 +10,12 @@ import Badge from "../../public/icons/award.svg";
 import Menu from "../../public/icons/menu.svg";
 import User from "../../public/icons/user.svg";
 import CreditCard from "../../public/icons/creditCard.svg";
+import Logo from '../../public/logos/bigLogo.svg';
 import { useAppSelector } from "@/lib/store";
 
 
 export default function Navigation() {
   const pathname = usePathname();
-  const app_name: string = "OverPlan AI";
   const userData = useAppSelector(state => state.session.userData);
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
@@ -28,7 +28,13 @@ export default function Navigation() {
       {/* Vertical Menu for Big Screens */}
       <div className="flex flex-row sm:flex-col gap-8 m-0 sm:w-56 shrink-0 px-4 py-2 sm:px-0 sm:py-8 bg-white text-center min-h-full">
         <div className="flex text-center justify-between sm:justify-center items-center w-full">
-          <p className="text-2xl font-semibold">{app_name}</p>
+          {/* Logo */}
+          <Image
+            src={Logo}
+            width={180}
+            height={50}
+            sizes="(max-width: 768px) 20vw, (max-width: 1200px) 10vw, 5vw"
+            alt="logo" />
           <button onClick={toggleMenu} className="sm:hidden">
             <Image src={Menu} alt="Menu" />
           </button>
