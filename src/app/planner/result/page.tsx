@@ -72,8 +72,8 @@ export default function Result() {
 
     const filteredTasks = tasks?.filter((task: ITask) => task.week === activeWeek);
 
-    if (isPending) return (<Loading />)
     if (error) return (<Error />)
+    if (isPending) return (<Loading />)
 
     return (
         <main className="flex min-h-screen flex-col p-8">
