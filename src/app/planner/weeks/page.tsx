@@ -8,7 +8,6 @@ import { setNumWeeks } from "@/lib/store/inputSlice";
 import { WEEK_QUESTION, DEFAULT_WEEKS, MIN_WEEKS, MAX_WEEKS } from "@/lib/constants/plannerConstants";
 
 const WeekSelector: React.FC<WeekOptionProps> = ({ weeks, setWeeks }) => {
-
     return (
         <div className="flex flex-col my-12">
             <div className="flex flex-row items-center sm:gap-4 my-8">
@@ -51,7 +50,9 @@ export default function SetWeeks() {
             <p className="text-xl sm:text-2xl text-center mt-8">
                 Goal: <span className="font-semibold">{goal}</span>
             </p>
-            <p className="text-2xl sm:text-3xl text-center font-semibold mt-16">{WEEK_QUESTION}</p>
+            <p className="text-2xl sm:text-3xl text-center font-semibold mt-12">
+                {WEEK_QUESTION}
+            </p>
             <WeekSelector weeks={weeks} setWeeks={setWeeks} />
             <div className="flex flex-row justify-between my-16 w-full lg:w-1/2">
                 <Link href="/planner/goal">

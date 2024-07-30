@@ -12,7 +12,7 @@ import { setActivePlan, setMetricsPlan } from "@/lib/store/planSlice";
 import { setIsNoTokensOpen } from "@/lib/store/modalSlice";
 import { useQueryClient } from "@tanstack/react-query";
 
-import Zap from "../../../../public/icons/zap.svg";
+import Coin from "../../../../public/icons/coin.svg";
 import Loading from "./loading";
 import Error from "./error";
 
@@ -119,7 +119,7 @@ export default function MyPlans() {
                 </div>
                 <div className="flex flex-row gap-4">
                     <div className="flex flex-row items-center justify-center px-4 h-16 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
-                        <Image src={Zap} alt="zap icon" />
+                        <Image src={Coin} alt="coin icon" />
                         <p className="text-xl font-medium text-center">{userData?.tokens}</p>
                     </div>
                     <button

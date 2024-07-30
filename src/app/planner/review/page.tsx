@@ -13,7 +13,7 @@ import { setActivePlan } from "@/lib/store/planSlice";
 import { REVIEW_TITLE } from "@/lib/constants/plannerConstants";
 import { setIsLoading, setIsNoTokensOpen } from "@/lib/store/modalSlice";
 
-import Zap from "../../../../public/icons/zap.svg";
+import Coin from "../../../../public/icons/coin.svg";
 import Compass from "../../../../public/icons/compass.svg";
 import Clock from "../../../../public/icons/clock.svg";
 import Calendar from "../../../../public/icons/calendar.svg";
@@ -137,7 +137,7 @@ export default function ReviewPlan() {
                                 <p className="text-white text-auto sm:text-xl">Create Plan</p>
                             </button>
                             <div className="flex flex-row p-2 sm:p-4 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
-                                <Image src={Zap} alt="zap icon" />
+                                <Image src={Coin} alt="coin icon" />
                                 <p className="text-xl font-medium text-center">{userData?.tokens}</p>
                             </div>
                         </div>
