@@ -82,7 +82,7 @@ export default function SubscriptionPage() {
                         <p className="text-4xl text-black font-semibold">$0/mo</p>
                     </div>
                     <div className="flex flex-col items-center gap-2 w-full">
-                        <p>1 Free Plan</p>
+                        <p>2 Free Plans</p>
                     </div>
                     {userData?.tier === 'Free' && (
                         <button
