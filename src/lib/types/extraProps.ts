@@ -1,10 +1,10 @@
 import { Plan } from "./planTypes";
 
 export interface PlanProgressProps {
-  prog: number;
+  prog: number; // 0 to 1, for percentage
 }
 
-export interface SmallPlanProgressProps {
+export interface SmallPlanProgressProps { // for Plan option on selector
   week: number;
   prog: number;
 }

@@ -286,7 +286,7 @@ export default function Week() {
     if (errorPlan || errorTasks || errorPlans) return (<Error />)
 
     return (
-        <div className="flex flex-col w-full gap-1">
+        <div className="flex flex-col bg-[#E6E6E6] gap-1 min-h-screen w-full">
             {/* Top Section */}
             <div className="flex flex-col lg:flex-row bg-white w-full px-6 rounded-sm">
                 {/* Plan title and progress */}
@@ -295,19 +295,20 @@ export default function Week() {
                         <button onClick={togglePlansSelector} className="flex mt-2 shrink-0 transition hover:scale-110 duration-300">
                             <Image src={showPlansSelector ? ExpandUp : ExpandDown} alt="expand" />
                         </button>
-                        <p className="text-2xl lg:text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p>
+                        {/* <p className="text-2xl lg:text-3xl font-medium w-5/6">{planData.goal} - Week {planData.currWeek} / {planData.numWeeks}</p> */}
+                        <p className="text-2xl lg:text-3xl font-medium w-5/6">{planData.goal}</p>
                     </div>
                     {showPlansSelector && <PlanSelector onSelect={handlePlanSelect} plans={plans} activePlanId={activePlanId || ""} />}
                     {!planData.completed && <ProgressBar prog={weekProg} />}
                 </div>
                 {/* Week end date and buttons */}
                 {(daysUntilWeekEnd > 0 && !showCompletedSection) && (
-                    <div className="flex flex-col justify-center items-center w-full lg:w-3/6 gap-4 mb-6 lg:mb-0">
-                        <div className="flex flex-row lg:flex-col justify-center items-center gap-2">
+                    <div className="flex flex-col justify-center w-full lg:w-3/6 gap-4 mb-6 lg:mb-0 lg:items-center">
+                        <div className="flex flex-row lg:flex-col gap-2 max-sm:justify-center lg:items-center">
                             <p className="text-auto lg:text-xl text-[#B3B3B3]">Week ends on:</p>
                             <p className="text-auto lg:text-xl">{planData.weekEndDate} ({daysUntilWeekEnd} {daysUntilWeekEnd > 1 ? 'days' : 'day'})</p>
                         </div>
-                        <div className="flex flex-row gap-4">
+                        <div className="flex flex-row gap-4 max-sm:justify-center">
                             <button
                                 className="py-2 px-3 lg:py-4 lg:px-6 rounded-md bg-white border-primary border-[1px] drop-shadow-lg 
                         transition hover:scale-110 duration-300"
@@ -365,12 +366,15 @@ export default function Week() {
 
                 </>
             ) :
-                (   // Else, show either Kanban or Activate sections
+                (   // Else, show either Kanban or Activate Plan sections
                     <>
                         {planData?.active && isDateBeforeOrToday(planData?.startDate) // if today >= start
                             ?    // Plan active and started
                             (
-                                <Kanban cards={cards} setCards={setCards} updateFn={handleUpdateProg} completedTasks={completedTasks} />
+                                <div className="flex flex-col bg-white min-h-[40vh] md:h-5/6 p-6 gap-2 w-full">
+                                    <p className="text-2xl font-medium">Week {planData.currWeek} / {planData.numWeeks}</p>
+                                    <Kanban cards={cards} setCards={setCards} updateFn={handleUpdateProg} completedTasks={completedTasks} />
+                                </div>
                             )
                             :    // Plan paused or starts later
                             (
