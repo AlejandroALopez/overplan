@@ -105,26 +105,28 @@ export default function MyPlans() {
         <div className="flex flex-col bg-white gap-12 p-8 w-full min-h-screen">
             {/* Headings */}
             <div className="flex flex-row items-center justify-between w-full">
+                {/* Heading text */}
                 <div className="flex flex-col items-start gap-2">
                     <p className="text-2xl md:text-3xl font-medium">{isArchiveMode ? "My Completed Plans" : "My Plans"}</p>
                     <button
                         onClick={() => toggleArchived()}
                     >
                         <p
-                            className="text-primary text-center transition hover:scale-105 duration-300"
+                            className="text-primary text-left w-5/6 sm:w-full transition hover:scale-105 duration-300"
                         >
                             See {isArchiveMode ? "active" : "completed"} plans
                         </p>
                     </button>
                 </div>
+                {/* Tokens and Start Plan button */}
                 <div className="flex flex-row gap-4">
-                    <div className="flex flex-row items-center justify-center px-4 h-16 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
+                    <div className="flex flex-row items-center justify-center px-4 h-14 lg:h-16 gap-3 border-2 border-[#B3B3B3] rounded-2xl">
                         <Image src={Coin} alt="coin icon" />
                         <p className="text-xl font-medium text-center">{userData?.tokens}</p>
                     </div>
                     <button
                         onClick={handleCreatePlan}
-                        className="px-6 lg:mr-8 h-16 border-none rounded-md bg-primary
+                        className="px-4 h-14 lg:px-6 lg:mr-8 lg:h-16 border-none rounded-md bg-primary
                             drop-shadow-lg transition hover:scale-110 duration-300"
                     >
                         <p className="text-lg sm:text-xl text-white">Create Plan</p>

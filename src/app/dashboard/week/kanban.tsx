@@ -228,7 +228,7 @@ const DropIndicator: React.FC<DropIndicatorProps> = ({ beforeId, column }) => {
 
 export const Kanban: React.FC<KanbanProps> = ({ cards, setCards, updateFn, completedTasks }) => {
     return (
-        <div className="flex flex-row gap-5 sm:gap-10 bg-white p-6 min-h-[40vh] md:h-5/6 rounded-sm overflow-x-auto w-full">
+        <div className="flex flex-row gap-5 sm:gap-10 overflow-x-auto">
             <Column column={"Backlog"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
             <Column column={"Today"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
             <Column column={"In Progress"} cards={cards} setCards={setCards} updateFn={updateFn} completedTasks={completedTasks} />
