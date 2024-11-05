@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { WeekProps, TaskProps } from "@/lib/types/plannerProps";
 import { ColumnColorsType } from "@/lib/types/weekProps";
@@ -10,6 +11,8 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchTasksByPlanId } from "@/lib/api/tasksApi";
 import { ITask } from "@/lib/types/planTypes";
 import { RESULT_SUBTITLE } from "@/lib/constants/plannerConstants";
+import ExpandPlus from "../../../../public/icons/expandPlus.svg";
+
 import Loading from "./loading";
 import Error from "./error";
 
@@ -34,7 +37,7 @@ const Week: React.FC<WeekProps> = ({ week, activeWeek, setActiveWeek }) => {
 
 const Task: React.FC<TaskProps> = ({ task }) => {
     const dispatch = useAppDispatch();
-    
+
     const handleClick = () => {
         dispatch(setSelectedTask(task));
         dispatch(setIsSingleTaskOpen(true));
@@ -43,11 +46,14 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     return (
         <button
             className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
-                rounded-md rounded-br-xl"
+                rounded-md rounded-br-xl transition hover:scale-105 duration-300 hover:cursor-pointer"
             onClick={handleClick}
         >
-            <p className="w-full p-2">{task.title}</p>
-            <div className={`h-4 w-6 rounded-tl-md rounded-br-xl ${status_bg_colors[task.status]}`} />
+            <div className="w-full flex flex-row justify-between items-center">
+                <Image className="ml-2" src={ExpandPlus} alt="expand icon" />
+                <p className="w-full p-2">{task.title}</p>
+            </div>
+            <div className={`h-4 w-6 rounded-tl-md rounded-br-[10px] ${status_bg_colors[task.status]}`} />
         </button>
     );
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import {
     ColumnProps, DropIndicatorProps, CardProps, KanbanProps,
@@ -10,6 +11,7 @@ import { updateTask } from "@/lib/api/tasksApi";
 import dayjs from "dayjs";
 import { useAppDispatch } from "@/lib/store";
 import { setIsSingleTaskOpen, setSelectedTask } from "@/lib/store/modalSlice";
+import ExpandPlus from "../../../../public/icons/expandPlus.svg";
 
 // Match column names with their respective colors
 const column_text_colors: ColumnColorsType = {
@@ -204,13 +206,16 @@ const Card: React.FC<CardProps> = ({ task, handleDragStart }) => {
                 layout
                 layoutId={task._id}
                 className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
-                    rounded-md rounded-br-xl cursor-grab active:cursor-grabbing"
+                    rounded-md rounded-br-xl cursor-grab active:cursor-grabbing transition hover:scale-105 duration-300"
                 draggable="true"
                 onClick={handleClick}
                 onDragStart={onDragStartHandler}
             >
-                <p className="w-full p-2">{task.title}</p>
-                <div className={`h-4 w-6 rounded-tl-md rounded-br-xl ${column_bg_colors[task.status]}`} />
+                <div className="w-full flex flex-row justify-between items-center">
+                    <Image className="ml-2" src={ExpandPlus} alt="expand icon" />
+                    <p className="w-full p-2">{task.title}</p>
+                </div>
+                <div className={`h-4 w-6 rounded-tl-md rounded-br-[10px] ${column_bg_colors[task.status]}`} />
             </motion.div>
         </>
     );
