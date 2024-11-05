@@ -2,12 +2,16 @@ import Image from "next/image";
 import Calendar from "../../../../../public/icons/smallCalendar.svg";
 import Check from "../../../../../public/icons/smallCheck.svg";
 import Bell from "../../../../../public/icons/smallBell.svg";
+import ExpandPlus from "../../../../../public/icons/expandPlus.svg";
 
 import { TopMetricsProps } from "@/lib/types/metricsProps";
 import dayjs from "dayjs";
 import { WeekProps, TaskProps, WeekSelectorProps } from "@/lib/types/plannerProps";
 import { ColumnColorsType } from "@/lib/types/weekProps";
 import { ITask } from "@/lib/types/planTypes";
+import { useAppDispatch } from "@/lib/store";
+import { setIsSingleTaskOpen, setSelectedTask } from "@/lib/store/modalSlice";
+
 
 export const TopMetrics: React.FC<TopMetricsProps> = ({ plan, tasks }) => {
     const today = dayjs().format('MM/DD/YYYY');
@@ -72,13 +76,24 @@ const Week: React.FC<WeekProps> = ({ week, activeWeek, setActiveWeek }) => {
 }
 
 const Task: React.FC<TaskProps> = ({ task }) => {
+    const dispatch = useAppDispatch();
+
+    const handleClick = () => {
+        dispatch(setSelectedTask(task));
+        dispatch(setIsSingleTaskOpen(true));
+    }
+    
     return (
         <div
             className="flex flex-col text-left items-end bg-white border-2 border-[#EDEDED]
-                    rounded-md rounded-br-xl"
+                    rounded-md rounded-br-xl transition hover:scale-105 duration-300 hover:cursor-pointer"
+            onClick={handleClick}
         >
-            <p className="text-sm md:text-base w-full p-2">{task.title}</p>
-            <div className={`h-4 w-6 rounded-tl-md rounded-br-xl ${status_bg_colors[task.status]}`} />
+            <div className="w-full flex flex-row justify-between items-center">
+                <Image className="ml-2" src={ExpandPlus} alt="expand icon" />
+                <p className="w-full p-2">{task.title}</p>
+            </div>
+            <div className={`h-4 w-6 rounded-tl-md rounded-br-[10px] ${status_bg_colors[task.status]}`} />
         </div>
     );
 }
